@@ -56,6 +56,18 @@ applyCoopon(data: any) {
     data
   );
 }
+  // Placeholder path — replace with the real profile endpoint once the backend exposes it
+  getProfile(): Observable<any> {
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get<any>(`${this.baseUrl}/chanelstu/profile`, {
+      headers,
+    });
+  }
+
 generateTempToken() {
     const accessToken = sessionStorage.getItem('access_token');
     const userId = Number(sessionStorage.getItem('user_id'));

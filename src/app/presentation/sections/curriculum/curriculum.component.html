@@ -42,58 +42,72 @@
         </p>
       </div>
 
-      <div class="topics-grid simulation-grid">
-        @for (topic of comprehensiveModules; track topic.id) {
-          <div
-            class="topic-card"
-            [class.has-image]="topic.image"
-            [class.clickable]="topic.hasReadMore !== false"
-            role="article"
-            [style.--topic-color]="topic.color"
-            (click)="topic.hasReadMore !== false ? onReadMore(topic) : null"
-          >
-            @if (topic.image) {
-              <div class="card-image-wrapper">
-                <img
-                  [src]="topic.image"
-                  [alt]="topic.title"
-                  class="card-hero-image"
-                />
-              </div>
-            }
-
-            <div class="card-icon-wrapper">
+      <div class="simulation-carousel">
+        <swiper-container
+          slides-per-view="1"
+          space-between="32"
+          [breakpoints]="{
+            '768': { slidesPerView: 2 },
+            '1024': { slidesPerView: 3 }
+          }"
+          loop="true"
+          autoplay-delay="2000"
+          autoplay-disable-on-interaction="false"
+        >
+          @for (topic of comprehensiveModules; track topic.id) {
+            <swiper-slide>
               <div
-                class="icon-box"
-                [style.background-color]="topic.color + '15'"
+                class="topic-card h-100"
+                [class.has-image]="topic.image"
+                [class.clickable]="topic.hasReadMore !== false"
+                role="article"
+                [style.--topic-color]="topic.color"
+                (click)="topic.hasReadMore !== false ? onReadMore(topic) : null"
               >
-                <i
-                  [class]="'fas fa-' + topic.icon + ' topic-icon'"
-                  [style.color]="topic.color"
-                ></i>
+                @if (topic.image) {
+                  <div class="card-image-wrapper">
+                    <img
+                      [src]="topic.image"
+                      [alt]="topic.title"
+                      class="card-hero-image"
+                    />
+                  </div>
+                }
+
+                <div class="card-icon-wrapper">
+                  <div
+                    class="icon-box"
+                    [style.background-color]="topic.color + '15'"
+                  >
+                    <i
+                      [class]="'fas fa-' + topic.icon + ' topic-icon'"
+                      [style.color]="topic.color"
+                    ></i>
+                  </div>
+                </div>
+
+                <div class="card-content">
+                  <h3 class="card-title">{{ topic.title }}</h3>
+                  <p class="card-description">{{ topic.description }}</p>
+                </div>
+
+                <div class="card-footer">
+                  <a href="javascript:void(0)" class="explore-link">
+                    <span>Read More</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+
+                  @if (topic.playUrl && isDesktop) {
+                    <button class="play-now-btn" (click)="onPlay(topic, $event)">
+                      <i class="fas fa-play"></i>
+                      <span> {{ topic.btn }} </span>
+                    </button>
+                  }
+                </div>
               </div>
-            </div>
-
-            <div class="card-content">
-              <h3 class="card-title">{{ topic.title }}</h3>
-              <p class="card-description">{{ topic.description }}</p>
-            </div>
-
-            <div class="card-footer">
-              <a href="javascript:void(0)" class="explore-link">
-                <span>Read More</span>
-                <i class="fas fa-arrow-right"></i>
-              </a>
-
-              @if (topic.playUrl && isDesktop) {
-                <button class="play-now-btn" (click)="onPlay(topic, $event)">
-                  <i class="fas fa-play"></i>
-                  <span>Simulate Now</span>
-                </button>
-              }
-            </div>
-          </div>
-        }
+            </swiper-slide>
+          }
+        </swiper-container>
       </div>
     </div>
 

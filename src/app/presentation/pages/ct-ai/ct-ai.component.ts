@@ -47,12 +47,12 @@ export class CtAiComponent {
     return value.toString().padStart(2, '0');
   }
   openPDF(chapter: any) {
-  this.router.navigate(['/pdf-viewer'], {
-    queryParams: {
-      file: chapter.pdf
-    }
-  });
-}
+    this.router.navigate(['/iframe-view'], {
+      queryParams: {
+        url: chapter.pdf
+      }
+    });
+  }
 }
 
 

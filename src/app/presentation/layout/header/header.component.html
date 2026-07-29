@@ -111,10 +111,10 @@
           </button>
           @if (userMenuOpen) {
           <div class="user-dropdown">
-            <a class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
+            <a class="user-dropdown-item" (click)="openProfileModal(); $event.stopPropagation()">
               <i class="fas fa-user"></i> My Profile
             </a>
-            <a class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
+            <a class="user-dropdown-item" (click)="openChangePasswordModal(); $event.stopPropagation()">
               <i class="fas fa-lock"></i> Change Password
             </a>
             <div class="user-dropdown-divider"></div>
@@ -275,8 +275,13 @@
           <input type="email" formControlName="email" placeholder="Email">
         </div>
 
-        <div class="input-group">
-          <input type="password" placeholder="Password" formControlName="password" />
+        <div class="input-group password-group">
+          <input [type]="showLoginPassword ? 'text' : 'password'" placeholder="Password"
+            formControlName="password" />
+          <button type="button" class="toggle-password" (click)="toggleLoginPasswordVisibility()"
+            [attr.aria-label]="showLoginPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showLoginPassword" [class.fa-eye-slash]="showLoginPassword"></i>
+          </button>
         </div>
 
         <button type="submit" class="submit-btn">Login</button>
@@ -292,7 +297,8 @@
 
       <form [formGroup]="signupForm" (ngSubmit)="submitForm()" class="signup-form">
         <div class="input-group">
-          <input type="text" placeholder="Name" formControlName="name" />
+          <input type="text" placeholder="Name" formControlName="name"
+            (input)="onNameInput($event, signupForm)" />
         </div>
 
         <div class="error" *ngIf="signupForm.get('name')?.touched &&
@@ -302,8 +308,15 @@
 
         </div>
 
+        <div class="error" *ngIf="signupForm.get('name')?.errors?.['pattern']">
+
+          Name should only contain letters.
+
+        </div>
+
         <div class="input-group">
-          <input type="text" placeholder="Mobile Number" formControlName="mobile" />
+          <input type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile Number"
+            formControlName="mobile" (input)="onMobileInput($event)" />
         </div>
 
         <div class="error" *ngIf="signupForm.get('mobile')?.touched &&
@@ -336,52 +349,62 @@
 
         </div>
 
-        <div class="input-group">
-          <select formControlName="board" (change)="setClasses(+$any($event.target).value)">
+        <div class="input-row">
+          <div class="input-col">
+            <div class="input-group">
+              <select formControlName="board" (change)="setClasses(+$any($event.target).value)">
 
-            <option [ngValue]="null">Select Board</option>
+                <option [ngValue]="null">Select Board</option>
 
-            <option *ngFor="let item of boardList" [ngValue]="item.id">
-              {{ item.name }}
-            </option>
+                <option *ngFor="let item of boardList" [ngValue]="item.id">
+                  {{ item.name }}
+                </option>
 
-          </select>
+              </select>
+            </div>
+
+            <div class="error" *ngIf="signupForm.get('board')?.touched &&
+                signupForm.get('board')?.errors?.['required']">
+
+              Please select board.
+
+            </div>
+          </div>
+
+          <div class="input-col" *ngIf="!isSchoolSignup">
+            <div class="input-group">
+              <select formControlName="class" [disabled]="!classList.length">
+                <option [ngValue]="null">Select Class</option>
+
+                @for (item of classList; track item.id) {
+                <option [value]="item.id">
+                  {{ item.name }}
+                </option>
+                }
+
+                @if (!classList.length) {
+                <option disabled>No Classes Available</option>
+                }
+              </select>
+            </div>
+            <div class="error" *ngIf="signupForm.get('class')?.touched &&
+                signupForm.get('class')?.errors?.['required']">
+
+              Please select class.
+
+            </div>
+          </div>
         </div>
 
-        <div class="error" *ngIf="signupForm.get('board')?.touched &&
-            signupForm.get('board')?.errors?.['required']">
-
-          Please select board.
-
-        </div>
-
-        <div class="input-group" *ngIf="!isSchoolSignup">
-          <select formControlName="class" [disabled]="!classList.length">
-            <option value="">Select Class</option>
-
-            @for (item of classList; track item.id) {
-            <option [value]="item.id">
-              {{ item.name }}
-            </option>
-            }
-
-            @if (!classList.length) {
-            <option disabled>No Classes Available</option>
-            }
-          </select>
-        </div>
-        <div class="error" *ngIf="!isSchoolSignup &&
-            signupForm.get('class')?.touched &&
-            signupForm.get('class')?.errors?.['required']">
-
-          Please select class.
-
-        </div>
 
 
-
-        <div class="input-group">
-          <input type="password" placeholder="Create Password" formControlName="password" />
+        <div class="input-group password-group">
+          <input [type]="showSignupPassword ? 'text' : 'password'" placeholder="Create Password"
+            formControlName="password" />
+          <button type="button" class="toggle-password" (click)="toggleSignupPasswordVisibility()"
+            [attr.aria-label]="showSignupPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showSignupPassword" [class.fa-eye-slash]="showSignupPassword"></i>
+          </button>
         </div>
 
         <div class="error" *ngIf="signupForm.get('password')?.touched &&
@@ -391,8 +414,13 @@
 
         </div>
 
-        <div class="input-group">
-          <input type="password" placeholder="Confirm Password" formControlName="confirmpassword" />
+        <div class="input-group password-group">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Confirm Password"
+            formControlName="confirmpassword" />
+          <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+          </button>
         </div>
 
         <div class="error" *ngIf="signupForm.errors?.['passwordMismatch'] &&
@@ -427,6 +455,145 @@
         <button type="submit" class="submit-btn">Register</button>
       </form>
       }
+    </div>
+  </div>
+  }
+
+  <!-- My Profile Modal -->
+  @if (isProfileOpen) {
+  <div class="signup-modal-overlay">
+    <div class="signup-modal-content profile-modal-content">
+      <button class="close-btn" (click)="closeProfileModal()">✕</button>
+
+      <div class="profile-avatar-block">
+        <span class="profile-avatar-lg">{{ getUserInitials() }}</span>
+      </div>
+
+      <div class="signup-header">
+        <h3>My Profile</h3>
+        <p>Manage your account details</p>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="submitProfile()" class="signup-form">
+        <div class="input-group">
+          <input type="text" placeholder="Name" formControlName="name"
+            (input)="onNameInput($event, profileForm)" />
+        </div>
+
+        <div class="error" *ngIf="profileForm.get('name')?.touched &&
+            profileForm.get('name')?.errors?.['required']">
+
+          Name is required.
+
+        </div>
+
+        <div class="profile-readonly-grid">
+          <div class="profile-readonly-item">
+            <span class="label">Email</span>
+            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.email
+              || '-') }}</span>
+          </div>
+          <div class="profile-readonly-item">
+            <span class="label">Student ID</span>
+            <span class="value">{{ userStudentId }}</span>
+          </div>
+          <div class="profile-readonly-item">
+            <span class="label">Account Type</span>
+            <span class="value">{{ userType }}</span>
+          </div>
+          <div class="profile-readonly-item">
+            <span class="label">Course</span>
+            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.course
+              || '-') }}</span>
+          </div>
+          <div class="profile-readonly-item">
+            <span class="label">Duration</span>
+            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.duration
+              || '-') }}</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="isProfileLoading">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  }
+
+  <!-- Change Password Modal -->
+  @if (isChangePasswordOpen) {
+  <div class="signup-modal-overlay">
+    <div class="signup-modal-content">
+      <button class="close-btn" (click)="closeChangePasswordModal()">✕</button>
+
+      <div class="signup-header">
+        <h3>Change Password</h3>
+        <p>Keep your account secure</p>
+      </div>
+
+      <form [formGroup]="changePasswordForm" (ngSubmit)="submitChangePassword()" class="signup-form">
+        <div class="input-group password-group">
+          <input [type]="showCurrentPassword ? 'text' : 'password'" placeholder="Current Password"
+            formControlName="currentPassword" />
+          <button type="button" class="toggle-password" (click)="toggleCurrentPasswordVisibility()"
+            [attr.aria-label]="showCurrentPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showCurrentPassword" [class.fa-eye-slash]="showCurrentPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('currentPassword')?.touched &&
+            changePasswordForm.get('currentPassword')?.errors?.['required']">
+
+          Current password is required.
+
+        </div>
+
+        <div class="input-group password-group">
+          <input [type]="showNewPassword ? 'text' : 'password'" placeholder="New Password"
+            formControlName="newPassword" />
+          <button type="button" class="toggle-password" (click)="toggleNewPasswordVisibility()"
+            [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showNewPassword" [class.fa-eye-slash]="showNewPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('newPassword')?.touched &&
+            changePasswordForm.get('newPassword')?.errors?.['required']">
+
+          New password is required.
+
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">
+
+          Password should be minimum 6 characters.
+
+        </div>
+
+        <div class="input-group password-group">
+          <input [type]="showConfirmNewPassword ? 'text' : 'password'" placeholder="Confirm New Password"
+            formControlName="confirmNewPassword" />
+          <button type="button" class="toggle-password" (click)="toggleConfirmNewPasswordVisibility()"
+            [attr.aria-label]="showConfirmNewPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showConfirmNewPassword" [class.fa-eye-slash]="showConfirmNewPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('confirmNewPassword')?.touched &&
+            changePasswordForm.get('confirmNewPassword')?.errors?.['required']">
+
+          Confirm new password is required.
+
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.errors?.['passwordMismatch'] &&
+            changePasswordForm.get('confirmNewPassword')?.touched">
+
+          New Password and Confirm Password do not match.
+
+        </div>
+
+        <button type="submit" class="submit-btn">Update Password</button>
+      </form>
     </div>
   </div>
   }
@@ -557,7 +724,7 @@
             </div>
             <div class="result-info">
               <span class="result-title">{{ item.title }}</span>
-              <span class="result-url">{{ item.url }}</span>
+              <!-- <span class="result-url">{{ item.url }}</span> -->
             </div>
             <i class="fas fa-chevron-right arrow-icon"></i>
           </div>

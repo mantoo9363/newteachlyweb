@@ -11,10 +11,12 @@ import {
   Renderer2,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -47,6 +49,14 @@ const LANGUAGE_MAP: { [key: string]: string } = {
   MAN: 'mni',
   KAS: 'ks',
 };
+
+function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const newPassword = group.get('newPassword')?.value;
+  const confirmPassword = group.get('confirmNewPassword')?.value;
+  return newPassword && confirmPassword && newPassword !== confirmPassword
+    ? { passwordMismatch: true }
+    : null;
+}
 
 @Component({
   selector: 'app-header',
@@ -84,6 +94,19 @@ export class HeaderComponent implements OnInit {
   activeTab: 'login' | 'signup' = 'signup';
   showMessageModal = false;
   userMenuOpen = false;
+  showLoginPassword = false;
+  showSignupPassword = false;
+  showConfirmPassword = false;
+
+  isProfileOpen = false;
+  isChangePasswordOpen = false;
+  isProfileLoading = false;
+  profileData: any = null;
+  profileForm!: FormGroup;
+  changePasswordForm!: FormGroup;
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmNewPassword = false;
 
   message = '';
   // 🔹 Dynamic Data
@@ -146,7 +169,21 @@ export class HeaderComponent implements OnInit {
     }
   }
   scroll() {
-    this.scrollToPricing.emit();
+    const currentPath = this.router.url.split('?')[0].split('#')[0];
+
+    if (currentPath === '/') {
+      this.scrollToPricing.emit();
+      this.scrollToPricingElement();
+      return;
+    }
+
+    this.router.navigateByUrl('/').then(() => {
+      setTimeout(() => this.scrollToPricingElement(), 300);
+    });
+  }
+
+  private scrollToPricingElement(): void {
+    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   closeSearchModal() {
     this.isSearchModalOpen.set(false);
@@ -718,7 +755,7 @@ export class HeaderComponent implements OnInit {
     });
 
     this.signupForm = this.fb.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
 
       mobile: [
         '',
@@ -869,6 +906,112 @@ export class HeaderComponent implements OnInit {
   }
   closeSignupModal() {
     this.isSignupOpen = false;
+  }
+
+  toggleLoginPasswordVisibility(): void {
+    this.showLoginPassword = !this.showLoginPassword;
+  }
+
+  toggleSignupPasswordVisibility(): void {
+    this.showSignupPassword = !this.showSignupPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onNameInput(event: Event, form: FormGroup): void {
+    const input = event.target as HTMLInputElement;
+    const lettersOnly = input.value.replace(/[^a-zA-Z\s]/g, '');
+
+    if (input.value !== lettersOnly) {
+      input.value = lettersOnly;
+    }
+
+    form.get('name')?.setValue(lettersOnly, { emitEvent: false });
+  }
+
+  onMobileInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digitsOnly = input.value.replace(/\D/g, '').slice(0, 10);
+
+    if (input.value !== digitsOnly) {
+      input.value = digitsOnly;
+    }
+
+    this.signupForm.get('mobile')?.setValue(digitsOnly, { emitEvent: false });
+  }
+
+  openProfileModal(): void {
+    this.closeUserMenu();
+    this.profileForm.reset({ name: this.userName });
+    this.profileData = null;
+    this.isProfileOpen = true;
+    this.isProfileLoading = true;
+
+    this.service.getProfile().subscribe({
+      next: (res: any) => {
+        this.profileData = res;
+        this.profileForm.patchValue({
+          name: res?.name || res?.first_name || this.userName,
+        });
+        this.isProfileLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load profile', err);
+        this.isProfileLoading = false;
+      },
+    });
+  }
+
+  closeProfileModal(): void {
+    this.isProfileOpen = false;
+  }
+
+  submitProfile(): void {
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    sessionStorage.setItem('school_name', this.profileForm.value.name);
+    this.closeProfileModal();
+    this.openMessage('Profile updated successfully.');
+  }
+
+  openChangePasswordModal(): void {
+    this.closeUserMenu();
+    this.changePasswordForm.reset();
+    this.showCurrentPassword = false;
+    this.showNewPassword = false;
+    this.showConfirmNewPassword = false;
+    this.isChangePasswordOpen = true;
+  }
+
+  closeChangePasswordModal(): void {
+    this.isChangePasswordOpen = false;
+  }
+
+  submitChangePassword(): void {
+    if (this.changePasswordForm.invalid) {
+      this.changePasswordForm.markAllAsTouched();
+      return;
+    }
+
+    this.closeChangePasswordModal();
+    this.openMessage('Password changed successfully.');
+  }
+
+  toggleCurrentPasswordVisibility(): void {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+
+  toggleNewPasswordVisibility(): void {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmNewPasswordVisibility(): void {
+    this.showConfirmNewPassword = !this.showConfirmNewPassword;
   }
   switchTab(tab: 'login' | 'signup') {
     this.activeTab = tab;
@@ -1181,6 +1324,14 @@ export class HeaderComponent implements OnInit {
 
   get userName(): string {
     return sessionStorage.getItem('school_name') || 'User';
+  }
+
+  get userType(): string {
+    return sessionStorage.getItem('user_type') === 'SCH' ? 'School' : 'Student';
+  }
+
+  get userStudentId(): string {
+    return sessionStorage.getItem('student_id') || '-';
   }
 
   getUserInitials(): string {
