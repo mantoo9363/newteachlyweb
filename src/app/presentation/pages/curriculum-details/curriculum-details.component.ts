@@ -1,4 +1,5 @@
 import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -11,7 +12,7 @@ import { ApiService } from '../../../core/services/api-service';
 @Component({
   selector: 'app-curriculum-details',
   standalone: true,
-  imports: [TranslateModule, HeaderComponent, FooterComponent, IframeEmbedComponent],
+  imports: [CommonModule, TranslateModule, HeaderComponent, FooterComponent, IframeEmbedComponent],
   templateUrl: './curriculum-details.component.html',
   styleUrls: ['./curriculum-details.component.scss']
 })

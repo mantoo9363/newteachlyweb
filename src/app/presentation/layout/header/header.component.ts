@@ -774,6 +774,19 @@ export class HeaderComponent implements OnInit {
 
     });
 
+    this.profileForm = this.fb.group({
+      name: ['', Validators.required],
+    });
+
+    this.changePasswordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmNewPassword: ['', Validators.required],
+      },
+      { validators: passwordsMatchValidator }
+    );
+
     this.restoreSignupDraft();
     this.signupForm.valueChanges.subscribe((formValue) => {
       if (this.isRestoringSignupDraft) return;

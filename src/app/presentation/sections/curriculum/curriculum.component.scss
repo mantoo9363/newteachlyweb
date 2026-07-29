@@ -161,7 +161,7 @@
 /* 🔥 Robust Grid Fix */
 .topics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 32px;
   align-items: stretch; /* Ensure all cards in a row have equal height */
   height: auto;
