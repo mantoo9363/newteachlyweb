@@ -509,8 +509,8 @@
           Cancel
         </button>
 
-        <button class="btn btn-success w-100 pay-btn" (click)="proceedPayment()">
-          Proceed To Payment
+        <button class="btn btn-success w-100 pay-btn" (click)="proceedPayment()" [disabled]="isPaymentProcessing">
+          {{ isPaymentProcessing ? 'Processing...' : 'Proceed To Payment' }}
         </button>
 
       </div>
