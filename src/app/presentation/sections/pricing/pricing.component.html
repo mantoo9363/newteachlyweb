@@ -5,17 +5,23 @@
     available in one place.
   </p>
 
+  <div class="independence-banner">
+    <span class="chakra">☸</span>
+    Happy Independence Day — Special Pricing Valid Till 15 August 2026
+    <span class="chakra">☸</span>
+  </div>
+
   <div class="pricing-container">
     <!-- LEFT CARD -->
     <div class="pricing-card school">
       <h3>SCHOOL PLAN</h3>
-      <h2>For Only School Owner’s</h2>
+      <h4>For Only School Owner’s</h4>
 
       <p class="all-in">→ All in One</p>
 
       <div class="price">
         <b>
-          <h2>₹ 70000 -<span>Per year</span></h2>
+          <h2>₹ 70000 /- <span>Per year</span></h2>
         </b>
       </div>
 
@@ -33,21 +39,22 @@
       </div>
 
       <div class="plan-gif">
-        <img src="/Indian_Flag_with_Teachly_Logo_Transparent.gif" alt="School Plan" />
+        <img src="image/Indian_Flag_with_Teachly_Logo_Transparent.gif" alt="School Plan" />
       </div>
 
-      <div class="school-offer-box">📅 Offer Valid Till 15 August 2026</div>
+      <!-- <div class="school-offer-box">Independence Day Offer
+        <br/> Valid Till 15 August 2026</div> -->
     </div>
 
     <div class="pricing-card school">
       <h3>SCHOOL TECH PLAN</h3>
-      <h2>For Only School Owner’s</h2>
+      <h4>For Only School Owner’s</h4>
 
       <p class="all-in">→ All in One</p>
 
       <div class="price">
         <b>
-          <h2>₹ 50000 -<span>Per year</span></h2>
+          <h2>₹ 50000 /- <span>Per year</span></h2>
         </b>
       </div>
 
@@ -58,17 +65,17 @@
       <div class="divider"></div>
 
       <div class="action-row">
-        <p class="validity">→ Validity (1 year)</p>
+        <p class="validity"> Validity (1 year)</p>
         <button class="buy-btn" [disabled]="isPurchasedPlan('schooltech')" (click)="openModal('signup', true, 'schooltech')">
           {{ getBuyButtonText('schooltech') }}
         </button>
       </div>
 
       <div class="plan-gif">
-        <img src="/Indian_Flag_with_Teachly_Logo_Transparent.gif" alt="School Plan" />
+        <img src="image/Indian_Flag_with_Teachly_Logo_Transparent.gif" alt="School Plan" />
       </div>
 
-      <div class="school-offer-box">📅 Offer Valid Till 15 August 2026</div>
+      <!-- <div class="school-offer-box">Independence Day Offer <br/>Valid Till 15 August 2026</div> -->
     </div>
 
     <!-- CARD 1 -->
@@ -106,20 +113,29 @@
       <!-- Coupon -->
       <div class="coupon-wrap" *ngIf="!isPurchasedPlan('tech')">
         <div class="coupon-field" *ngIf="appliedCoupons['tech'] === null">
-          <input #techInput type="text" class="coupon-input" [(ngModel)]="couponCode" placeholder="Enter coupon code" />
+          <input
+            #techInput
+            type="text"
+            class="coupon-input"
+            [(ngModel)]="couponCode"
+            placeholder="Enter coupon code"
+          />
           <button class="coupon-go" (click)="applyCoupon('tech', techInput)">
             GO
           </button>
         </div>
         <div class="coupon-applied" *ngIf="appliedCoupons['tech'] !== null">
-          <span class="applied-label">✔ {{ appliedCoupons['tech'] }}</span>
-          <button class="remove-coupon" (click)="removeCoupon('tech')">✕</button>
+          <span class="applied-label">✔ {{ appliedCoupons["tech"] }}</span>
+          <button class="remove-coupon" (click)="removeCoupon('tech')">
+            ✕
+          </button>
         </div>
       </div>
 
       <div class="offer-text">
         <span>
-          📅 Offer Valid Till
+          Independence Day Offer — Valid Till
+          <br />
           <b>15 August 2026</b>
         </span>
       </div>
@@ -130,19 +146,35 @@
         <h4>Choose Validity</h4>
 
         <div class="month-grid">
-          <button class="month-btn" [class.active]="planMonths.tech == 1" (click)="selectMonth('tech', 1)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.tech == 1"
+            (click)="selectMonth('tech', 1)"
+          >
             1 Month
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.tech == 3" (click)="selectMonth('tech', 3)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.tech == 3"
+            (click)="selectMonth('tech', 3)"
+          >
             3 Months
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.tech == 6" (click)="selectMonth('tech', 6)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.tech == 6"
+            (click)="selectMonth('tech', 6)"
+          >
             6 Months
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.tech == 12" (click)="selectMonth('tech', 12)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.tech == 12"
+            (click)="selectMonth('tech', 12)"
+          >
             12 Months
           </button>
         </div>
@@ -191,20 +223,29 @@
       <!-- Coupon -->
       <div class="coupon-wrap" *ngIf="!isPurchasedPlan('smart')">
         <div class="coupon-field" *ngIf="appliedCoupons['smart'] === null">
-          <input #smartInput type="text" class="coupon-input" placeholder="Enter coupon code" value="TEACH50" />
+          <input
+            #smartInput
+            type="text"
+            class="coupon-input"
+            placeholder="Enter coupon code"
+            value="TEACH50"
+          />
           <button class="coupon-go" (click)="applyCoupon('smart', smartInput)">
             GO
           </button>
         </div>
         <div class="coupon-applied" *ngIf="appliedCoupons['smart'] !== null">
-          <span class="applied-label">✔ {{ appliedCoupons['smart'] }}</span>
-          <button class="remove-coupon" (click)="removeCoupon('smart')">✕</button>
+          <span class="applied-label">✔ {{ appliedCoupons["smart"] }}</span>
+          <button class="remove-coupon" (click)="removeCoupon('smart')">
+            ✕
+          </button>
         </div>
       </div>
 
       <div class="offer-text">
         <span>
-          📅 Offer Valid Till
+          Independence Day Offer — Valid Till
+          <br />
           <b>15 August 2026</b>
         </span>
       </div>
@@ -214,19 +255,35 @@
         <h4>Choose Validity</h4>
 
         <div class="month-grid">
-          <button class="month-btn" [class.active]="planMonths.smart == 1" (click)="selectMonth('smart', 1)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.smart == 1"
+            (click)="selectMonth('smart', 1)"
+          >
             1 Month
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.smart == 3" (click)="selectMonth('smart', 3)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.smart == 3"
+            (click)="selectMonth('smart', 3)"
+          >
             3 Months
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.smart == 6" (click)="selectMonth('smart', 6)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.smart == 6"
+            (click)="selectMonth('smart', 6)"
+          >
             6 Months
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.smart == 12" (click)="selectMonth('smart', 12)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.smart == 12"
+            (click)="selectMonth('smart', 12)"
+          >
             12 Months
           </button>
         </div>
@@ -240,8 +297,6 @@
     </div>
     <!-- CARD 5 -->
     <div class="pricing-card modern-card highlight last-card">
-      <b><span class="best">Best Choice</span></b>
-
       <b>
         <h1><span class="plan-title">INDIVIDUAL</span></h1>
       </b>
@@ -275,20 +330,29 @@
       <!-- Coupon -->
       <div class="coupon-wrap" *ngIf="!isPurchasedPlan('combo')">
         <div class="coupon-field" *ngIf="appliedCoupons['combo'] === null">
-          <input #comboInput type="text" class="coupon-input" placeholder="Enter coupon code" value="TEACH63" />
+          <input
+            #comboInput
+            type="text"
+            class="coupon-input"
+            placeholder="Enter coupon code"
+            value="TEACH63"
+          />
           <button class="coupon-go" (click)="applyCoupon('combo', comboInput)">
             GO
           </button>
         </div>
         <div class="coupon-applied" *ngIf="appliedCoupons['combo'] !== null">
-          <span class="applied-label">✔ {{ appliedCoupons['combo'] }}</span>
-          <button class="remove-coupon" (click)="removeCoupon('combo')">✕</button>
+          <span class="applied-label">✔ {{ appliedCoupons["combo"] }}</span>
+          <button class="remove-coupon" (click)="removeCoupon('combo')">
+            ✕
+          </button>
         </div>
       </div>
 
       <div class="offer-text">
         <span>
-          📅 Offer Valid Till
+          Independence Day Offer — Valid Till
+          <br />
           <b>15 August 2026</b>
         </span>
       </div>
@@ -298,19 +362,35 @@
         <h4>Choose Validity</h4>
 
         <div class="month-grid">
-          <button class="month-btn" [class.active]="planMonths.combo == 1" (click)="selectMonth('combo', 1)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.combo == 1"
+            (click)="selectMonth('combo', 1)"
+          >
             1 Month
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.combo == 3" (click)="selectMonth('combo', 3)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.combo == 3"
+            (click)="selectMonth('combo', 3)"
+          >
             3 Months
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.combo == 6" (click)="selectMonth('combo', 6)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.combo == 6"
+            (click)="selectMonth('combo', 6)"
+          >
             6 Months
           </button>
 
-          <button class="month-btn" [class.active]="planMonths.combo == 12" (click)="selectMonth('combo', 12)">
+          <button
+            class="month-btn"
+            [class.active]="planMonths.combo == 12"
+            (click)="selectMonth('combo', 12)"
+          >
             12 Months
           </button>
         </div>
@@ -330,24 +410,18 @@
 
 <!-- Popup -->
 <div class="popup-overlay" *ngIf="showPopup">
-
   <div class="popup-card">
-
     <button class="close-btn" (click)="closePopup()">✕</button>
 
     <div class="popup-content">
-
       <!-- LEFT -->
       <div class="popup-left">
-
         <h2>{{ selectedPlan.title }}</h2>
 
-        <p class="subtitle">
-          Future Skills Learning Program
-        </p>
+        <p class="subtitle">Future Skills Learning Program</p>
 
         <div class="plan-logo">
-          <img src="/logo.jpeg" alt="Teachly Logo">
+          <img src="/logo.jpeg" alt="Teachly Logo" />
         </div>
 
         <div class="section">
@@ -363,22 +437,18 @@
 
           <!-- Monthly Plans -->
           <div class="duration-list" *ngIf="selectedPlan.type !== 'yearly'">
-
             <div class="duration active">
-
-
-              <span *ngIf="selectedPlanKey=='tech'">
-                ₹{{ getPrice('tech') }} / {{ getDuration('tech') }}
+              <span *ngIf="selectedPlanKey == 'tech'">
+                ₹{{ getPrice("tech") }} / {{ getDuration("tech") }}
               </span>
 
-              <span *ngIf="selectedPlanKey=='smart'">
-                ₹{{ getPrice('smart') }} / {{ getDuration('smart') }}
+              <span *ngIf="selectedPlanKey == 'smart'">
+                ₹{{ getPrice("smart") }} / {{ getDuration("smart") }}
               </span>
 
-              <span *ngIf="selectedPlanKey=='combo'">
-                ₹{{ getPrice('combo') }} / {{ getDuration('combo') }}
+              <span *ngIf="selectedPlanKey == 'combo'">
+                ₹{{ getPrice("combo") }} / {{ getDuration("combo") }}
               </span>
-
             </div>
 
             <!--  <div class="duration">
@@ -390,9 +460,7 @@
               <h5>12 Months</h5>
               <span>Save 30%</span>
             </div>-->
-
           </div>
-
         </div>
 
         <div class="section" *ngIf="selectedPlan.type !== 'yearly' && !isPurchasedPlan(selectedPlanKey)">
@@ -400,103 +468,114 @@
           <h4>Coupon Code</h4>
 
           <div class="coupon-box">
-            <input type="text" [(ngModel)]="popupCouponCode" placeholder="Enter Coupon Code">
+            <input
+              type="text"
+              [(ngModel)]="popupCouponCode"
+              placeholder="Enter Coupon Code"
+            />
             <button class="apply-btn" (click)="applyPopupCoupon()">
               Apply
             </button>
           </div>
-
         </div>
 
         <div class="section">
-
           <div class="features-scroll">
-
             <div class="feature-columns">
-
-              <div class="feature-box" *ngFor="let section of selectedPlan.features">
-
+              <div
+                class="feature-box"
+                *ngFor="let section of selectedPlan.features"
+              >
                 <h5>{{ section.title }}</h5>
 
                 <ul>
-                  <li *ngFor="let item of section.items">
-                    ✔ {{ item }}
-                  </li>
+                  <li *ngFor="let item of section.items">✔ {{ item }}</li>
                 </ul>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
 
       <!-- RIGHT -->
 
       <div class="popup-right">
-
         <div class="price-box">
-
           <!-- School -->
-          <h2 *ngIf="selectedPlanKey=='school'">
-            ₹70,000 / Year
-          </h2>
+          <h2 *ngIf="selectedPlanKey == 'school'">₹70,000 / Year</h2>
 
           <!-- School Tech -->
-          <h2 *ngIf="selectedPlanKey=='schooltech'">
-            ₹50,000 / Year
-          </h2>
+          <h2 *ngIf="selectedPlanKey == 'schooltech'">₹50,000 / Year</h2>
 
           <!-- Tech -->
-          <h2 *ngIf="selectedPlanKey=='tech'">
-            ₹{{ getPrice('tech') }} / {{ getDuration('tech') }}
+          <h2 *ngIf="selectedPlanKey == 'tech'">
+            ₹{{ getPrice("tech") }} / {{ getDuration("tech") }}
           </h2>
 
           <!-- Smart -->
-          <h2 *ngIf="selectedPlanKey=='smart'">
-            ₹{{ getPrice('smart') }} / {{ getDuration('smart') }}
+          <h2 *ngIf="selectedPlanKey == 'smart'">
+            ₹{{ getPrice("smart") }} / {{ getDuration("smart") }}
           </h2>
 
           <!-- Combo -->
-          <h2 *ngIf="selectedPlanKey=='combo'">
-            ₹{{ getPrice('combo') }} / {{ getDuration('combo') }}
+          <h2 *ngIf="selectedPlanKey == 'combo'">
+            ₹{{ getPrice("combo") }} / {{ getDuration("combo") }}
           </h2>
 
           <!-- Old Price -->
 
-          <p class="old-price" *ngIf="selectedPlanKey=='tech' && showOldPrice.tech">
-            ₹{{ getOldPrice('tech') }}
+          <p
+            class="old-price"
+            *ngIf="selectedPlanKey == 'tech' && showOldPrice.tech"
+          >
+            ₹{{ getOldPrice("tech") }}
           </p>
 
-          <p class="old-price" *ngIf="selectedPlanKey=='smart' && showOldPrice.smart">
-            ₹{{ getOldPrice('smart') }}
+          <p
+            class="old-price"
+            *ngIf="selectedPlanKey == 'smart' && showOldPrice.smart"
+          >
+            ₹{{ getOldPrice("smart") }}
           </p>
 
-          <p class="old-price" *ngIf="selectedPlanKey=='combo' && showOldPrice.combo">
-            ₹{{ getOldPrice('combo') }}
+          <p
+            class="old-price"
+            *ngIf="selectedPlanKey == 'combo' && showOldPrice.combo"
+          >
+            ₹{{ getOldPrice("combo") }}
           </p>
 
           <!-- Discount -->
 
-          <span class="discount" *ngIf="selectedPlanKey=='school' || selectedPlanKey=='schooltech'">
+          <span
+            class="discount"
+            *ngIf="
+              selectedPlanKey == 'school' || selectedPlanKey == 'schooltech'
+            "
+          >
             {{ selectedPlan.discount }}
           </span>
 
-          <span class="discount" *ngIf="selectedPlanKey=='tech' && showOldPrice.tech">
+          <span
+            class="discount"
+            *ngIf="selectedPlanKey == 'tech' && showOldPrice.tech"
+          >
             {{ selectedPlan.discount }}
           </span>
 
-          <span class="discount" *ngIf="selectedPlanKey=='smart' && showOldPrice.smart">
+          <span
+            class="discount"
+            *ngIf="selectedPlanKey == 'smart' && showOldPrice.smart"
+          >
             {{ selectedPlan.discount }}
           </span>
 
-          <span class="discount" *ngIf="selectedPlanKey=='combo' && showOldPrice.combo">
+          <span
+            class="discount"
+            *ngIf="selectedPlanKey == 'combo' && showOldPrice.combo"
+          >
             {{ selectedPlan.discount }}
           </span>
-
         </div>
 
         <button class="buy-btn" [disabled]="isPurchasedPlan(selectedPlanKey)" (click)="buySelectedPlan()">
@@ -504,9 +583,6 @@
         </button>
 
       </div>
-
     </div>
-
   </div>
-
 </div>
