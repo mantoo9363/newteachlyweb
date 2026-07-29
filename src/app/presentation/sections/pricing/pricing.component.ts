@@ -64,7 +64,12 @@ export class PricingComponent {
     return this.paymentPrices[plan] * this.planMonths[plan];
   }
 
+  hasPurchasedPackage(): boolean {
+    return sessionStorage.getItem('has_active_package') === 'true';
+  }
+
   applyCoupon(plan: PlanKey, inputEl: HTMLInputElement): void {
+    if (this.hasPurchasedPackage()) return;
 
     const code = inputEl.value.trim().toUpperCase();
 
@@ -77,7 +82,7 @@ export class PricingComponent {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(localStorage.getItem('student_id')) || 0
+      student_id: Number(sessionStorage.getItem('user_id')) || null
     };
 
     this.apiService.applyCoopon(data).subscribe({
@@ -293,6 +298,10 @@ export class PricingComponent {
   };
 
   openModal(tab: 'login' | 'signup', isSchool: boolean = false, plan?: string): void {
+    if (this.hasPurchasedPackage()) {
+      this.toastService.show('You already have an active package.', 'success');
+      return;
+    }
 
     if (plan && this.plans[plan as keyof typeof this.plans]) {
       const selectedPlan = this.plans[plan as keyof typeof this.plans];
@@ -347,6 +356,8 @@ export class PricingComponent {
   }
 
   applyPopupCoupon(): void {
+    if (this.hasPurchasedPackage()) return;
+
     const plan = this.selectedPlanKey;
     if (plan !== 'tech' && plan !== 'smart' && plan !== 'combo') return;
 
@@ -357,7 +368,7 @@ export class PricingComponent {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(localStorage.getItem('student_id')) || 0
+      student_id: Number(sessionStorage.getItem('user_id')) || null
     };
 
     this.apiService.applyCoopon(data).subscribe({

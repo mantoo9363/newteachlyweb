@@ -171,6 +171,36 @@ export class HeaderComponent implements OnInit {
       this.searchQuery.set('');
     }
   }
+
+  hasPurchasedPackage(): boolean {
+    return sessionStorage.getItem('has_active_package') === 'true';
+  }
+
+  private setPackageStatusFromResponse(res: any): void {
+    const hasActivePackage = Boolean(
+      res?.user?.has_active_package ||
+      res?.payment?.has_active_package ||
+      res?.has_active_package
+    );
+
+    sessionStorage.setItem('has_active_package', String(hasActivePackage));
+  }
+
+  private syncPackageStatus(): void {
+    const userId = Number(sessionStorage.getItem('user_id'));
+    if (!sessionStorage.getItem('access_token') || !userId) return;
+
+    this.service.getSchoolPaymentHistory(userId).subscribe({
+      next: (payments: any) => {
+        const hasActivePackage = Array.isArray(payments)
+          && payments.some((payment: any) => payment?.payment_status === 'SUCCESS');
+        sessionStorage.setItem('has_active_package', String(hasActivePackage));
+      },
+      error: () => {
+        sessionStorage.removeItem('has_active_package');
+      }
+    });
+  }
   scroll() {
     const currentPath = this.router.url.split('?')[0].split('#')[0];
 
@@ -648,6 +678,7 @@ export class HeaderComponent implements OnInit {
     this.translateService.use('en');
 
     this.createForms();
+    this.syncPackageStatus();
     this.updateActiveClass();
     // this.getBoardsAndClasses();
 
@@ -883,6 +914,11 @@ export class HeaderComponent implements OnInit {
   openModal(tab: 'login' | 'signup', isSchool: boolean = false) {
 
     if (tab === 'signup' && this.isLoggedIn && this.paymentSummary.planName) {
+      if (this.hasPurchasedPackage()) {
+        this.openMessage("You already have an active package.");
+        return;
+      }
+
         this.paymentSummary.userid= Number(sessionStorage.getItem('user_id')),
       this.paymentSummary.schoolId= sessionStorage.getItem('student_id'),
       this.paymentSummary.schoolName= sessionStorage.getItem('school_name'),
@@ -1057,11 +1093,15 @@ export class HeaderComponent implements OnInit {
         sessionStorage.setItem('student_id', res.user.student_id);
         sessionStorage.setItem('school_name', res.user.first_name);
         sessionStorage.setItem('user_type', res.user.user_type || '');
+        this.setPackageStatusFromResponse(res);
 
         this.headermsg = "Login Successfully";
         this.closeSignupModal();
 
-        if (this.paymentSummary) {
+        if (this.hasPurchasedPackage()) {
+          this.showPaymentPopup = false;
+          this.openMessage("You already have an active package.");
+        } else if (this.paymentSummary?.planName) {
           this.paymentSummary = {
             ...this.paymentSummary,
             schoolId: res.user.student_id,
@@ -1139,6 +1179,7 @@ export class HeaderComponent implements OnInit {
         sessionStorage.setItem('student_id', registeredUser.student_id);
         sessionStorage.setItem('user_type', registeredUser.user_type || data.user_type);
         sessionStorage.setItem('school_name', registeredUser.first_name);
+        this.setPackageStatusFromResponse(res);
 
         // Payment Summary
         this.paymentSummary = {
@@ -1210,6 +1251,12 @@ export class HeaderComponent implements OnInit {
   proceedPayment() {
     if (this.isPaymentProcessing) return;
 
+    if (this.hasPurchasedPackage()) {
+      this.showPaymentPopup = false;
+      this.openMessage("You already have an active package.");
+      return;
+    }
+
     if (
       !this.paymentSummary.planKey ||
       !this.paymentSummary.planMonths
@@ -1228,9 +1275,6 @@ export class HeaderComponent implements OnInit {
 
     this.service.createSchoolOrder(data).subscribe({
       next: (res: any) => {
-        this.paymentSummary.taxableAmount = res.taxable_amount ?? this.paymentSummary.taxableAmount;
-        this.paymentSummary.gstAmount = res.gst_amount ?? this.paymentSummary.gstAmount;
-        this.paymentSummary.totalAmount = res.total_amount ?? this.paymentSummary.totalAmount;
         this.openRazorpay(res);
       },
       error: (err) => {
@@ -1243,7 +1287,6 @@ export class HeaderComponent implements OnInit {
   openRazorpay(order: any) {
     const options: any = {
       key: order.key,
-      amount: order.amount,
       currency: order.currency,
       name: 'Teachly',
       description: this.paymentSummary.planName,
@@ -1271,6 +1314,7 @@ export class HeaderComponent implements OnInit {
 
     this.service.verifySchoolPayment(data).subscribe({
       next: (res: any) => {
+        this.setPackageStatusFromResponse(res);
         this.isPaymentProcessing = false;
         this.openMessage(res.message || "Payment Successful");
         if (res.coupon_code) {
@@ -1381,6 +1425,7 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('student_id');
     sessionStorage.removeItem('school_name');
     sessionStorage.removeItem('user_type');
+    sessionStorage.removeItem('has_active_package');
     this.userMenuOpen = false;
     window.location.reload();
   }

@@ -59,6 +59,13 @@ verifySchoolPayment(data: any) {
   );
 }
 
+getSchoolPaymentHistory(userId: number) {
+  return this.http.get(
+    `${this.baseUrl}/school-payment/history/${userId}`,
+    { headers: this.getAuthHeaders() }
+  );
+}
+
 applyCoopon(data: any) {
   return this.http.post(
     this.baseUrl + '/school-payment/apply_coupon',
