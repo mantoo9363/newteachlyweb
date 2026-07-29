@@ -11,6 +11,13 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  private getAuthHeaders(): HttpHeaders {
+    const accessToken = sessionStorage.getItem('access_token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${accessToken || ''}`
+    });
+  }
+
   // ===============================
   // Landing API
   // ===============================
@@ -39,14 +46,16 @@ export class ApiService {
 createSchoolOrder(data: any) {
   return this.http.post(
     this.baseUrl + '/school-payment/create-order',
-    data
+    data,
+    { headers: this.getAuthHeaders() }
   );
 }
 
 verifySchoolPayment(data: any) {
   return this.http.post(
     this.baseUrl + '/school-payment/verify-payment',
-    data
+    data,
+    { headers: this.getAuthHeaders() }
   );
 }
 
@@ -76,4 +85,3 @@ generateTempToken() {
   }
 
 }
-

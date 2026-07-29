@@ -75,7 +75,8 @@ export class PricingComponent {
 
     const data = {
       coupon_code: code,
-      amount: this.getBasePrice(plan),
+      plan_key: plan,
+      plan_duration: this.planMonths[plan],
       student_id: Number(localStorage.getItem('student_id')) || 0
     };
 
@@ -317,11 +318,15 @@ export class PricingComponent {
       const planMonths = plan === 'school' || plan === 'schooltech' ? 12 : this.planMonths[plan as PlanKey];
 
       this.popupService.setPopupData({
+        planKey: plan,
         planName: selectedPlan.title,
         taxableAmount,
         gstAmount,
         totalAmount: amount,
-        planMonths
+        planMonths,
+        couponCode: plan === 'tech' || plan === 'smart' || plan === 'combo'
+          ? this.appliedCoupons[plan as PlanKey]
+          : null
       });
     }
 
@@ -350,7 +355,8 @@ export class PricingComponent {
 
     const data = {
       coupon_code: code,
-      amount: this.getBasePrice(plan),
+      plan_key: plan,
+      plan_duration: this.planMonths[plan],
       student_id: Number(localStorage.getItem('student_id')) || 0
     };
 

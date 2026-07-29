@@ -67,12 +67,15 @@ export class HeaderComponent implements OnInit {
   paymentSummary: any = {
     schoolId: '',
     schoolName: '',
+    planKey: '',
     planName: '',
     taxableAmount: 0,
     gstAmount: 0,
     totalAmount: 0,
     planMonths: 1,
+    couponCode: null,
   };
+  isPaymentProcessing = false;
   selectedLanguage: string = '';
   headermsg: string = '';
   mobileMenuOpen = signal(false);
@@ -594,11 +597,13 @@ export class HeaderComponent implements OnInit {
     this.popupService.popupData$.subscribe((plan) => {
 
       if (plan) {
+        this.paymentSummary.planKey = plan.planKey;
         this.paymentSummary.planName = plan.planName;
         this.paymentSummary.taxableAmount = plan.taxableAmount;
         this.paymentSummary.gstAmount = plan.gstAmount;
         this.paymentSummary.totalAmount = plan.totalAmount;
         this.paymentSummary.planMonths = plan.planMonths || 1;
+        this.paymentSummary.couponCode = plan.couponCode || null;
       }
     });
     this.translateService.setDefaultLang('en');
@@ -967,18 +972,23 @@ export class HeaderComponent implements OnInit {
     this.service.chaneStuRegister(data).subscribe({
       next: (res: any) => {
         // console.log(res);
+        const registeredUser = res.user || res;
+
+        if (res.access_token) {
+          sessionStorage.setItem('access_token', res.access_token);
+        }
 
         // Session Storage
-        sessionStorage.setItem('user_id', res.id.toString());
-        sessionStorage.setItem('student_id', res.student_id);
-        sessionStorage.setItem('user_type', res.user_type);
-        sessionStorage.setItem('school_name', res.first_name);
+        sessionStorage.setItem('user_id', String(registeredUser.user_id || registeredUser.id));
+        sessionStorage.setItem('student_id', registeredUser.student_id);
+        sessionStorage.setItem('user_type', registeredUser.user_type || data.user_type);
+        sessionStorage.setItem('school_name', registeredUser.first_name);
 
         // Payment Summary
         this.paymentSummary = {
           ...this.paymentSummary,
-          schoolId: res.student_id,
-          schoolName: res.first_name,
+          schoolId: registeredUser.student_id,
+          schoolName: registeredUser.first_name,
         };
 
         // console.log('Payment Summary Before Popup', this.paymentSummary);
@@ -1042,54 +1052,55 @@ export class HeaderComponent implements OnInit {
   }
 
   proceedPayment() {
+    if (this.isPaymentProcessing) return;
+
     if (
-      !this.paymentSummary.totalAmount ||
-      this.paymentSummary.totalAmount <= 0
+      !this.paymentSummary.planKey ||
+      !this.paymentSummary.planMonths
     ) {
-      this.openMessage("Payment Successful");
+      this.openMessage("Please select a plan to continue.");
       return;
     }
 
+    this.isPaymentProcessing = true;
+
     const data = {
-      user_id: Number(sessionStorage.getItem('user_id')),
-      student_id: sessionStorage.getItem('student_id'),
-      school_name: sessionStorage.getItem('school_name'),
-      plan_name: this.paymentSummary.planName,
-      total_amount: Number(this.paymentSummary.totalAmount),
-       plan_duration: String(this.paymentSummary.planMonths),
-
+      plan_key: this.paymentSummary.planKey,
+      plan_duration: Number(this.paymentSummary.planMonths),
+      coupon_code: this.paymentSummary.couponCode || null,
     };
-
-    console.log('Payment Request:', data);
 
     this.service.createSchoolOrder(data).subscribe({
       next: (res: any) => {
+        this.paymentSummary.taxableAmount = res.taxable_amount ?? this.paymentSummary.taxableAmount;
+        this.paymentSummary.gstAmount = res.gst_amount ?? this.paymentSummary.gstAmount;
+        this.paymentSummary.totalAmount = res.total_amount ?? this.paymentSummary.totalAmount;
         this.openRazorpay(res);
       },
       error: (err) => {
         console.error(err);
-
-
+        this.isPaymentProcessing = false;
         this.openMessage("Unable to create payment order.");
       },
     });
   }
   openRazorpay(order: any) {
-    console.log('Razorpay Order:', order);
-
     const options: any = {
       key: order.key,
       amount: order.amount,
       currency: order.currency,
       name: 'Teachly',
-      description: 'School Plan',
+      description: this.paymentSummary.planName,
       order_id: order.order_id,
       handler: (response: any) => {
         this.verifyPayment(response);
       },
+      modal: {
+        ondismiss: () => {
+          this.isPaymentProcessing = false;
+        }
+      }
     };
-
-    console.log('Opening Razorpay Amount:', options.amount);
 
     const rzp = new (window as any).Razorpay(options);
     rzp.open();
@@ -1097,35 +1108,25 @@ export class HeaderComponent implements OnInit {
 
   verifyPayment(payment: any) {
     const data = {
-      user_id: Number(sessionStorage.getItem('user_id')),
-
       razorpay_order_id: payment.razorpay_order_id,
-
       razorpay_payment_id: payment.razorpay_payment_id,
-
       razorpay_signature: payment.razorpay_signature,
     };
 
     this.service.verifySchoolPayment(data).subscribe({
       next: (res: any) => {
-
-
-
-        this.openMessage("Please select a plan to continue.");
-
-        this.openMessage('Coupon Code:' + res.coupon_code);
-
-
-
+        this.isPaymentProcessing = false;
+        this.openMessage(res.message || "Payment Successful");
+        if (res.coupon_code) {
+          this.openMessage('Coupon Code:' + res.coupon_code);
+        }
         this.showPaymentPopup = false;
       },
 
       error: (err) => {
         console.log(err);
-
+        this.isPaymentProcessing = false;
         this.openMessage("Payment Verification Failed.");
-
-
       },
     });
   }
