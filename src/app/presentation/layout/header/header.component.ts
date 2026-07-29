@@ -22,6 +22,7 @@ import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/services/api-service';
 import { PopupService } from '../../../core/services/popup.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 const LANGUAGE_MAP: { [key: string]: string } = {
   ENG: 'en',
@@ -98,6 +99,8 @@ export class HeaderComponent implements OnInit {
   isSearchModalOpen = signal(false);
   searchQuery = signal('');
   public service = inject(ApiService);
+  private readonly signupDraftStorageKey = 'teachly_signup_draft';
+  private isRestoringSignupDraft = false;
   get filteredSearchItems() {
     const query = this.searchQuery().toLowerCase().trim();
     if (!query) return [];
@@ -583,6 +586,7 @@ export class HeaderComponent implements OnInit {
     private fb: FormBuilder,
     private popupService: PopupService,
     private renderer: Renderer2,
+    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
@@ -625,7 +629,7 @@ export class HeaderComponent implements OnInit {
       { id: 1, name: 'CBSE' },
       { id: 2, name: 'ICSE' },
       { id: 3, name: 'ISC' },
-      { id: 4, name: 'UP BOard' },
+      { id: 4, name: 'UP Board' },
     ];
   }
   /* =========================
@@ -733,6 +737,64 @@ export class HeaderComponent implements OnInit {
 
     });
 
+    this.restoreSignupDraft();
+    this.signupForm.valueChanges.subscribe((formValue) => {
+      if (this.isRestoringSignupDraft) return;
+
+      const draft = {
+        name: formValue.name || '',
+        mobile: formValue.mobile || '',
+        Email: formValue.Email || '',
+        board: formValue.board || '',
+        class: formValue.class || '',
+      };
+
+      const hasDraftValue = Object.values(draft).some((value) => String(value).trim() !== '');
+      if (hasDraftValue) {
+        localStorage.setItem(this.signupDraftStorageKey, JSON.stringify(draft));
+      } else {
+        localStorage.removeItem(this.signupDraftStorageKey);
+      }
+    });
+
+  }
+
+  private restoreSignupDraft(): void {
+    const savedDraft = localStorage.getItem(this.signupDraftStorageKey);
+    if (!savedDraft || !this.signupForm) return;
+
+    try {
+      const draft = JSON.parse(savedDraft);
+      this.isRestoringSignupDraft = true;
+      this.signupForm.patchValue({
+        name: draft.name || '',
+        mobile: draft.mobile || '',
+        Email: draft.Email || '',
+        board: draft.board || '',
+        class: draft.class || '',
+        password: '',
+        confirmpassword: '',
+      }, { emitEvent: false });
+
+      if (draft.board) {
+        this.setClasses(Number(draft.board));
+        this.signupForm.patchValue({ class: draft.class || '' }, { emitEvent: false });
+      }
+    } catch {
+      localStorage.removeItem(this.signupDraftStorageKey);
+    } finally {
+      this.isRestoringSignupDraft = false;
+    }
+  }
+
+  private resetSignupFormWithDraft(tab: 'login' | 'signup'): void {
+    this.isRestoringSignupDraft = true;
+    this.signupForm.reset();
+    this.isRestoringSignupDraft = false;
+
+    if (tab === 'signup') {
+      this.restoreSignupDraft();
+    }
   }
   flattenTickerItems(): void {
     const items: string[] = [];
@@ -776,7 +838,7 @@ export class HeaderComponent implements OnInit {
     this.activeTab = tab;
     this.isSchoolSignup = isSchool;
     this.isSignupOpen = true;
-    this.signupForm.reset();
+    this.resetSignupFormWithDraft(tab);
     if (this.isSchoolSignup) {
       this.signupForm.get('board')?.clearValidators();
       this.signupForm.get('class')?.clearValidators();
@@ -874,17 +936,21 @@ export class HeaderComponent implements OnInit {
   submitForm() {
     if (this.signupForm.invalid) {
       this.signupForm.markAllAsTouched();
+      this.toastService.show('Please fill all required fields correctly.', 'error');
       return;
     }
 
     const form = this.signupForm.value;
+    const selectedBoard = this.boardList.find((board) => String(board.id) === String(form.board));
+    const selectedClass = this.classList.find((classItem) => String(classItem.id) === String(form.class));
+    const classNumber = selectedClass?.id ?? form.class;
 
     const data = {
       first_name: form.name,
       last_name: '',
 
-      class_name: this.isSchoolSignup ? null : form.class,
-      board: this.isSchoolSignup ? null : String(form.board),
+      class_name: this.isSchoolSignup ? null : `Class ${classNumber}`,
+      board: this.isSchoolSignup ? null : selectedBoard?.name,
 
       mobile_no: form.mobile,
 
@@ -919,6 +985,8 @@ export class HeaderComponent implements OnInit {
         // Open Payment Popup
         this.showPaymentPopup = true;
         this.headermsg = "Register Successfully";
+        this.toastService.show('Register Successfully', 'success');
+        localStorage.removeItem(this.signupDraftStorageKey);
 
         this.signupForm.reset();
 
@@ -934,10 +1002,43 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-
-        this.openMessage(err.error.detail);
+        const message = this.getApiErrorMessage(err);
+        this.toastService.show(message, 'error');
+        this.openMessage(message);
       },
     });
+  }
+
+  private getApiErrorMessage(err: any): string {
+    const error = err?.error;
+
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    if (error?.message) {
+      return error.message;
+    }
+
+    if (typeof error?.detail === 'string') {
+      return error.detail;
+    }
+
+    if (Array.isArray(error?.detail) && error.detail.length) {
+      return error.detail
+        .map((item: any) => item?.msg || item?.message)
+        .filter(Boolean)
+        .join(', ');
+    }
+
+    if (Array.isArray(error?.errors) && error.errors.length) {
+      return error.errors
+        .map((item: any) => item?.message)
+        .filter(Boolean)
+        .join(', ');
+    }
+
+    return 'Registration failed. Please try again.';
   }
 
   proceedPayment() {
