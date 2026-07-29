@@ -1153,7 +1153,7 @@ export class HeaderComponent implements OnInit {
 
     this.service.chaneStuLogin(data).subscribe({
 
-      next: (res: any) => {
+        next: (res: any) => {
 
   console.log(res);
 
