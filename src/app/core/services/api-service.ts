@@ -6,8 +6,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ApiService {
 
-  //private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
- private readonly baseUrl = 'http://127.0.0.1:8000';
+  private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
+//  private readonly baseUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) {}
 
@@ -65,6 +65,18 @@ applyCoopon(data: any) {
     data
   );
 }
+  // Placeholder path — replace with the real profile endpoint once the backend exposes it
+  getProfile(): Observable<any> {
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    return this.http.get<any>(`${this.baseUrl}/chanelstu/profile`, {
+      headers,
+    });
+  }
+
 generateTempToken() {
     const accessToken = sessionStorage.getItem('access_token');
     const userId = Number(sessionStorage.getItem('user_id'));

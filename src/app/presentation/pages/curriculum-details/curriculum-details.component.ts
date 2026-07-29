@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -11,11 +12,13 @@ import { ApiService } from '../../../core/services/api-service';
 @Component({
   selector: 'app-curriculum-details',
   standalone: true,
-  imports: [TranslateModule, HeaderComponent, FooterComponent, IframeEmbedComponent],
+  imports: [CommonModule, TranslateModule, HeaderComponent, FooterComponent, IframeEmbedComponent],
   templateUrl: './curriculum-details.component.html',
   styleUrls: ['./curriculum-details.component.scss']
 })
 export class CurriculumDetailsComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) headerComponent?: HeaderComponent;
 
   constructor(
   private route: ActivatedRoute,
@@ -290,14 +293,13 @@ learningLevels: [
    launchSimulation(): void {
 
   const token = sessionStorage.getItem('access_token');
-  const userId = sessionStorage.getItem('user_id');
 
  // console.log(token);
 
   if (!token) {
 
-    this.openMessage("Please login first");
-   
+    this.headerComponent?.openModal('login');
+
     return;
   }
 

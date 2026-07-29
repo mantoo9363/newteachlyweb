@@ -300,11 +300,22 @@
   white-space: nowrap;
   position: relative;
   z-index: 2;
+  cursor: pointer;
 }
 
 /* Login (minimal clean) */
 .pill-btn.login {
   color: #6b7280;
+}
+
+/* Upgrade (plain pill, no modifier class) */
+.pill-btn:not(.login):not(.signup) {
+  color: #6b7280;
+
+  &:hover {
+    color: #111;
+    background: rgba(124, 58, 237, 0.08);
+  }
 }
 
 /* Signup (main highlight) */
@@ -1088,9 +1099,11 @@
   position: relative;
   width: 90%;
   max-width: 490px;
+  max-height: 90vh;
+  overflow-y: auto;
   background: #ffffff;
   border-radius: 22px;
-  padding: 32px 22px 24px;
+  padding: 24px 22px 18px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
   animation: modalFade 0.3s ease;
 }
@@ -1132,20 +1145,103 @@
   }
 }
 
+.profile-avatar-block {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.profile-avatar-lg {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+  border: 3px solid #fff;
+  outline: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.profile-readonly-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.profile-readonly-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+
+  .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.skeleton {
+      display: block;
+      height: 14px;
+      margin-top: 2px;
+      border-radius: 6px;
+      background: linear-gradient(
+        90deg,
+        #e5e7eb 25%,
+        #f3f4f6 37%,
+        #e5e7eb 63%
+      );
+      background-size: 400% 100%;
+      animation: skeletonShimmer 1.4s ease infinite;
+    }
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
 /* Header */
 .signup-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 
   h3 {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
     color: #111827;
   }
 
   p {
-    font-size: 18px;
+    font-size: 14px;
     color: #6b7280;
+    margin: 2px 0 0;
   }
 }
 
@@ -1153,16 +1249,38 @@
 .signup-form {
   width: 100%;
 
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+
+    .input-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+
+      .input-group {
+        margin-bottom: 0;
+      }
+
+      .error {
+        margin: 2px 0 0 6px;
+      }
+    }
+  }
+
   .input-group {
     width: 100%;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
 
     input,
     select {
       width: 100%;
-      height: 48px; /* SAME HEIGHT */
+      height: 42px; /* SAME HEIGHT */
       padding: 0 14px;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid #e5e7eb;
       background: #f9fafb;
       font-size: 14px;
@@ -1182,24 +1300,68 @@
       box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
     }
   }
+
+  .password-group {
+    position: relative;
+
+    input {
+      padding-right: 42px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: color 0.2s ease, background 0.2s ease;
+
+      &:hover {
+        color: #7c3aed;
+        background: rgba(124, 58, 237, 0.08);
+      }
+
+      i {
+        font-size: 15px;
+      }
+    }
+  }
 }
 @media (max-width: 480px) {
   .signup-modal-content {
     width: 95%;
-    padding: 25px 16px;
+    padding: 18px 16px;
   }
 
   .input-group input,
   .input-group select {
-    height: 44px;
+    height: 40px;
     font-size: 13px;
+  }
+
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+
+    .input-col {
+      margin-bottom: 10px;
+    }
   }
 }
 
 /* Button */
 .submit-btn {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border-radius: 40px;
   border: none;
   font-weight: 600;
@@ -1208,7 +1370,7 @@
   background: linear-gradient(135deg, #7c3aed, #ec4899);
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 5px;
+  margin-top: 4px;
 
   &:hover {
     transform: translateY(-2px);
@@ -1218,8 +1380,8 @@
 
 .error{
     color:#dc3545;
-    font-size:13px;
-    margin-top:4px;
+    font-size:12px;
+    margin-bottom:8px;
     margin-left:6px;
     font-weight:500;
 }
@@ -1442,6 +1604,17 @@ font-weight:600;
   padding: 8px;
   z-index: 1100;
   animation: userDropdownIn 0.25s ease-out forwards;
+
+  // Invisible bridge so the pointer doesn't leave the container while
+  // crossing the gap between the avatar button and the dropdown
+  &::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+  }
 }
 
 @keyframes userDropdownIn {
