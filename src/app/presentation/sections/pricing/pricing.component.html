@@ -27,8 +27,8 @@
 
       <div class="action-row">
         <p class="validity">→ Validity (1 year)</p>
-        <button class="buy-btn" *ngIf="!hasPurchasedPackage()" (click)="openModal('signup', true, 'school')">
-          BUY NOW
+        <button class="buy-btn" [disabled]="isPurchasedPlan('school')" (click)="openModal('signup', true, 'school')">
+          {{ getBuyButtonText('school') }}
         </button>
       </div>
 
@@ -59,8 +59,8 @@
 
       <div class="action-row">
         <p class="validity">→ Validity (1 year)</p>
-        <button class="buy-btn" *ngIf="!hasPurchasedPackage()" (click)="openModal('signup', true, 'schooltech')">
-          BUY NOW
+        <button class="buy-btn" [disabled]="isPurchasedPlan('schooltech')" (click)="openModal('signup', true, 'schooltech')">
+          {{ getBuyButtonText('schooltech') }}
         </button>
       </div>
 
@@ -104,7 +104,7 @@
       <button class="view-btn" (click)="openPopup('tech')">View Details</button>
 
       <!-- Coupon -->
-      <div class="coupon-wrap" *ngIf="!hasPurchasedPackage()">
+      <div class="coupon-wrap" *ngIf="!isPurchasedPlan('tech')">
         <div class="coupon-field" *ngIf="appliedCoupons['tech'] === null">
           <input #techInput type="text" class="coupon-input" [(ngModel)]="couponCode" placeholder="Enter coupon code" />
           <button class="coupon-go" (click)="applyCoupon('tech', techInput)">
@@ -150,8 +150,8 @@
 
       <!-- Buy Button -->
 
-      <button class="buy-outline" *ngIf="!hasPurchasedPackage()" (click)="openModal('signup', false, 'tech')">
-        BUY NOW
+      <button class="buy-outline" [disabled]="isPurchasedPlan('tech')" (click)="openModal('signup', false, 'tech')">
+        {{ getBuyButtonText('tech') }}
       </button>
 
       <!-- Offer -->
@@ -189,7 +189,7 @@
       </button>
 
       <!-- Coupon -->
-      <div class="coupon-wrap" *ngIf="!hasPurchasedPackage()">
+      <div class="coupon-wrap" *ngIf="!isPurchasedPlan('smart')">
         <div class="coupon-field" *ngIf="appliedCoupons['smart'] === null">
           <input #smartInput type="text" class="coupon-input" placeholder="Enter coupon code" value="TEACH50" />
           <button class="coupon-go" (click)="applyCoupon('smart', smartInput)">
@@ -234,8 +234,8 @@
 
       <div class="divider"></div>
 
-      <button class="buy-outline" *ngIf="!hasPurchasedPackage()" (click)="openModal('signup', false, 'smart')">
-        BUY NOW
+      <button class="buy-outline" [disabled]="isPurchasedPlan('smart')" (click)="openModal('signup', false, 'smart')">
+        {{ getBuyButtonText('smart') }}
       </button>
     </div>
     <!-- CARD 5 -->
@@ -273,7 +273,7 @@
       </button>
 
       <!-- Coupon -->
-      <div class="coupon-wrap" *ngIf="!hasPurchasedPackage()">
+      <div class="coupon-wrap" *ngIf="!isPurchasedPlan('combo')">
         <div class="coupon-field" *ngIf="appliedCoupons['combo'] === null">
           <input #comboInput type="text" class="coupon-input" placeholder="Enter coupon code" value="TEACH63" />
           <button class="coupon-go" (click)="applyCoupon('combo', comboInput)">
@@ -318,8 +318,8 @@
 
       <div class="divider"></div>
 
-      <button class="buy-outline" *ngIf="!hasPurchasedPackage()" (click)="openModal('signup', false, 'combo')">
-        BUY NOW
+      <button class="buy-outline" [disabled]="isPurchasedPlan('combo')" (click)="openModal('signup', false, 'combo')">
+        {{ getBuyButtonText('combo') }}
       </button>
     </div>
   </div>
@@ -395,7 +395,7 @@
 
         </div>
 
-        <div class="section" *ngIf="selectedPlan.type !== 'yearly' && !hasPurchasedPackage()">
+        <div class="section" *ngIf="selectedPlan.type !== 'yearly' && !isPurchasedPlan(selectedPlanKey)">
 
           <h4>Coupon Code</h4>
 
@@ -499,8 +499,8 @@
 
         </div>
 
-        <button class="buy-btn" *ngIf="!hasPurchasedPackage()" (click)="buySelectedPlan()">
-          BUY NOW
+        <button class="buy-btn" [disabled]="isPurchasedPlan(selectedPlanKey)" (click)="buySelectedPlan()">
+          {{ getBuyButtonText(selectedPlanKey) }}
         </button>
 
       </div>

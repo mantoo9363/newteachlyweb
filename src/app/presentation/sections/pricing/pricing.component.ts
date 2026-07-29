@@ -64,12 +64,20 @@ export class PricingComponent {
     return this.paymentPrices[plan] * this.planMonths[plan];
   }
 
-  hasPurchasedPackage(): boolean {
+  hasActivePackage(): boolean {
     return sessionStorage.getItem('has_active_package') === 'true';
   }
 
+  isPurchasedPlan(plan: string): boolean {
+    return this.hasActivePackage() && sessionStorage.getItem('active_package_key') === plan;
+  }
+
+  getBuyButtonText(plan: string): string {
+    return this.isPurchasedPlan(plan) ? 'SELECTED' : 'BUY NOW';
+  }
+
   applyCoupon(plan: PlanKey, inputEl: HTMLInputElement): void {
-    if (this.hasPurchasedPackage()) return;
+    if (this.isPurchasedPlan(plan)) return;
 
     const code = inputEl.value.trim().toUpperCase();
 
@@ -298,8 +306,8 @@ export class PricingComponent {
   };
 
   openModal(tab: 'login' | 'signup', isSchool: boolean = false, plan?: string): void {
-    if (this.hasPurchasedPackage()) {
-      this.toastService.show('You already have an active package.', 'success');
+    if (plan && this.isPurchasedPlan(plan)) {
+      this.toastService.show('This package is already selected.', 'success');
       return;
     }
 
@@ -356,10 +364,9 @@ export class PricingComponent {
   }
 
   applyPopupCoupon(): void {
-    if (this.hasPurchasedPackage()) return;
-
     const plan = this.selectedPlanKey;
     if (plan !== 'tech' && plan !== 'smart' && plan !== 'combo') return;
+    if (this.isPurchasedPlan(plan)) return;
 
     const code = this.popupCouponCode.trim().toUpperCase();
     if (!code) return;

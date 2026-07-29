@@ -267,6 +267,20 @@
   transform: translateY(-2px);
 }
 
+.buy-outline:disabled,
+.buy-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.buy-outline:disabled:hover,
+.buy-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 /* ==========================================================
    COUPON
 ========================================================== */

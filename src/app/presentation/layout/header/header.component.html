@@ -130,9 +130,7 @@
             [ngClass]="activeTab === 'login' ? 'signup active' : 'login'">
             Login
           </a>
-          @if (!hasPurchasedPackage()) {
           <a class="pill-btn" (click)="scroll()"> Upgrade </a>
-          }
         </div>
         }
 

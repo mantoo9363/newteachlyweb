@@ -1,106 +1,69 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { API_ENDPOINTS } from '../api/api-endpoints';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-
-  private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
-//  private readonly baseUrl = 'http://127.0.0.1:8000';
+  private readonly baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
+
+  private url(endpoint: string): string {
+    return `${this.baseUrl}${endpoint}`;
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const accessToken = sessionStorage.getItem('access_token');
     return new HttpHeaders({
-      Authorization: `Bearer ${accessToken || ''}`
+      Authorization: `Bearer ${accessToken || ''}`,
     });
   }
 
-  // ===============================
-  // Landing API
-  // ===============================
-  
-
-  // ===============================
-  // School / Student Register
-  // ===============================
   chaneStuRegister(data: any): Observable<any> {
-    return this.http.post(
-      `${this.baseUrl}/chanelstu/chanesturegister`,
-      data
-    );
+    return this.http.post(this.url(API_ENDPOINTS.chanelStudent.register), data);
   }
 
-  // ===============================
-  // School / Student Login
-  // ===============================
   chaneStuLogin(data: any): Observable<any> {
-    return this.http.post(
-      `${this.baseUrl}/chanelstu/chanestulogin`,
-      data
-    );
+    return this.http.post(this.url(API_ENDPOINTS.chanelStudent.login), data);
   }
 
-createSchoolOrder(data: any) {
-  return this.http.post(
-    this.baseUrl + '/school-payment/create-order',
-    data,
-    { headers: this.getAuthHeaders() }
-  );
-}
-
-verifySchoolPayment(data: any) {
-  return this.http.post(
-    this.baseUrl + '/school-payment/verify-payment',
-    data,
-    { headers: this.getAuthHeaders() }
-  );
-}
-
-getSchoolPaymentHistory(userId: number) {
-  return this.http.get(
-    `${this.baseUrl}/school-payment/history/${userId}`,
-    { headers: this.getAuthHeaders() }
-  );
-}
-
-applyCoopon(data: any) {
-  return this.http.post(
-    this.baseUrl + '/school-payment/apply_coupon',
-    data
-  );
-}
-  // Placeholder path — replace with the real profile endpoint once the backend exposes it
   getProfile(): Observable<any> {
-    const accessToken = sessionStorage.getItem('access_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${accessToken}`,
-    });
-
-    return this.http.get<any>(`${this.baseUrl}/chanelstu/profile`, {
-      headers,
+    return this.http.get<any>(this.url(API_ENDPOINTS.chanelStudent.profile), {
+      headers: this.getAuthHeaders(),
     });
   }
 
-generateTempToken() {
-    const accessToken = sessionStorage.getItem('access_token');
-    const userId = Number(sessionStorage.getItem('user_id'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${accessToken}`
+  createSchoolOrder(data: any): Observable<any> {
+    return this.http.post(this.url(API_ENDPOINTS.schoolPayment.createOrder), data, {
+      headers: this.getAuthHeaders(),
     });
+  }
 
+  verifySchoolPayment(data: any): Observable<any> {
+    return this.http.post(this.url(API_ENDPOINTS.schoolPayment.verifyPayment), data, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getSchoolPaymentHistory(userId: number): Observable<any> {
+    return this.http.get(this.url(API_ENDPOINTS.schoolPayment.history(userId)), {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  applyCoopon(data: any): Observable<any> {
+    return this.http.post(this.url(API_ENDPOINTS.schoolPayment.applyCoupon), data);
+  }
+
+  generateTempToken(): Observable<any> {
     return this.http.post<any>(
-      `${this.baseUrl}/token/generate-token`,
-      {
-        user_id: ''
-      },
-      {
-        headers
-      }
+      this.url(API_ENDPOINTS.token.generateTempToken),
+      { user_id: '' },
+      { headers: this.getAuthHeaders() }
     );
   }
-
 }

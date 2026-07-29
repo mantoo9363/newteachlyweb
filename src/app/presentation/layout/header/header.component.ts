@@ -176,6 +176,10 @@ export class HeaderComponent implements OnInit {
     return sessionStorage.getItem('has_active_package') === 'true';
   }
 
+  private isPurchasedPlan(planKey: string): boolean {
+    return this.hasPurchasedPackage() && sessionStorage.getItem('active_package_key') === planKey;
+  }
+
   private setPackageStatusFromResponse(res: any): void {
     const hasActivePackage = Boolean(
       res?.user?.has_active_package ||
@@ -184,6 +188,20 @@ export class HeaderComponent implements OnInit {
     );
 
     sessionStorage.setItem('has_active_package', String(hasActivePackage));
+
+    const activePackageKey = res?.active_package_key || res?.payment?.active_package_key || res?.user?.active_package_key;
+    if (activePackageKey && hasActivePackage) {
+      sessionStorage.setItem('active_package_key', activePackageKey);
+    } else if (!hasActivePackage) {
+      sessionStorage.removeItem('active_package_key');
+    }
+
+    const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
+    if (packageExpiresAt && hasActivePackage) {
+      sessionStorage.setItem('package_expires_at', packageExpiresAt);
+    } else if (!hasActivePackage) {
+      sessionStorage.removeItem('package_expires_at');
+    }
   }
 
   private syncPackageStatus(): void {
@@ -192,12 +210,61 @@ export class HeaderComponent implements OnInit {
 
     this.service.getSchoolPaymentHistory(userId).subscribe({
       next: (payments: any) => {
-        const hasActivePackage = Array.isArray(payments)
-          && payments.some((payment: any) => payment?.payment_status === 'SUCCESS');
+        const activePayment = Array.isArray(payments)
+          ? payments.find((payment: any) => payment?.is_active)
+          : null;
+        const hasActivePackage = Boolean(activePayment);
+
         sessionStorage.setItem('has_active_package', String(hasActivePackage));
+
+        if (activePayment?.active_package_key) {
+          sessionStorage.setItem('active_package_key', activePayment.active_package_key);
+        } else {
+          sessionStorage.removeItem('active_package_key');
+        }
+
+        if (activePayment?.expires_at) {
+          sessionStorage.setItem('package_expires_at', activePayment.expires_at);
+        } else {
+          sessionStorage.removeItem('package_expires_at');
+        }
       },
       error: () => {
         sessionStorage.removeItem('has_active_package');
+        sessionStorage.removeItem('active_package_key');
+        sessionStorage.removeItem('package_expires_at');
+      }
+    });
+  }
+
+  private loadLoggedInProfile(): void {
+    if (!sessionStorage.getItem('access_token')) return;
+
+    this.service.getProfile().subscribe({
+      next: (profile: any) => {
+        this.profileData = profile;
+
+        if (profile?.user_id) {
+          sessionStorage.setItem('user_id', String(profile.user_id));
+        }
+
+        if (profile?.student_id) {
+          sessionStorage.setItem('student_id', profile.student_id);
+        }
+
+        if (profile?.first_name) {
+          sessionStorage.setItem('school_name', profile.first_name);
+        }
+
+        if (profile?.user_type) {
+          sessionStorage.setItem('user_type', profile.user_type);
+        }
+
+        this.setPackageStatusFromResponse(profile);
+      },
+      error: (err) => {
+        console.error('Failed to load profile', err);
+        this.syncPackageStatus();
       }
     });
   }
@@ -678,7 +745,7 @@ export class HeaderComponent implements OnInit {
     this.translateService.use('en');
 
     this.createForms();
-    this.syncPackageStatus();
+    this.loadLoggedInProfile();
     this.updateActiveClass();
     // this.getBoardsAndClasses();
 
@@ -914,8 +981,8 @@ export class HeaderComponent implements OnInit {
   openModal(tab: 'login' | 'signup', isSchool: boolean = false) {
 
     if (tab === 'signup' && this.isLoggedIn && this.paymentSummary.planName) {
-      if (this.hasPurchasedPackage()) {
-        this.openMessage("You already have an active package.");
+      if (this.isPurchasedPlan(this.paymentSummary.planKey)) {
+        this.openMessage("This package is already selected.");
         return;
       }
 
@@ -1088,31 +1155,42 @@ export class HeaderComponent implements OnInit {
 
       next: (res: any) => {
 
-        sessionStorage.setItem("access_token", res.access_token);
-        sessionStorage.setItem('user_id', res.user.user_id.toString());
-        sessionStorage.setItem('student_id', res.user.student_id);
-        sessionStorage.setItem('school_name', res.user.first_name);
-        sessionStorage.setItem('user_type', res.user.user_type || '');
-        this.setPackageStatusFromResponse(res);
+  console.log(res);
 
-        this.headermsg = "Login Successfully";
-        this.closeSignupModal();
+  // Payment pending
+  if (res.payment_required) {
 
-        if (this.hasPurchasedPackage()) {
-          this.showPaymentPopup = false;
-          this.openMessage("You already have an active package.");
-        } else if (this.paymentSummary?.planName) {
-          this.paymentSummary = {
-            ...this.paymentSummary,
-            schoolId: res.user.student_id,
-            schoolName: res.user.first_name,
-            userid: res.user.user_id,
-          };
-          this.showPaymentPopup = true;
-        } else {
-          this.openMessage("Please select a plan to continue.");
-        }
-      },
+    this.paymentSummary = {
+      planName: res.payment?.plan_name,
+      taxableAmount: res.payment?.taxable_amount,
+      gstAmount: res.payment?.gst_amount,
+      totalAmount: res.payment?.total_amount,
+
+      schoolId: res.user.student_id,
+      schoolName: res.user.first_name,
+      userid: res.user.user_id
+    };
+
+    this.closeSignupModal();
+    this.showPaymentPopup = true;
+    return;
+  }
+
+  // Login Success
+  sessionStorage.setItem("access_token", res.access_token);
+  sessionStorage.setItem('user_id', res.user.user_id.toString());
+  sessionStorage.setItem('student_id', res.user.student_id);
+  sessionStorage.setItem('school_name', res.user.first_name);
+  sessionStorage.setItem('user_type', res.user.user_type || '');
+  this.setPackageStatusFromResponse(res);
+
+  this.headermsg = "Login Successfully";
+  this.closeSignupModal();
+
+  // Dashboard
+  this.router.navigate(['/dashboard']);
+
+},
 
       error: (err: any) => {
         console.log(err);
@@ -1251,9 +1329,9 @@ export class HeaderComponent implements OnInit {
   proceedPayment() {
     if (this.isPaymentProcessing) return;
 
-    if (this.hasPurchasedPackage()) {
+    if (this.isPurchasedPlan(this.paymentSummary.planKey)) {
       this.showPaymentPopup = false;
-      this.openMessage("You already have an active package.");
+      this.openMessage("This package is already selected.");
       return;
     }
 
@@ -1315,6 +1393,7 @@ export class HeaderComponent implements OnInit {
     this.service.verifySchoolPayment(data).subscribe({
       next: (res: any) => {
         this.setPackageStatusFromResponse(res);
+        this.loadLoggedInProfile();
         this.isPaymentProcessing = false;
         this.openMessage(res.message || "Payment Successful");
         if (res.coupon_code) {
@@ -1426,6 +1505,8 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('school_name');
     sessionStorage.removeItem('user_type');
     sessionStorage.removeItem('has_active_package');
+    sessionStorage.removeItem('active_package_key');
+    sessionStorage.removeItem('package_expires_at');
     this.userMenuOpen = false;
     window.location.reload();
   }
