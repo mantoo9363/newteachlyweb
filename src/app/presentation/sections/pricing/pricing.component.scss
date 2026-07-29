@@ -1,0 +1,1386 @@
+/* ==========================================================
+   PRICING SECTION
+========================================================== */
+
+.pricing-section {
+  padding: 50px 20px;
+  background: #f7f8fc;
+  text-align: center;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    max-width: 750px;
+    margin: 0 auto 30px;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+/* ==========================================================
+   PRICING CONTAINER
+========================================================== */
+
+.pricing-container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(340px, 1fr));
+  gap: 10px;
+
+  margin: auto;
+  max-width: 1200px;
+  align-items: stretch;
+  justify-items: center;
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.pricing-card,
+.modern-card {
+  width: 100%;
+  max-width: 360px;
+  min-height: auto;
+
+  background: #fff;
+  border-radius: 16px;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+
+  transition: 0.35s;
+}
+
+.pricing-card:hover,
+.modern-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================
+   SCHOOL CARD
+========================================================== */
+
+.school {
+  background: linear-gradient(180deg, #5b0f6b, #7b1fa2);
+
+  color: #fff;
+}
+
+.school .price span {
+  color: #ddd;
+}
+
+.school .divider {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.plan-label {
+  display: block;
+
+  font-size: 11px;
+
+  color: #999;
+
+  letter-spacing: 2px;
+
+  font-weight: 700;
+
+  margin-bottom: 10px;
+}
+
+.plan-title {
+  font-size: 22px;
+
+  font-weight: 700;
+
+  color: #222;
+
+  margin-bottom: 12px;
+}
+
+.school .plan-title {
+  color: #fff;
+}
+
+/* ==========================================================
+   PRICE
+========================================================== */
+
+.price-section {
+  display: flex;
+
+  justify-content: center;
+
+  margin: 0 auto;
+  align-items: center;
+
+  margin-bottom: 10px;
+}
+
+.old-price {
+  display: block;
+
+  text-decoration: line-through;
+
+  color: #999;
+
+  font-size: 13px;
+}
+
+.new-price {
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #111;
+}
+
+.new-price span {
+  font-size: 15px;
+
+  color: #777;
+
+  font-weight: 500;
+}
+
+.school .new-price {
+  color: #fff;
+}
+
+.school .old-price {
+  color: #ddd;
+}
+
+/* ==========================================================
+   DISCOUNT
+========================================================== */
+
+.discount-badge {
+  width: 72px;
+
+  height: 72px;
+
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #8a2be2, #5b21b6);
+
+  color: #fff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.discount-badge strong {
+  font-size: 24px;
+}
+
+.discount-badge span {
+  font-size: 11px;
+}
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+.view-btn,
+.buy-outline {
+  width: 100%;
+  height: 42px;
+
+  margin-top: 20px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: linear-gradient(90deg, #8a2be2, #5b21b6);
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+.view-btn {
+  margin: 12px 0;
+
+  border: 2px solid #7b1fa2;
+
+  color: #7b1fa2;
+
+  background: #fff;
+}
+
+.view-btn:hover {
+  background: #7b1fa2;
+
+  color: #fff;
+}
+
+.school .view-btn {
+  border-color: #fff;
+
+  color: #7b1fa2;
+}
+
+.school .view-btn:hover {
+  background: transparent;
+
+  color: #fff;
+}
+
+.buy-outline {
+  margin-top: auto;
+
+  border: none;
+
+  background: linear-gradient(135deg, #8a2be2, #5b21b6);
+
+  color: #fff;
+
+  margin-top: 25px;
+}
+
+.buy-outline:hover {
+  transform: translateY(-2px);
+}
+
+/* ==========================================================
+   COUPON
+========================================================== */
+
+.coupon-wrap {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.coupon-badge {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px 6px 12px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #064e3b, #047857);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
+  animation: badgePop 0.5s ease;
+}
+
+.coupon-badge.user-applied {
+  background: linear-gradient(135deg, #7c2d12, #b45309);
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.3);
+}
+
+.badge-icon {
+  font-size: 16px;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+.badge-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: shine 3s ease-in-out infinite;
+}
+
+.coupon-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px;
+  border: 1.5px solid #d1fae5;
+  border-radius: 10px;
+  background: #f0fdf4;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.coupon-field:focus-within {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+.coupon-input {
+  flex: 1;
+  height: 42px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+}
+
+.coupon-input {
+  flex: 1;
+
+  height: 36px;
+
+  padding: 0 12px;
+
+  border: 1.5px solid #34d399;
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: #111827;
+
+  font-size: 13px;
+
+  outline: none;
+
+  transition: all 0.3s ease;
+}
+
+.coupon-input::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.coupon-go {
+  min-width: 48px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.coupon-go:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.coupon-go:active {
+  transform: scale(0.95);
+}
+
+.coupon-applied {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 14px;
+  background: linear-gradient(135deg, #064e3b, #047857);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
+  animation: badgePop 0.5s ease;
+}
+
+.applied-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.remove-coupon {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  line-height: 1;
+}
+
+.remove-coupon:hover {
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(1.15);
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  20% {
+    left: 120%;
+  }
+  100% {
+    left: 120%;
+  }
+}
+
+/* ==========================================================
+   VALIDITY
+========================================================== */
+
+.validity {
+  margin-top: 10px;
+}
+
+.validity h4 {
+  font-size: 13px;
+
+  margin-bottom: 8px;
+}
+
+.month-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 8px;
+}
+
+.month-btn {
+  height: 36px;
+
+  border-radius: 10px;
+
+  border: 2px solid #7b1fa2;
+
+  background: #fff;
+
+  color: #7b1fa2;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.month-btn:hover,
+.month-btn.active {
+  background: #7b1fa2;
+
+  color: #fff;
+}
+
+/* ==========================================================
+   OFFER
+========================================================== */
+
+.offer-text {
+  margin-top: 10px;
+
+  padding-top: 10px;
+
+  border-top: 1px solid #eee;
+
+  font-size: 12px;
+
+  text-align: center;
+
+  color: #555;
+}
+
+.offer-text b {
+  color: #5b21b6;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1024px) {
+  .pricing-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-container {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card,
+  .modern-card {
+    max-width: 380px;
+  }
+
+  .pricing-section h1 {
+    font-size: 28px;
+  }
+}
+
+/* ==========================================================
+   POPUP OVERLAY
+========================================================== */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+
+  z-index: 99999;
+
+  animation: fade 0.3s ease;
+}
+
+/* ==========================================================
+   POPUP CARD
+========================================================== */
+
+.popup-card {
+  position: relative;
+
+  width: 1100px;
+  max-width: 95vw;
+
+  height: 85vh;
+
+  background: #fff;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+
+  animation: popup 0.35s ease;
+}
+
+/* ==========================================================
+   CLOSE BUTTON
+========================================================== */
+
+.close-btn {
+  position: absolute;
+
+  top: 18px;
+  right: 20px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 34px;
+
+  color: #333;
+
+  cursor: pointer;
+
+  z-index: 100;
+
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  color: #7b1fa2;
+
+  transform: rotate(90deg);
+}
+
+/* ==========================================================
+   POPUP CONTENT
+========================================================== */
+
+.popup-content {
+  display: flex;
+
+  height: 100%;
+}
+
+/* ==========================================================
+   LEFT PANEL
+========================================================== */
+
+.popup-left {
+  flex: 1;
+
+  padding: 35px;
+
+  overflow-y: auto;
+}
+
+.popup-left h2 {
+  color: #6a1b9a;
+
+  margin-bottom: 8px;
+}
+
+.popup-left .subtitle {
+  color: #777;
+
+  margin-bottom: 25px;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+
+/* ==========================================================
+   FEATURES
+========================================================== */
+
+.features-scroll {
+  max-height: 340px;
+
+  overflow-y: auto;
+
+  padding-right: 10px;
+}
+
+.features-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.features-scroll::-webkit-scrollbar-thumb {
+  background: #7b1fa2;
+
+  border-radius: 20px;
+}
+
+.features-scroll::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+.feature-columns {
+  display: flex;
+
+  gap: 20px;
+}
+
+.feature-box {
+  flex: 1;
+
+  background: #fafafa;
+
+  border: 1px solid #e6e6e6;
+
+  border-radius: 15px;
+
+  padding: 18px;
+}
+
+.feature-box h5 {
+  color: #6a1b9a;
+
+  font-size: 18px;
+
+  margin-bottom: 15px;
+}
+
+.feature-box ul {
+  list-style: none;
+
+  margin: 0;
+
+  padding: 0;
+}
+
+.feature-box li {
+  padding: 8px 0;
+
+  border-bottom: 1px solid #eee;
+
+  font-size: 15px;
+}
+
+.feature-box li:last-child {
+  border-bottom: none;
+}
+
+/* ==========================================================
+   RIGHT PANEL
+========================================================== */
+
+.popup-right {
+  width: 340px;
+
+  border-left: 1px solid #ececec;
+
+  background: #fafafa;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 30px;
+}
+
+/* ==========================================================
+   DURATION
+========================================================== */
+
+.duration-list {
+  display: flex;
+
+  gap: 12px;
+}
+
+.duration {
+  flex: 1;
+
+  border: 2px solid #ddd;
+
+  border-radius: 12px;
+
+  padding: 15px;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.duration.active {
+  border-color: #7b1fa2;
+
+  background: #f5edff;
+}
+
+.duration:hover {
+  border-color: #7b1fa2;
+}
+
+/* ==========================================================
+   COUPON
+========================================================== */
+
+.coupon-box {
+  display: flex;
+
+  gap: 12px;
+
+  margin: 25px 0;
+}
+
+.coupon-box input {
+  flex: 1;
+
+  height: 46px;
+
+  border: 2px solid #22c55e;
+
+  border-radius: 25px;
+
+  padding: 0 18px;
+
+  outline: none;
+}
+
+.coupon-box button {
+  width: 110px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: #7b1fa2;
+
+  color: #fff;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.coupon-box button:hover {
+  background: #651fff;
+}
+
+/* ==========================================================
+   PRICE
+========================================================== */
+
+.price-box {
+  text-align: center;
+
+  margin: 30px 0;
+}
+
+.old-price {
+  color: #999;
+
+  text-decoration: line-through;
+}
+
+.price-box h2 {
+  color: #7b1fa2;
+
+  font-size: 38px;
+
+  margin: 10px 0;
+}
+
+.discount {
+  color: #16a34a;
+
+  font-weight: 700;
+}
+
+/* ==========================================================
+   BUY BUTTON
+========================================================== */
+
+.all-in {
+  font-size: 13px;
+  margin: 4px 0 8px;
+  opacity: 0.85;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0 6px;
+
+  .validity {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .buy-btn {
+    width: auto;
+    height: 40px;
+    margin-top: 0;
+    padding: 0 24px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 65, 108, 0.4);
+    }
+  }
+}
+
+.buy-btn {
+  width: 100%;
+
+  height: 54px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #ff4b6e, #e91e63);
+
+  color: #fff;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.buy-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 25px rgba(233, 30, 99, 0.25);
+}
+
+/* ==========================================================
+   ANIMATION
+========================================================== */
+
+@keyframes popup {
+  from {
+    transform: scale(0.85);
+
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+  .popup-content {
+    flex-direction: column;
+  }
+
+  .popup-right {
+    width: 100%;
+
+    border-left: none;
+
+    border-top: 1px solid #eee;
+  }
+
+  .feature-columns {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .popup-card {
+    width: 100%;
+
+    height: 95vh;
+  }
+
+  .popup-left,
+  .popup-right {
+    padding: 20px;
+  }
+}
+
+/* ==========================================================
+   PLAN LOGO
+========================================================== */
+
+.popup-left {
+  position: relative;
+}
+
+.plan-logo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 140px;
+  height: 140px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.plan-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  opacity: 0.08;
+
+  border-radius: 50%;
+}
+
+/* ==========================================================
+   POPUP LOGO
+========================================================== */
+
+.popup-logo {
+  position: absolute;
+
+  top: 25px;
+  right: 420px;
+
+  width: 120px;
+  height: 120px;
+
+  z-index: 2;
+}
+
+.popup-logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+/* ==========================================================
+   INPUTS
+========================================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+  width: 100%;
+  height: 48px;
+
+  border: 2px solid #22c55e;
+
+  border-radius: 25px;
+
+  padding: 0 18px;
+
+  background: #fff;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #16a34a;
+
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+
+input::placeholder {
+  color: #777;
+}
+
+/* ==========================================================
+   APPLY BUTTON
+========================================================== */
+
+.apply-btn {
+  min-width: 120px;
+  height: 48px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: linear-gradient(135deg, #7b1fa2, #5b21b6);
+
+  color: #fff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(135deg, #6d28d9, #4c1d95);
+}
+
+/* ==========================================================
+   CUSTOM SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7b1fa2;
+
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5b21b6;
+}
+
+/* ==========================================================
+   COMMON TRANSITIONS
+========================================================== */
+
+button,
+input,
+.month-btn,
+.view-btn,
+.buy-btn,
+.buy-outline,
+.apply-btn {
+  transition: all 0.3s ease;
+}
+
+/* ==========================================================
+   CARD HOVER
+========================================================== */
+
+.pricing-card:hover,
+.modern-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+  .pricing-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-container {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card,
+  .modern-card {
+    max-width: 380px;
+    width: 100%;
+  }
+
+  .price-section {
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .coupon-field {
+    flex-direction: row;
+  }
+
+  .coupon-box {
+    flex-direction: column;
+  }
+
+  .coupon-box button,
+  .apply-btn {
+    width: 100%;
+  }
+
+  .duration-list {
+    flex-wrap: wrap;
+  }
+
+  .popup-logo {
+    display: none;
+  }
+
+  .plan-logo {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-section {
+    padding: 50px 15px;
+  }
+
+  .pricing-section h1 {
+    font-size: 28px;
+  }
+
+  .plan-title {
+    font-size: 24px;
+  }
+
+  .new-price {
+    font-size: 32px;
+  }
+
+  .discount-badge {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.offer-text {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #444;
+}
+
+.offer-text b {
+  color: #d60000;
+  font-size: 22px;
+  font-weight: 800;
+  animation: blinkOffer 1s infinite;
+}
+
+@keyframes blinkOffer {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.2;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* new scss for gif*/
+
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-gif {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 15px; // card ke dono side thoda gap
+  box-sizing: border-box;
+
+  img {
+    width: 100%;
+    max-width: 220px; // desktop par maximum size
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+.tech-plan-offer {
+  width: 92%;
+  margin: 15px auto;
+  padding: 14px 18px;
+  background: #fff;
+  color: #6a1b9a;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: offerBlink 1s infinite;
+  transition: all 0.3s ease;
+}
+
+.tech-plan-offer strong {
+  color: #ff1744;
+  font-size: 20px;
+}
+
+@keyframes offerBlink {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.3);
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 0.75;
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.7);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.3);
+  }
+}
+
+.school-offer-box {
+  font-size: 11px;
+  text-align: center;
+  padding: 6px 0;
+  margin-top: 8px;
+  opacity: 0.9;
+}

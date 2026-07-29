@@ -1,0 +1,587 @@
+<header class="header">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <div class="logo">
+        <a routerLink="/" (click)="closeMobileMenu()">
+          <img src="image/TEACHLY LOGO Circle.png" alt="Teachly logo" title="Teachly Logo" class="logo-img"
+            fetchpriority="high" />
+        </a>
+      </div>
+
+      <div class="desktop-nav">
+        <ul class="nav-links">
+          @for (menu of navigationMenu; track menu.title) {
+          <li class="nav-item" (mouseenter)="setActiveDropdown(menu.title)" (mouseleave)="setActiveDropdown(null)">
+            @if (menu.type === "link") {
+            @if (menu.url && menu.url.startsWith("http")) {
+            <a [href]="menu.url" target="_blank" class="nav-link">
+              @if (menu.icon) {
+              <i [class]="menu.icon" class="nav-icon-animated"></i>
+              }
+              {{ menu.title }}
+            </a>
+            } @else if (menu.url) {
+            <a [routerLink]="getRoutePath(menu.url)" [queryParams]="getRouteQueryParams(menu.url)" class="nav-link"
+              routerLinkActive="active" [routerLinkActiveOptions]="{ exact: menu.url === '/' }">
+              @if (menu.icon) {
+              <i [class]="menu.icon" class="nav-icon-animated"></i>
+              }
+              {{ menu.title }}
+            </a>
+            } @else {
+            <span class="nav-link no-link">
+              @if (menu.icon) {
+              <i [class]="menu.icon" class="nav-icon-animated"></i>
+              }
+              {{ menu.title }}
+            </span>
+            }
+            } @else {
+            <div class="dropdown-trigger" [class.active]="isDropdownActive(menu)">
+              <span class="nav-link" [class.active]="isDropdownActive(menu)">{{ menu.title }}</span>
+              <i class="fas fa-chevron-down dropdown-icon" [class.active]="isDropdownActive(menu)"></i>
+            </div>
+
+            @if (activeDropdown() === menu.title) {
+            <div class="dropdown-menu">
+              @for (item of menu.items; track item.title) {
+              <div class="dropdown-item-container" (mouseenter)="
+                          item.type === 'nested-dropdown'
+                            ? activeSubDropdown.set(item.title)
+                            : null
+                        " (mouseleave)="
+                          item.type === 'nested-dropdown'
+                            ? activeSubDropdown.set(null)
+                            : null
+                        ">
+                @if (item.type === "nested-dropdown") {
+                <div class="dropdown-item nested-trigger" [class.active]="
+                              isDropdownActive({
+                                type: 'dropdown',
+                                items: [item],
+                              })
+                            ">
+                  <span>{{ item.title }}</span>
+                  <i class="fas fa-chevron-right nested-icon"></i>
+
+                  @if (activeSubDropdown() === item.title) {
+                  <div class="sub-dropdown-menu">
+                    @for (
+                    subItem of item.items;
+                    track subItem.title
+                    ) {
+                    @if (subItem.url.startsWith("http")) {
+                    <a [href]="subItem.url" target="_blank" class="dropdown-item">{{ subItem.title }}</a>
+                    } @else {
+                    <a [routerLink]="getRoutePath(subItem.url)" [queryParams]="
+                                        getRouteQueryParams(subItem.url)
+                                      " class="dropdown-item" routerLinkActive="active">{{ subItem.title }}</a>
+                    }
+                    }
+                  </div>
+                  }
+                </div>
+                } @else {
+                @if (item.url.startsWith("http")) {
+                <a [href]="item.url" target="_blank" class="dropdown-item">{{ item.title }}</a>
+                } @else {
+                <a [routerLink]="getRoutePath(item.url)" [queryParams]="getRouteQueryParams(item.url)"
+                  class="dropdown-item" routerLinkActive="active">{{ item.title }}</a>
+                }
+                }
+              </div>
+              }
+            </div>
+            }
+            }
+          </li>
+          }
+        </ul>
+      </div>
+
+      <div class="nav-right">
+        <button class="search-trigger" (click)="toggleSearchModal()" aria-label="Open search">
+          <i class="fas fa-search"></i>
+        </button>
+        @if (isLoggedIn) {
+        <div class="user-menu-container" (mouseleave)="closeUserMenu()">
+          <button class="user-avatar-btn" (click)="toggleUserMenu()" title="{{ userName }}">
+            <span class="user-avatar">{{ getUserInitials() }}</span>
+            <i class="fas fa-chevron-down user-chevron" [class.open]="userMenuOpen"></i>
+          </button>
+          @if (userMenuOpen) {
+          <div class="user-dropdown">
+            <a class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
+              <i class="fas fa-user"></i> My Profile
+            </a>
+            <a class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
+              <i class="fas fa-lock"></i> Change Password
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a class="user-dropdown-item logout" (click)="logout(); $event.stopPropagation()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="auth-pill">
+          <a (click)="openModal('login')" class="pill-btn signup active"
+            [ngClass]="activeTab === 'login' ? 'signup active' : 'login'">
+            Login
+          </a>
+          <a class="pill-btn" (click)="scroll()"> Upgrade </a>
+        </div>
+        }
+
+        <button class="hamburger-menu" (click)="toggleMobileMenu()" aria-label="Toggle mobile menu"
+          [class.active]="mobileMenuOpen()">
+          <div class="hamburger-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="menu-label">Menu</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" [class.open]="mobileMenuOpen()" (click)="closeMobileMenu()"></div>
+
+  <aside class="mobile-menu" [class.open]="mobileMenuOpen()">
+    <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close mobile menu">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="mobile-course-sections">
+      @for (menu of navigationMenu; track menu.title) {
+      <div class="mobile-section">
+        @if (menu.type === "link") {
+        @if (menu.url && menu.url.startsWith("http")) {
+        <a [href]="menu.url" target="_blank" class="mobile-section-header no-chevron" (click)="closeMobileMenu()">
+          @if (menu.icon) {
+          <i [class]="menu.icon" class="mobile-icon"></i>
+          }
+          <span class="mobile-section-title">{{ menu.title }}</span>
+        </a>
+        } @else if (menu.url) {
+        <a [routerLink]="getRoutePath(menu.url)" [queryParams]="getRouteQueryParams(menu.url)"
+          class="mobile-section-header no-chevron" routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: menu.url === '/' }" (click)="closeMobileMenu()">
+          @if (menu.icon) {
+          <i [class]="menu.icon" class="mobile-icon"></i>
+          }
+          <span class="mobile-section-title">{{ menu.title }}</span>
+        </a>
+        } @else {
+        <div class="mobile-section-header no-chevron">
+          @if (menu.icon) {
+          <i [class]="menu.icon" class="mobile-icon"></i>
+          }
+          <span class="mobile-section-title">{{ menu.title }}</span>
+        </div>
+        }
+        } @else {
+        <div class="mobile-section-header" [class.active]="isDropdownActive(menu)" (click)="toggleSection(menu.title)">
+          <span class="mobile-section-title">{{ menu.title }}</span>
+          <i class="fas fa-chevron-down toggle-icon" [class.rotated]="expandedSections() === menu.title"
+            [class.active]="isDropdownActive(menu)"></i>
+        </div>
+
+        @if (expandedSections() === menu.title) {
+        <div class="mobile-section-links">
+          @for (item of menu.items; track item.title) {
+          @if (item.type === "nested-dropdown") {
+          <div class="mobile-nested-section">
+            <div class="mobile-nested-header" [class.active]="
+                          isDropdownActive({ type: 'dropdown', items: [item] })
+                        " (click)="
+                          toggleItem(item.title); $event.stopPropagation()
+                        ">
+              <span>{{ item.title }}</span>
+              <i class="fas fa-chevron-down toggle-icon" [class.rotated]="expandedItems() === item.title"
+                [class.active]="
+                            isDropdownActive({
+                              type: 'dropdown',
+                              items: [item],
+                            })
+                          "></i>
+            </div>
+            @if (expandedItems() === item.title) {
+            <div class="mobile-nested-links">
+              @for (subItem of item.items; track subItem.title) {
+              @if (subItem.url.startsWith("http")) {
+              <a [href]="subItem.url" target="_blank" class="mobile-link" (click)="closeMobileMenu()">
+                {{ subItem.title }}
+              </a>
+              } @else {
+              <a [routerLink]="getRoutePath(subItem.url)" [queryParams]="getRouteQueryParams(subItem.url)"
+                class="mobile-link" routerLinkActive="active" (click)="closeMobileMenu()">
+                {{ subItem.title }}
+              </a>
+              }
+              }
+            </div>
+            }
+          </div>
+          } @else {
+          @if (item.url.startsWith("http")) {
+          <a [href]="item.url" target="_blank" class="mobile-link" (click)="closeMobileMenu()">
+            {{ item.title }}
+          </a>
+          } @else {
+          <a [routerLink]="getRoutePath(item.url)" [queryParams]="getRouteQueryParams(item.url)" class="mobile-link"
+            routerLinkActive="active" (click)="closeMobileMenu()">
+            {{ item.title }}
+          </a>
+          }
+          }
+          }
+        </div>
+        }
+        }
+      </div>
+      }
+    </div>
+  </aside>
+  <!-- Signup Modal -->
+  @if (isSignupOpen) {
+  <div class="signup-modal-overlay">
+    <div class="signup-modal-content">
+      <!-- Close Button -->
+      <button class="close-btn" (click)="closeSignupModal()">✕</button>
+
+      <!-- Toggle Tabs -->
+      <div class="auth-pill">
+        <a (click)="openModal('login')" class="pill-btn" [ngClass]="activeTab === 'login' ? 'signup active' : 'login'">
+          Login
+        </a>
+
+        <a (click)="openModal('signup')" class="pill-btn"
+          [ngClass]="activeTab === 'signup' ? 'signup active' : 'login'">
+          Sign Up
+        </a>
+      </div>
+      <!-- LOGIN FORM -->
+      @if (activeTab === "login") {
+      <div class="signup-header">
+        <h3>Login</h3>
+        <p>Welcome back!</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="signup-form">
+        <div class="input-group">
+          <input type="email" formControlName="email" placeholder="Email">
+        </div>
+
+        <div class="input-group">
+          <input type="password" placeholder="Password" formControlName="password" />
+        </div>
+
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+      }
+
+      <!-- SIGNUP FORM -->
+      @if (activeTab === "signup") {
+      <div class="signup-header">
+        <h3>Signup Now</h3>
+        <p>Create your account in seconds</p>
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="submitForm()" class="signup-form">
+        <div class="input-group">
+          <input type="text" placeholder="Name" formControlName="name" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('name')?.touched &&
+            signupForm.get('name')?.errors?.['required']">
+
+          Name is required.
+
+        </div>
+
+        <div class="input-group">
+          <input type="text" placeholder="Mobile Number" formControlName="mobile" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('mobile')?.touched &&
+            signupForm.get('mobile')?.errors?.['required']">
+
+          Mobile Number is required.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('mobile')?.errors?.['pattern']">
+
+          Enter valid 10 digit mobile number.
+
+        </div>
+
+        <div class="input-group">
+          <input type="text" placeholder="Email" formControlName="Email" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('Email')?.touched &&
+            signupForm.get('Email')?.errors?.['required']">
+
+          Email is required.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('Email')?.errors?.['email']">
+
+          Enter valid Email Address.
+
+        </div>
+
+        <div class="input-group">
+          <select formControlName="board" (change)="setClasses(+$any($event.target).value)">
+
+            <option [ngValue]="null">Select Board</option>
+
+            <option *ngFor="let item of boardList" [ngValue]="item.id">
+              {{ item.name }}
+            </option>
+
+          </select>
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('board')?.touched &&
+            signupForm.get('board')?.errors?.['required']">
+
+          Please select board.
+
+        </div>
+
+        <div class="input-group" *ngIf="!isSchoolSignup">
+          <select formControlName="class" [disabled]="!classList.length">
+            <option value="">Select Class</option>
+
+            @for (item of classList; track item.id) {
+            <option [value]="item.id">
+              {{ item.name }}
+            </option>
+            }
+
+            @if (!classList.length) {
+            <option disabled>No Classes Available</option>
+            }
+          </select>
+        </div>
+        <div class="error" *ngIf="!isSchoolSignup &&
+            signupForm.get('class')?.touched &&
+            signupForm.get('class')?.errors?.['required']">
+
+          Please select class.
+
+        </div>
+
+
+
+        <div class="input-group">
+          <input type="password" placeholder="Create Password" formControlName="password" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('password')?.touched &&
+            signupForm.get('password')?.errors?.['required']">
+
+          Password is required.
+
+        </div>
+
+        <div class="input-group">
+          <input type="password" placeholder="Confirm Password" formControlName="confirmpassword" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.errors?.['passwordMismatch'] &&
+         signupForm.get('confirmpassword')?.touched">
+
+          Password and Confirm Password do not match.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('confirmpassword')?.touched &&
+            signupForm.get('confirmpassword')?.errors?.['required']">
+
+          Confirm Password is required.
+
+        </div>
+        <div class="error" *ngIf="signupForm.get('password')?.errors?.['minlength']">
+
+          Password should be minimum 6 characters.
+
+        </div>
+        <!-- Board -->
+
+
+        <!-- Class -->
+        <!-- Class -->
+        <!-- Class -->
+        <!-- Class -->
+
+
+
+
+        <button type="submit" class="submit-btn">Register</button>
+      </form>
+      }
+    </div>
+  </div>
+  }
+  <!-- =========================================
+        PAYMENT SUMMARY POPUP
+  ========================================== -->
+
+  @if (showPaymentPopup) {
+
+  <div class="payment-overlay">
+
+    <div class="payment-popup">
+
+      <div class="payment-header">
+
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+        <h2>{{headermsg}}</h2>
+
+
+
+      </div>
+
+      <div class="payment-body">
+
+        <div class="school-details">
+
+          <div class="detail-row">
+            <span>ID</span>
+            <strong>{{ paymentSummary.schoolId }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span> Name</span>
+            <strong>{{ paymentSummary.schoolName }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Plan</span>
+            <strong>{{ paymentSummary.planName }}</strong>
+          </div>
+
+        </div>
+
+        <div class="summary-box">
+
+          <h3>Payment Summary</h3>
+
+          <div class="detail-row">
+            <span>Taxable Amount</span>
+            <strong>₹{{ paymentSummary.taxableAmount }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>GST (18%)</span>
+            <strong>₹{{ paymentSummary.gstAmount }}</strong>
+          </div>
+
+          <hr>
+
+          <div class="detail-row total">
+            <span>Total Amount</span>
+            <strong>₹{{ paymentSummary.totalAmount }}</strong>
+          </div>
+
+        </div>
+
+        <div class="gst-note">
+          <i class="fas fa-check-circle"></i>
+          GST Included in Total Amount
+        </div>
+
+      </div>
+
+      <div class="payment-footer">
+
+        <button class="cancel-btn" (click)="showPaymentPopup = false">
+          Cancel
+        </button>
+
+        <button class="btn btn-success w-100 pay-btn" (click)="proceedPayment()">
+          Proceed To Payment
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+  <!-- Search Modal -->
+  @if (isSearchModalOpen()) {
+  <div class="search-modal-overlay" (click)="closeSearchModal()">
+    <div class="search-modal-content" (click)="$event.stopPropagation()">
+      <div class="search-modal-header">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input #searchInput type="text" placeholder="Search for courses, boards, skills..." [(ngModel)]="searchQuery"
+            (ngModelChange)="searchQuery.set($event)" autocomplete="off" />
+          @if (searchQuery()) {
+          <button class="clear-search" (click)="searchQuery.set('')">
+            <i class="fas fa-times"></i>
+          </button>
+          }
+        </div>
+        <button class="close-search-modal" (click)="closeSearchModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="search-results-container">
+        @if (!searchQuery()) {
+        <div class="search-placeholder">
+          <i class="fas fa-lightbulb"></i>
+          <p>
+            Type to search for courses, skills, and prepare for your future!
+          </p>
+        </div>
+        } @else if (filteredSearchItems.length > 0) {
+        <div class="search-results-list">
+          @for (item of filteredSearchItems; track item.title) {
+          <div class="search-result-item" (click)="onSearchItemClick(item.url)">
+            <div class="result-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="result-info">
+              <span class="result-title">{{ item.title }}</span>
+              <span class="result-url">{{ item.url }}</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon"></i>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="no-results">
+          <i class="fas fa-search-minus"></i>
+          <p>No results found for "{{ searchQuery() }}"</p>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+
+  <div class="message-overlay" *ngIf="showMessageModal">
+    <div class="message-modal">
+
+      <p>{{ message }}</p>
+
+      <button (click)="closeMessage()">OK</button>
+
+    </div>
+  </div>
+</header>

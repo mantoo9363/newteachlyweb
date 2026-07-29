@@ -1,0 +1,171 @@
+<section class="hero" role="region" aria-label="Hero section">
+  <div class="floating-subject-icons" aria-hidden="true">
+    <div class="subject-icon subject-icon-math">
+      <i class="fas fa-square-root-alt" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-science">
+      <i class="fas fa-flask" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-chemistry">
+      <i class="fas fa-atom" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-studies">
+      <i class="fas fa-book-open" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-materials">
+      <i class="fas fa-pencil-ruler" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-digital">
+      <i class="fas fa-laptop-code" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-doctor">
+      <i class="fas fa-stethoscope" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-heart">
+      <i class="fas fa-heart-pulse" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-biology">
+      <i class="fas fa-dna" aria-hidden="true"></i>
+    </div>
+    <div class="subject-icon subject-icon-pi">
+      <i class="fas fa-pi" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="hero-container" [ngClass]="heroContent[activeIndex].theme">
+    <div class="hero-content-wrapper">
+      @if (heroContent[activeIndex].type === "platform-overview") {
+        <div class="overview-content">
+          <div class="overview-header">
+            <h1 class="brand-name">TEACHLY</h1>
+            <p class="brand-tagline">
+              INDIA'S FIRST ONE-STOP LEARNING PLATFORM
+            </p>
+            <div class="keyword-cloud">
+              Class 5 to College · CBSE · ICSE · UP Board · AI · Drone ·
+              Robotics · CAD · Ask Doubt 24/7
+            </div>
+          </div>
+
+          <div class="features-grid">
+            @for (feature of platformFeatures; track $index) {
+              <div class="feature-box-mini" [ngClass]="feature.theme">
+                <div class="box-header">{{ feature.title }}</div>
+                <div class="box-body">
+                  <p>{{ feature.desc }}</p>
+                  <span class="box-highlight">{{ feature.highlight }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="hero-content active">
+          <div class="badge">{{ heroContent[activeIndex].badge }}</div>
+          <h1 class="hero-title">
+            {{ heroContent[activeIndex].title }}
+          </h1>
+          <p class="hero-description">
+            {{ heroContent[activeIndex].description }}
+          </p>
+
+          <div class="cta-group">
+            <button
+              class="btn-primary"
+              (click)="onBtnClick(heroContent[activeIndex])"
+            >
+              <span>{{ heroContent[activeIndex].btnText }}</span>
+              <i class="fas fa-arrow-right btn-icon"></i>
+            </button>
+          </div>
+        </div>
+      }
+
+      <div class="slider-controls">
+        @for (item of heroContent; track $index) {
+          <button
+            class="dot"
+            [class.active]="$index === activeIndex"
+            (click)="setSlide($index)"
+            [aria-label]="'Go to slide ' + ($index + 1)"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <div class="hero-video-wrapper">
+      <div class="video-container">
+        <video
+          #heroVideo
+          class="main-hero-video"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+        >
+          <source
+            src="/video/WhatsApp Video 2026-04-29 at 1.18.49 PM.mp4"
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay-gradient"></div>
+        <div class="floating-badge badge-top">
+          <i class="fas fa-robot"></i>
+          <span>AI Driven</span>
+        </div>
+        <div class="floating-badge badge-bottom">
+          <i class="fas fa-microchip"></i>
+          <span>STEM Labs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if (isModalOpen) {
+  <div
+    class="video-modal-overlay"
+    (click)="onOverlayClick($event)"
+    (touchend)="onOverlayClick($event)"
+  >
+    <div
+      class="video-modal-container"
+      role="dialog"
+      aria-label="Video demo modal"
+    >
+      <button
+        class="video-modal-close"
+        (click)="closeVideoModal()"
+        (touchend)="closeVideoModal()"
+        aria-label="Close video"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="video-wrapper">
+        <video
+          #videoElement
+          class="video-player"
+          controls
+          controlsList="nodownload"
+          preload="auto"
+        >
+          <source
+            src="/video/Teachly- What you get Lavanya 02.mp4"
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+}

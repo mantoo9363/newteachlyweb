@@ -1,0 +1,61 @@
+<div class="iframe-container">
+  <!-- Module Selector (always visible when modules are available) -->
+  @if (modules.length > 0) {
+  <div class="module-selector-bar">
+    <div class="selector-content">
+      <span class="selector-label"><i class="fas fa-th-large"></i> Switch Module:</span>
+      <select #moduleSelect [value]="selectedModuleId" (change)="switchModule(moduleSelect.value)"
+        class="module-dropdown">
+        @for (module of modules; track module.id) {
+        <option [value]="module.id">{{ module.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+  }
+
+  <!-- Loading Spinner -->
+  @if (isLoading) {
+  <div class="loading-overlay">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading {{ getSelectedModuleName() }}...</p>
+    </div>
+  </div>
+  }
+
+  <!-- Error State -->
+  @if (hasError) {
+  <div class="error-overlay">
+    <div class="error-content">
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3 class="error-title">Content Unavailable</h3>
+      <p class="error-message">{{ errorMessage }}</p>
+      <div class="error-actions">
+        <button (click)="openInNewTab()" class="button-uiverse primary">
+          <div class="dots_border"></div>
+          <span class="text_button">Open in New Tab</span>
+        </button>
+        <button (click)="hasError = false; isLoading = true" class="button-uiverse secondary">
+          <span class="text_button"><i class="fas fa-redo"></i> Try Again</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Iframe -->
+  @if (sanitizedUrl && !hasError) {
+  <iframe [src]="sanitizedUrl" [title]="title" class="external-iframe" (load)="onIframeLoad()" (error)="onIframeError()"
+    frameborder="0" allow="
+        accelerometer;
+        autoplay;
+        clipboard-write;
+        encrypted-media;
+        gyroscope;
+        picture-in-picture;
+      " allowfullscreen></iframe>
+  }
+</div>

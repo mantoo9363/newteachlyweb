@@ -1,0 +1,75 @@
+import { Routes } from '@angular/router';
+import { HomePageComponent } from './presentation/pages/home/home.component';
+import { SimulatorComponent } from './presentation/pages/simulator/simulator.component';
+import { SimulatorDetailComponent } from './presentation/pages/simulator-detail/simulator-detail.component';
+import { CurriculumDetailsComponent } from './presentation/pages/curriculum-details/curriculum-details.component';
+import { AboutUsComponent } from './presentation/pages/about-us/about-us.component';
+import { CognitiveSkillProfileComponent } from './presentation/pages/cognitive-skill-profile/cognitive-skill-profile.component';
+import { ChildPsychologyComponent } from './presentation/pages/child-psychology/child-psychology.component';
+import { IframeViewComponent } from './presentation/pages/iframe-view/iframe-view.component';
+import { PrivacyPolicyComponent } from './presentation/pages/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './presentation/pages/terms-of-service/terms-of-service.component';
+import { CtAiComponent } from './presentation/pages/ct-ai/ct-ai.component';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: HomePageComponent,
+    title: 'Teachly | Interactive STEM Simulations & Learning Platform'
+  },
+  {
+    path: 'simulator',
+    component: SimulatorComponent,
+    title: 'Teachly | STEM virtual lab - Physics, Chemistry, Biology & Math'
+  },
+
+   {
+    path: 'ctai',
+    component: CtAiComponent,
+    title: 'Teachly | CT-AI'
+  },
+  {
+    path: 'view-simulator/:id',
+    component: SimulatorDetailComponent,
+    title: 'Teachly | Interactive Simulation Detail'
+  },
+  {
+    path: 'curriculum-details',
+    component: CurriculumDetailsComponent,
+    title: 'Teachly | Curriculum Details'
+  },
+  {
+    path: 'iframe-view',
+    component: IframeViewComponent,
+    title: 'Teachly | External Content'
+  },
+  {
+    path: 'about-us',
+    component: AboutUsComponent,
+    title: 'Teachly | About Us'
+  },
+  {
+    path: 'cognitive-skill-profile',
+    component: CognitiveSkillProfileComponent,
+    title: 'Teachly | Cognitive Skill Profile'
+  },
+  {
+    path: 'child-psychology',
+    component: ChildPsychologyComponent,
+    title: 'Teachly | Child Psychology'
+  },
+  {
+    path: 'privacy-policy',
+    component: PrivacyPolicyComponent,
+    title: 'Teachly | Privacy Policy'
+  },
+  {
+    path: 'terms-of-service',
+    component: TermsOfServiceComponent,
+    title: 'Teachly | Terms of Service'
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
+];

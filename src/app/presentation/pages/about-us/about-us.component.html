@@ -1,0 +1,528 @@
+<app-header></app-header>
+
+<main class="about-modern-page">
+  <!-- Background Decorations (Original Style) -->
+  <div class="background-decor">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="floating-icons">
+      <i class="fas fa-brain icon icon-1"></i>
+      <i class="fas fa-rocket icon icon-2"></i>
+      <i class="fas fa-atom icon icon-3"></i>
+      <i class="fas fa-code icon icon-4"></i>
+    </div>
+  </div>
+
+  <div class="content-container">
+    <!-- Hero Section -->
+    <section class="hero-story-section">
+      <div class="section-tag">Our Origin</div>
+      <h1 class="story-quote">
+        Empowering <span class="gradient-accent">India's students</span> with the education they deserve.
+      </h1>
+    </section>
+
+    <!-- Mission Detailed Section -->
+    <section class="mission-grid-section">
+      <div class="glass-container">
+        <div class="mission-top-content">
+          <div class="mission-text">
+            <h2 class="section-title">Who We Are</h2>
+            <p class="highlight-p">
+              Teachly is the one-stop learning platform — built on a single, radical belief: 
+              that the quality of a student's education should not be determined by the size of their city, 
+              the budget of their school, or the income of their family.
+            </p>
+        </div>
+        <div class="mission-visual">
+          <div class="visual-card">
+            <img src="image/AI Learning.jpeg" alt="Teachly AI Learning" />
+          </div>
+        </div>
+      </div>
+
+      <div class="main-body-text">
+          <p>
+            We are a team of educators, technologists, and dreamers who looked at India's education landscape 
+            and saw a fundamental contradiction. On one side: 250 million students with extraordinary ambition, 
+            intelligence, and potential.
+          </p>
+          
+          <div class="expandable-wrapper" [class.expanded]="isExpanded">
+            <div class="expanded-content">
+              <p>
+                On the other: a fragmented system where accessing AI education requires 
+                an expensive engineering college, learning drone technology requires a lakhs hardware kit, 
+                and having a doubt answered at midnight requires knowing the right person.
+              </p>
+              <p>
+                We built Teachly to erase that contradiction. Not with more content. Not with another tutoring service. 
+                With a complete ecosystem — curriculum, future skills, languages, exam preparation, hobby development, 
+                and a 24/7 AI teacher — all in one platform, at one price, available to every learner in India 
+                from Class 6 to college and beyond.
+              </p>
+            </div>
+          </div>
+
+          <button class="read-more-btn" (click)="toggleReadMore()">
+            {{ isExpanded ? 'Read Less' : 'Read More' }}
+            <i class="fas" [class.fa-chevron-down]="!isExpanded" [class.fa-chevron-up]="isExpanded"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- What We Give Section -->
+    <section class="offerings-section">
+      <div class="section-header-centered">
+        <div class="header-decor">
+          <div class="decor-line"></div>
+          <div class="section-tag">What We Give</div>
+          <div class="decor-line"></div>
+        </div>
+        <h2 class="offerings-quote">
+          One subscription to 
+          <span class="keyword-learn">learn</span>, 
+          <span class="keyword-grow">grow</span>, and 
+          <span class="keyword-lead">lead</span>.
+        </h2>
+        <div class="header-divider-modern"></div>
+        <p class="offerings-intro">
+          Teachly is not a collection of courses loosely assembled under one login. It is a carefully designed <strong>learning ecosystem</strong> where every component works together — reinforcing, complementing, and completing the learning journey.
+        </p>
+      </div>
+
+      <div class="offerings-grid">
+        <!-- Item 1 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-book-open"></i></div>
+          <div class="offering-content">
+            <h3>Complete Academic Curriculum</h3>
+            <p>Full CBSE, ICSE, and UP Board curriculum from Class 6 through Class 12. Every subject. Every chapter. Board-aligned. Teacher-quality video lessons with structured progression.</p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-helicopter"></i></div>
+          <div class="offering-content">
+            <h3>Drone Technology — On Simulators</h3>
+            <p>Programme autonomous flight paths, complete missions, and understand aerodynamics — without a single piece of physical hardware. India's first drone education simulator for school and college students.</p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-brain"></i></div>
+          <div class="offering-content">
+            <h3>AI Development — On Simulators</h3>
+            <p>Build, train, and test real AI models from Class 9 onwards. No prior coding knowledge required. India's first AI education available at school level through simulators.</p>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-robot"></i></div>
+          <div class="offering-content">
+            <h3>Robotics — On Simulators</h3>
+            <p>Assemble, programme, and test robots in a virtual environment. Class 9 to college. Develop the engineering thinking that robotics companies hire for.</p>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-cubes"></i></div>
+          <div class="offering-content">
+            <h3>CAD — Computer-Aided Design</h3>
+            <p>Industry-standard 3D design skills for college students. The foundation of every engineering, architecture, and product design career — on a simulator.</p>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-flask"></i></div>
+          <div class="offering-content">
+            <h3>STEM Simulators</h3>
+            <p>Over 50 chemistry, physics, and biology experiments conducted virtually. Class 9 to 12, all boards. The lab your city school cannot afford — on every laptop.</p>
+          </div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="offering-card glass featured-offering">
+          <div class="offering-icon-box"><i class="fas fa-headset"></i></div>
+          <div class="offering-content">
+            <h3>Ask Doubt 24/7</h3>
+            <p>Our AI teacher avatar — contextually aware of your course and chapter — answers any doubt in seconds. Before an exam. Always available. Never tired. Never "ask me tomorrow."</p>
+          </div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-language"></i></div>
+          <div class="offering-content">
+            <h3>Foreign Languages</h3>
+            <p>French, German, Arabic, Sanskrit, and Spanish — structured from beginner to advanced. For every learner, every age. Because a foreign language is not just communication — it is a career multiplier.</p>
+          </div>
+        </div>
+
+        <!-- Item 9 -->
+        <div class="offering-card glass">
+          <div class="offering-icon-box"><i class="fas fa-graduation-cap"></i></div>
+          <div class="offering-content">
+            <h3>Competitive Exam Preparation</h3>
+            <p>JEE, NEET, UPSC, State PCS, and more. Structured preparation with concept videos, practice tests, and Ask Doubt to resolve every gap before it costs a mark.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How Teachly Works Section -->
+    <section class="how-it-works-section">
+      <div class="section-header-centered">
+        <div class="header-decor">
+          <div class="decor-line"></div>
+          <div class="section-tag premium-tag">
+            <i class="fas fa-magic"></i>
+            <span>How Teachly Works</span>
+          </div>
+          <div class="decor-line"></div>
+        </div>
+        <h2 class="works-quote">
+          Start in <span class="highlight-purple">two minutes</span>. Experience the <span class="highlight-pink">transformation</span>.
+        </h2>
+        <p class="works-intro">
+          Teachly is designed to feel effortless from the very first second — because the last thing a student needs is a learning platform that is hard to learn. Here is the complete Teachly experience, from sign-up to the moment everything clicks.
+        </p>
+      </div>
+
+      <div class="steps-flow">
+        <!-- Step 1 -->
+        <div class="step-row left-align">
+          <div class="step-visual">
+            <div class="visual-circle color-purple">
+              <span class="step-index">01</span>
+              <i class="fas fa-user-plus"></i>
+            </div>
+          </div>
+          <div class="step-text glass-card" [class.expanded]="isStepExpanded(1)">
+            <div class="card-glow"></div>
+            <h3>Sign up in under 2 minutes</h3>
+            <p>Visit teachly.com and create your profile. Tell us your class, board, and what you are primarily here to learn.</p>
+            
+            <div class="step-expandable-content">
+              <p>No credit card. No long forms. Immediate access to the complete platform from the moment you sign up. Your free trial begins the second you log in.</p>
+            </div>
+
+            <button class="step-read-more" (click)="toggleStep(1)">
+              {{ isStepExpanded(1) ? 'Read Less' : 'Read More' }}
+              <i class="fas" [class.fa-chevron-down]="!isStepExpanded(1)" [class.fa-chevron-up]="isStepExpanded(1)"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-row right-align">
+          <div class="step-text glass-card" [class.expanded]="isStepExpanded(2)">
+            <div class="card-glow"></div>
+            <h3>Your personalised learning dashboard</h3>
+            <p>Based on your class, board, and learning goals, Teachly surfaces your curriculum subjects directly.</p>
+            
+            <div class="step-expandable-content">
+              <p>Everything is organised by subject, topic, and difficulty — you always know exactly where you are and what comes next. Recommended simulators and relevant courses are highlighted for you.</p>
+            </div>
+
+            <button class="step-read-more" (click)="toggleStep(2)">
+              {{ isStepExpanded(2) ? 'Read Less' : 'Read More' }}
+              <i class="fas" [class.fa-chevron-down]="!isStepExpanded(2)" [class.fa-chevron-up]="isStepExpanded(2)"></i>
+            </button>
+          </div>
+          <div class="step-visual">
+            <div class="visual-circle color-blue">
+              <span class="step-index">02</span>
+              <i class="fas fa-th-large"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-row left-align">
+          <div class="step-visual">
+            <div class="visual-circle color-indigo">
+              <span class="step-index">03</span>
+              <i class="fas fa-play-circle"></i>
+            </div>
+          </div>
+          <div class="step-text glass-card" [class.expanded]="isStepExpanded(3)">
+            <div class="card-glow"></div>
+            <h3>Learn at your own pace</h3>
+            <p>Every lesson is a high-quality video that you control completely. Watch at 1x or 1.5x speed.</p>
+            
+            <div class="step-expandable-content">
+              <p>Pause to take notes. Rewind to a sentence that was unclear. Watch a chapter three times if needed. Teachly never rushes you — because real understanding cannot be scheduled.</p>
+            </div>
+
+            <button class="step-read-more" (click)="toggleStep(3)">
+              {{ isStepExpanded(3) ? 'Read Less' : 'Read More' }}
+              <i class="fas" [class.fa-chevron-down]="!isStepExpanded(3)" [class.fa-chevron-up]="isStepExpanded(3)"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-row right-align">
+          <div class="step-text glass-card highlight-step" [class.expanded]="isStepExpanded(4)">
+            <div class="card-glow"></div>
+            <h3>Ask Doubt immediately</h3>
+            <p>The instant a doubt arises — click Ask Doubt. An AI teacher avatar appears to help you.</p>
+            
+            <div class="step-expandable-content">
+              <p>It knows what video you were watching, what chapter you are on, and what topic you were studying. It answers your specific doubt in seconds. This happens as many times as needed, at any hour.</p>
+            </div>
+
+            <button class="step-read-more" (click)="toggleStep(4)">
+              {{ isStepExpanded(4) ? 'Read Less' : 'Read More' }}
+              <i class="fas" [class.fa-chevron-down]="!isStepExpanded(4)" [class.fa-chevron-up]="isStepExpanded(4)"></i>
+            </button>
+          </div>
+          <div class="step-visual">
+            <div class="visual-circle color-pink">
+              <span class="step-index">04</span>
+              <i class="fas fa-comment-dots"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-row left-align">
+          <div class="step-visual">
+            <div class="visual-circle color-teal">
+              <span class="step-index">05</span>
+              <i class="fas fa-vial"></i>
+            </div>
+          </div>
+          <div class="step-text glass-card" [class.expanded]="isStepExpanded(5)">
+            <div class="card-glow"></div>
+            <h3>Go hands-on with simulators</h3>
+            <p>After learning a concept, take it into the relevant simulator. Run virtual experiments.</p>
+            
+            <div class="step-expandable-content">
+              <p>Programme your first drone flight path. Build a robotic arm. Train an AI model. Design in CAD. The simulators are where knowledge becomes skill and discovery happens.</p>
+            </div>
+
+            <button class="step-read-more" (click)="toggleStep(5)">
+              {{ isStepExpanded(5) ? 'Read Less' : 'Read More' }}
+              <i class="fas" [class.fa-chevron-down]="!isStepExpanded(5)" [class.fa-chevron-up]="isStepExpanded(5)"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-row right-align">
+          <div class="step-text glass-card" [class.expanded]="isStepExpanded(6)">
+            <div class="card-glow"></div>
+            <h3>Explore beyond your curriculum</h3>
+            <p>Your subscription gives unlimited access to everything on Teachly. Explore any time you want.</p>
+            
+            <div class="step-expandable-content">
+              <p>After a physics class, open the drone simulator. Before bed, spend 15 minutes on your French lesson. Teachly has no silos — every part of the platform is always available to you.</p>
+            </div>
+
+            <button class="step-read-more" (click)="toggleStep(6)">
+              {{ isStepExpanded(6) ? 'Read Less' : 'Read More' }}
+              <i class="fas" [class.fa-chevron-down]="!isStepExpanded(6)" [class.fa-chevron-up]="isStepExpanded(6)"></i>
+            </button>
+          </div>
+          <div class="step-visual">
+            <div class="visual-circle color-orange">
+              <span class="step-index">06</span>
+              <i class="fas fa-compass"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Choose Teachly Section (Mesh Design) -->
+    <section class="why-choose-section">
+      <div class="why-choose-hero">
+        <div class="header-main-box">
+          <div class="header-left">
+            <div class="modern-badge">The Teachly Edge</div>
+            <h2 class="hero-quote-text">
+              <span class="text-glow">Compare</span> every alternative. One answer <span class="text-underline">makes sense.</span>
+            </h2>
+          </div>
+          <div class="header-right">
+            <div class="intro-description">
+              <p>
+                There are many ways to learn in India today. YouTube. Tuition centres. Online courses. Coaching classes. 
+              </p>
+              <div class="divider-short"></div>
+              <p class="highlight-callout">
+                We are not asking you to take our word for it. We are asking you to <strong>look at the evidence</strong> — and decide for yourself.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="background-watermark">Comparison</div>
+      </div>
+
+      <div class="tiles-container">
+        <!-- Tile 1 -->
+        <div class="floating-tile tile-1">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-p"><i class="fas fa-wallet"></i></div>
+            <div class="tile-text">
+              <h3>One Subscription Replaces Everything</h3>
+              <p>Most families pay ₹8k–₹12k/month. Teachly replaces it all with more content, skills, and support.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 2 -->
+        <div class="floating-tile tile-2">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-b"><i class="fas fa-microchip"></i></div>
+            <div class="tile-text">
+              <h3>Cutting-Edge Simulators</h3>
+              <p>AI, Drone, Robotics, and CAD simulators. Future-ready skills accessible to every school student.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 3 (The Anchor) -->
+        <div class="tile-anchor">
+          <div class="anchor-inner">
+            <div class="anchor-glow"></div>
+            <div class="anchor-content">
+              <i class="fas fa-star main-star"></i>
+              <h3>Ask Doubt 24/7</h3>
+              <p>An AI teacher who knows your specific course, giving specific answers in seconds, anytime.</p>
+              <div class="exclusive-badge">Category Killer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 4 -->
+        <div class="floating-tile tile-3">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-pk"><i class="fas fa-map-marked-alt"></i></div>
+            <div class="tile-text">
+              <h3>Built for Bharat</h3>
+              <p>Designed for every corner of India. No hardware required. Just a gadget and a subscription.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 5 -->
+        <div class="floating-tile tile-4">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-o"><i class="fas fa-infinity"></i></div>
+            <div class="tile-text">
+              <h3>Covers Every Dream</h3>
+              <p>Class 6 to college. Academics, skills, languages, exams, hobbies, and entrepreneurship.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 6 -->
+        <div class="floating-tile tile-5">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-t"><i class="fas fa-chart-line"></i></div>
+            <div class="tile-text">
+              <h3>Confidence-First</h3>
+              <p>When students build a robot that moves, they start believing learning is something they DO.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 7 -->
+        <div class="floating-tile tile-6">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-i"><i class="fas fa-university"></i></div>
+            <div class="tile-text">
+              <h3>Institutional Trust</h3>
+              <p>Trusted by schools with dedicated dashboards and training. A competitive advantage for all.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tile 8 -->
+        <div class="floating-tile tile-7">
+          <div class="tile-inner glass">
+            <div class="tile-icon-box color-r"><i class="fas fa-shield-alt"></i></div>
+            <div class="tile-text">
+              <h3>Risk-Free Start</h3>
+              <p>Free trial with no payment info required. We invite you to compare us every single time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Immersive CTA Section -->
+      <div class="immersive-cta">
+        <div class="cta-backdrop"></div>
+        <div class="cta-shell">
+          <div class="cta-heading-group">
+            <h3>Ready to Experience the <span>Future?</span></h3>
+            <p>Start your free trial now. No card. No commitments. Just growth.</p>
+          </div>
+          <div class="cta-btn-group">
+            <a href="#" class="btn-neon">Start Free Trial <i class="fas fa-arrow-right"></i></a>
+            <a href="#" class="btn-ghost">Book Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Visualization (Modernized Original) -->
+    <section class="stats-visualization">
+      <div class="stats-header">
+        <div class="line"></div>
+        <span>Our Impact</span>
+        <div class="line"></div>
+      </div>
+      <div class="impact-cards">
+        <div class="impact-card">
+          <div class="card-glow"></div>
+          <div class="icon-box"><i class="fas fa-user-graduate"></i></div>
+          <h3>Class 5–12</h3>
+          <p>Complete school curriculum</p>
+        </div>
+        <div class="impact-card">
+          <div class="card-glow"></div>
+          <div class="icon-box"><i class="fas fa-university"></i></div>
+          <h3>3 Boards</h3>
+          <p>CBSE, ICSE, UP Board</p>
+        </div>
+        <div class="impact-card">
+          <div class="card-glow"></div>
+          <div class="icon-box"><i class="fas fa-clock"></i></div>
+          <h3>24/7</h3>
+          <p>AI doubt resolution</p>
+        </div>
+        <div class="impact-card featured">
+          <div class="card-glow"></div>
+          <div class="icon-box"><i class="fas fa-flag"></i></div>
+          <h3>India First</h3>
+          <p>AI + Drone + Robotics on simulators</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Manifesto -->
+    <section class="manifesto-section">
+      <div class="manifesto-card">
+        <p class="manifesto-p">
+          Democratizing <span class="gradient-accent">premium education</span> for every student across Bharat.
+        </p>
+        <div class="manifesto-footer">
+          <div class="divider"></div>
+          <h3 class="mission-statement">That equality is not a feature. <br><span>It is our mission.</span></h3>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<app-footer></app-footer>

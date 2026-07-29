@@ -1,0 +1,150 @@
+<app-header></app-header>
+
+<main class="simulator-page">
+
+  <!-- Hero Banner Start (now a full-width header) -->
+ 
+  <!-- Hero Banner End -->
+
+  <div class="simulator-layout">
+    <!-- Sidebar Filters -->
+    <aside class="sidebar">
+      <div class="filter-section">
+
+        <h3 class="filter-title" (click)="toggleClasses()">
+          CLASSES
+          <span>{{ showClasses ? '⌄' : '>' }}</span>
+        </h3>
+
+        @if(showClasses){
+          <div class="filter-content">
+            @for(group of classGroups; track group){
+              <div
+                class="subject-header"
+                (click)="selectClassGroup(group)"
+                [class.active]="selectedClassGroup === group">
+                <span class="subject-name">
+                  {{ group }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+
+      <div class="filter-section">
+
+        <h3 class="filter-title" (click)="showSubjects = !showSubjects">
+          SUBJECT
+          <span class="toggle">
+            {{ showSubjects ? '⌄' : '>' }}
+          </span>
+        </h3>
+
+        @if(showSubjects){
+          <div class="filter-content">
+            @for(subject of filters.subjects; track subject.name){
+              <div class="subject-group">
+
+                <div class="subject-header" (click)="toggleSubTopics(subject.name)">
+                  <label class="checkbox-container">
+                    <input
+                      type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      (change)="toggleSubject(subject.name)"
+                    />
+                    <span class="checkmark"></span>
+                    <span class="subject-name">
+                      {{ getSubjectTranslation(subject.name) }}
+                    </span>
+                  </label>
+
+                  <span class="arrow">
+                    {{ expandedSubjects.has(subject.name) ? '⌄' : '>' }}
+                  </span>
+                </div>
+
+                @if(expandedSubjects.has(subject.name)){
+                  <div class="sub-subjects">
+                    @for(sub of subject.sub; track sub){
+                      <label class="checkbox-container sub-item">
+                        <input
+                          type="checkbox"
+                          (change)="toggleSubject(sub)">
+                        <span class="checkmark"></span>
+                        {{ getSubjectTranslation(sub) }}
+                      </label>
+                    }
+                  </div>
+                }
+
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="results-area">
+
+      <div class="search-bar-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event); applyFilters()"
+          [placeholder]="'simulator.searchPlaceholder' | translate"
+          class="search-input">
+      </div>
+
+      <div class="simulator-grid" [class.list-view]="viewMode() === 'list'">
+        @for (sim of filteredSimulators(); track sim.id) {
+          <div class="simulator-card"  (click)="openVideo(sim)">
+            <div class="card-image">
+              <img [src]="sim.thumbnail" [alt]="sim.name" [title]="sim.name">
+              @if (sim.isNew) {
+                <!-- <span class="new-badge">NEW!</span> -->
+              }
+            </div>
+            <div class="card-info">
+              <h4 class="sim-name">{{ sim.name }}</h4>
+              <div class="sim-icons">
+                <!-- @for (comp of sim.compatibility; track comp) {
+                  <span class="compat-icon" [title]="comp">
+                    @if (comp === 'HTML5') {
+                      <span class="html5-icon">5</span>
+                    }
+                  </span>
+                } -->
+                <i class="fas fa-keyboard"></i>
+                <i class="fas fa-volume-up"></i>
+                <i class="fas fa-search-plus"></i>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+    </section>
+  </div>
+</main>
+
+@if (selectedVideo()) {
+  <div class="video-modal">
+    <div class="video-box">
+      <button class="close-btn" (click)="closeVideo()">
+        ✕
+      </button>
+      <video width="100%" controls autoplay   (ended)="onVideoEnded()"
+>
+        <source [src]="selectedVideo()!" type="video/mp4"  controlsList="nodownload">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+}
+
+<app-footer></app-footer>

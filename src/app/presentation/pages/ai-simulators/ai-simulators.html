@@ -1,0 +1,75 @@
+<p>ai-simulators works!</p>
+<!-- Hero Banner -->
+<section class="hero-banner">
+
+  <div class="hero-content">
+
+    <div class="hero-left">
+      <h1>AI <br> Simulators</h1>
+
+      <button class="explore-btn">
+        Explore More
+      </button>
+    </div>
+
+    <div class="hero-right">
+        <img src="/banner.jpeg" alt="AI Banner">
+     
+    </div>
+
+  </div>
+
+</section>
+
+<!-- Simulator Section -->
+<section class="simulator-section">
+
+  <div class="container">
+
+    <!-- Hero Banner -->
+<section class="hero-banner">
+  <div class="hero-content">
+
+    <div class="hero-left">
+      <h1>AI <br> Simulators</h1>
+
+      <button class="explore-btn">
+        Explore More
+      </button>
+    </div>
+
+    <div class="hero-right">
+      <img src="/banner.jpeg" alt="AI Banner">
+    </div>
+
+  </div>
+</section>
+
+<!-- Simulator Section -->
+<section class="simulator-section">
+  <div class="container">
+
+    <div class="card-grid">
+
+      <div class="simulator-card" *ngFor="let simulator of simulators">
+
+        <img [src]="simulator.image" [alt]="simulator.title">
+
+        <div class="card-content">
+          <h3>{{ simulator.title }}</h3>
+
+          <a href="#" class="view-btn">
+            VIEW MORE
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+  </div>
+
+</section>
