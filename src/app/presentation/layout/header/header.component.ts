@@ -137,7 +137,7 @@ export class HeaderComponent implements OnInit {
     this.navigationMenu.forEach((menu) => {
       if (menu.type === 'link') {
         if (menu.title.toLowerCase().includes(query)) {
-          results.push({ title: menu.title, url: menu.url });
+          results.push({ title: menu.title, url: menu.url, requiresPlan: menu.requiresPlan });
         }
       } else if (menu.items) {
         menu.items.forEach((item: any) => {
@@ -147,6 +147,7 @@ export class HeaderComponent implements OnInit {
                 results.push({
                   title: `${menu.title} > ${item.title} > ${subItem.title}`,
                   url: subItem.url,
+                  requiresPlan: subItem.requiresPlan,
                 });
               }
             });
@@ -155,6 +156,7 @@ export class HeaderComponent implements OnInit {
               results.push({
                 title: `${menu.title} > ${item.title}`,
                 url: item.url,
+                requiresPlan: item.requiresPlan,
               });
             }
           }
@@ -173,35 +175,139 @@ export class HeaderComponent implements OnInit {
   }
 
   hasPurchasedPackage(): boolean {
-    return sessionStorage.getItem('has_active_package') === 'true';
+    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
+
+    if (this.isPackageExpired(sessionStorage.getItem('package_expires_at'))) {
+      this.clearPackageStatus();
+      this.notifyPackageStatusChanged();
+      return false;
+    }
+
+    return true;
   }
 
   private isPurchasedPlan(planKey: string): boolean {
     return this.hasPurchasedPackage() && sessionStorage.getItem('active_package_key') === planKey;
   }
 
+  // The 3 individual plan states: Tech, Smart, and Combo (Tech & Smart together).
+  // Combo appears in both groups since it unlocks the whole system.
+  private readonly planGroups: Record<'tech' | 'smart', string[]> = {
+    tech: ['tech', 'combo'],
+    smart: ['smart', 'combo'],
+  };
+
+  private readonly planGroupLabels: Record<'tech' | 'smart', string> = {
+    tech: 'Tech Education Plan',
+    smart: 'Smart Education Plan',
+  };
+
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology'];
+
+  hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
+    if (!this.hasPurchasedPackage()) return false;
+    const activePlanKey = sessionStorage.getItem('active_package_key');
+    return !!activePlanKey && this.planGroups[group].includes(activePlanKey);
+  }
+
+  planGroupLabel(group: 'tech' | 'smart'): string {
+    return this.planGroupLabels[group];
+  }
+
+  isMenuItemAccessible(item: any): boolean {
+    if (!this.isLoggedIn) return false;
+    return item?.requiresPlan ? this.hasPlanGroupAccess(item.requiresPlan) : true;
+  }
+
+  isNavLinkAccessible(item: any): boolean {
+    if (item?.url && this.publicUrls.includes(this.getRoutePath(item.url))) return true;
+    return this.isMenuItemAccessible(item);
+  }
+
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
+
+  private clearPackageStatus(): void {
+    sessionStorage.setItem('has_active_package', 'false');
+    sessionStorage.removeItem('active_package_key');
+    sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
+  }
+
+  private getPlanKeyFromName(planName: string | null | undefined): string | null {
+    const normalizedName = planName?.trim().toLowerCase();
+    const planMap: Record<string, string> = {
+      'school plan': 'school',
+      'school': 'school',
+      'school tech plan': 'schooltech',
+      'school tech': 'schooltech',
+      'tech education plan': 'tech',
+      'tech plan': 'tech',
+      'tech': 'tech',
+      'smart education plan': 'smart',
+      'smart plan': 'smart',
+      'smart': 'smart',
+      'tech & smart education plan': 'combo',
+      'tech & smart': 'combo',
+      'tech and smart': 'combo',
+      'combo': 'combo',
+    };
+
+    return normalizedName ? planMap[normalizedName] || null : null;
+  }
+
+  private notifyPackageStatusChanged(profile?: any): void {
+    window.dispatchEvent(new CustomEvent('teachly-package-status-changed', {
+      detail: {
+        profile,
+        hasActivePackage: sessionStorage.getItem('has_active_package') === 'true',
+        activePackageKey: sessionStorage.getItem('active_package_key'),
+        packageExpiresAt: sessionStorage.getItem('package_expires_at'),
+      },
+    }));
+  }
+
   private setPackageStatusFromResponse(res: any): void {
+    const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
     const hasActivePackage = Boolean(
       res?.user?.has_active_package ||
       res?.payment?.has_active_package ||
       res?.has_active_package
-    );
+    ) && !this.isPackageExpired(packageExpiresAt);
 
     sessionStorage.setItem('has_active_package', String(hasActivePackage));
 
-    const activePackageKey = res?.active_package_key || res?.payment?.active_package_key || res?.user?.active_package_key;
+    const activePackageKey =
+      res?.active_package_key ||
+      res?.payment?.active_package_key ||
+      res?.user?.active_package_key ||
+      this.getPlanKeyFromName(res?.course) ||
+      this.getPlanKeyFromName(res?.payment?.plan_name);
+
     if (activePackageKey && hasActivePackage) {
       sessionStorage.setItem('active_package_key', activePackageKey);
     } else if (!hasActivePackage) {
       sessionStorage.removeItem('active_package_key');
     }
 
-    const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
     if (packageExpiresAt && hasActivePackage) {
       sessionStorage.setItem('package_expires_at', packageExpiresAt);
     } else if (!hasActivePackage) {
       sessionStorage.removeItem('package_expires_at');
     }
+
+    const activeCourse = res?.course || res?.payment?.plan_name;
+    if (activeCourse && hasActivePackage) {
+      sessionStorage.setItem('active_course', activeCourse);
+    } else {
+      sessionStorage.removeItem('active_course');
+    }
+
+    this.notifyPackageStatusChanged(res);
   }
 
   private syncPackageStatus(): void {
@@ -213,26 +319,41 @@ export class HeaderComponent implements OnInit {
         const activePayment = Array.isArray(payments)
           ? payments.find((payment: any) => payment?.is_active)
           : null;
-        const hasActivePackage = Boolean(activePayment);
+        const hasActivePackage = Boolean(activePayment) && !this.isPackageExpired(activePayment?.expires_at);
 
         sessionStorage.setItem('has_active_package', String(hasActivePackage));
 
-        if (activePayment?.active_package_key) {
-          sessionStorage.setItem('active_package_key', activePayment.active_package_key);
+        const activePackageKey =
+          activePayment?.active_package_key ||
+          this.getPlanKeyFromName(activePayment?.plan_name) ||
+          this.getPlanKeyFromName(activePayment?.course);
+
+        if (activePackageKey && hasActivePackage) {
+          sessionStorage.setItem('active_package_key', activePackageKey);
         } else {
           sessionStorage.removeItem('active_package_key');
         }
 
-        if (activePayment?.expires_at) {
+        if (activePayment?.expires_at && hasActivePackage) {
           sessionStorage.setItem('package_expires_at', activePayment.expires_at);
         } else {
           sessionStorage.removeItem('package_expires_at');
         }
+
+        if (hasActivePackage && (activePayment?.course || activePayment?.plan_name)) {
+          sessionStorage.setItem('active_course', activePayment.course || activePayment.plan_name);
+        } else {
+          sessionStorage.removeItem('active_course');
+        }
+
+        this.notifyPackageStatusChanged(activePayment);
       },
       error: () => {
         sessionStorage.removeItem('has_active_package');
         sessionStorage.removeItem('active_package_key');
         sessionStorage.removeItem('package_expires_at');
+        sessionStorage.removeItem('active_course');
+        this.notifyPackageStatusChanged();
       }
     });
   }
@@ -240,6 +361,7 @@ export class HeaderComponent implements OnInit {
   private loadLoggedInProfile(): void {
     if (!sessionStorage.getItem('access_token')) return;
 
+    console.log('Calling profile API on home load');
     this.service.getProfile().subscribe({
       next: (profile: any) => {
         this.profileData = profile;
@@ -298,14 +420,24 @@ export class HeaderComponent implements OnInit {
   //this.closeSearchModal();
   //}
 
-  onSearchItemClick(url: string): void {
+  onSearchItemClick(url: string, requiresPlan?: 'tech' | 'smart'): void {
 
     this.closeSearchModal();
+
+    if (this.publicUrls.includes(this.getRoutePath(url))) {
+      this.router.navigateByUrl(url);
+      return;
+    }
 
     const token = sessionStorage.getItem('access_token');
 
     if (!token) {
       this.openModal('signup');
+      return;
+    }
+
+    if (requiresPlan && !this.hasPlanGroupAccess(requiresPlan)) {
+      this.openMessage(`Upgrade to the ${this.planGroupLabel(requiresPlan)} to access this content.`);
       return;
     }
 
@@ -331,29 +463,30 @@ export class HeaderComponent implements OnInit {
         {
           title: 'Board Curriculum',
           type: 'nested-dropdown',
+          requiresPlan: 'smart',
           items: [
-            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse' },
-            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse' },
-            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc' },
+            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart' },
+            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart' },
+            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart' },
 
-            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login' }
+            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login', requiresPlan: 'smart' }
           ]
         },
-        { title: 'CT/AI', url: '/ctai' },
+        { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },
 
         // { title: 'Computer Course', url: 'https://zenai.theteachly.com/school-courses/computer-course-school' },
-        { title: 'Essential Studies', url: '/iframe-view?url=https://zenai.theteachly.com/school-courses/aptitude60' },
-        { title: 'Project Work', url: '/iframe-view?url=https://zenai.theteachly.com/project-work/school-level' },
-        { title: 'Stem Simulators', url: '/simulator' }
+        { title: 'Essential Studies', url: '/iframe-view?url=https://zenai.theteachly.com/school-courses/aptitude60', requiresPlan: 'smart' },
+        { title: 'Project Work', url: '/iframe-view?url=https://zenai.theteachly.com/project-work/school-level', requiresPlan: 'smart' },
+        { title: 'Stem Simulators', url: '/simulator', requiresPlan: 'smart' }
       ]
     },
     {
       title: 'Simulations',
       type: 'dropdown',
       items: [
-        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module' },
-        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module' },
-        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module' },
+        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module', requiresPlan: 'tech' },
+        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
+        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
 
       ]
     },
@@ -362,11 +495,11 @@ export class HeaderComponent implements OnInit {
       title: 'Languages',
       type: 'dropdown',
       items: [
-        { title: 'ARABIC', url: '/iframe-view?url=https://zenai.theteachly.com/course/arabic-language' },
-        { title: 'GERMAN', url: '/iframe-view?url=https://zenai.theteachly.com/course/german-language' },
-        { title: 'SPANISH', url: '/iframe-view?url=https://zenai.theteachly.com/course/spanish-language' },
-        { title: 'FRENCH', url: '/iframe-view?url=https://zenai.theteachly.com/course/french-language' },
-        { title: 'SANSKRIT', url: '/iframe-view?url=https://zenai.theteachly.com/course/sanskrit' }
+        { title: 'ARABIC', url: '/iframe-view?url=https://zenai.theteachly.com/course/arabic-language', requiresPlan: 'smart' },
+        { title: 'GERMAN', url: '/iframe-view?url=https://zenai.theteachly.com/course/german-language', requiresPlan: 'smart' },
+        { title: 'SPANISH', url: '/iframe-view?url=https://zenai.theteachly.com/course/spanish-language', requiresPlan: 'smart' },
+        { title: 'FRENCH', url: '/iframe-view?url=https://zenai.theteachly.com/course/french-language', requiresPlan: 'smart' },
+        { title: 'SANSKRIT', url: '/iframe-view?url=https://zenai.theteachly.com/course/sanskrit', requiresPlan: 'smart' }
       ]
     },
     {
@@ -385,17 +518,17 @@ export class HeaderComponent implements OnInit {
       title: 'Competitive Exams',
       type: 'dropdown',
       items: [
-        { title: 'IELTS', url: '/iframe-view?url=https://zenai.theteachly.com/course/international-english-language-testing-system-ielts' },
+        { title: 'IELTS', url: '/iframe-view?url=https://zenai.theteachly.com/course/international-english-language-testing-system-ielts', requiresPlan: 'smart' },
 
-        { title: 'Engineering', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/engineering' },
-        { title: 'Medical', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/medical' },
-        { title: 'Bank Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/competitive-bank-exams' },
-        { title: 'Foundation', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/foundation' },
-        { title: 'SSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/staff-selection-commission-ssc' },
-        { title: 'Defence', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/defence' },
-        { title: 'UPSSSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/upsssc' },
-        { title: 'Railways', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/railways' },
-        { title: 'State Level Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/state-level-exams' }
+        { title: 'Engineering', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/engineering', requiresPlan: 'smart' },
+        { title: 'Medical', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/medical', requiresPlan: 'smart' },
+        { title: 'Bank Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/competitive-bank-exams', requiresPlan: 'smart' },
+        { title: 'Foundation', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/foundation', requiresPlan: 'smart' },
+        { title: 'SSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/staff-selection-commission-ssc', requiresPlan: 'smart' },
+        { title: 'Defence', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/defence', requiresPlan: 'smart' },
+        { title: 'UPSSSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/upsssc', requiresPlan: 'smart' },
+        { title: 'Railways', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/railways', requiresPlan: 'smart' },
+        { title: 'State Level Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/state-level-exams', requiresPlan: 'smart' }
       ]
     },
 
@@ -740,6 +873,14 @@ export class HeaderComponent implements OnInit {
         this.paymentSummary.couponCode = plan.couponCode || null;
       }
     });
+
+    this.popupService.signup$.subscribe((shouldOpen: boolean) => {
+      if (shouldOpen) {
+        this.openModal('signup');
+        this.popupService.closeSignup();
+      }
+    });
+
     this.translateService.setDefaultLang('en');
     this.selectedLanguage = '';
     this.translateService.use('en');
@@ -1507,6 +1648,7 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('has_active_package');
     sessionStorage.removeItem('active_package_key');
     sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
     this.userMenuOpen = false;
     window.location.reload();
   }
@@ -1514,9 +1656,7 @@ export class HeaderComponent implements OnInit {
   navigateWithLogin(url: string): void {
 
     // Home aur login page bina login ke open ho sakte hain
-    const publicUrls = ['/', '/about-us'];
-
-    if (publicUrls.includes(this.getRoutePath(url))) {
+    if (this.publicUrls.includes(this.getRoutePath(url))) {
       this.router.navigateByUrl(url);
       return;
     }
@@ -1534,5 +1674,30 @@ export class HeaderComponent implements OnInit {
       this.router.navigateByUrl(url);
     }
 
+  }
+
+  handleMenuLinkClick(event: Event, url: string, item?: any): void {
+    if (!url) return;
+
+    const path = this.getRoutePath(url);
+
+    if (this.publicUrls.includes(path)) {
+      return; // Allow standard routerLink navigation
+    }
+
+    if (!this.isLoggedIn) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
+      this.openModal('signup');
+      return;
+    }
+
+    if (item?.requiresPlan && !this.hasPlanGroupAccess(item.requiresPlan)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
+      this.openMessage(`Upgrade to the ${this.planGroupLabel(item.requiresPlan)} to access this content.`);
+    }
   }
 }

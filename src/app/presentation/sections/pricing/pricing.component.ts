@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupService } from '../../../core/services/popup.service';
@@ -7,6 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { FormsModule } from '@angular/forms';
 
 type PlanKey = 'tech' | 'smart' | 'combo';
+type PackagePlanKey = PlanKey | 'school' | 'schooltech';
 
 @Component({
   selector: 'app-pricing',
@@ -15,23 +16,83 @@ type PlanKey = 'tech' | 'smart' | 'combo';
   templateUrl: './pricing.component.html',
   styleUrls: ['./pricing.component.scss'],
 })
-export class PricingComponent {
+export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() signupClick = new EventEmitter<boolean>();
+  @ViewChild('pricingContainer') pricingContainer!: ElementRef<HTMLDivElement>;
+
+  private autoScrollInterval: any = null;
 
   constructor(
     private popupService: PopupService,
     private apiService: ApiService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   couponCode = 'TEACH50';
   popupCouponCode = '';
+  profileSummary: {
+    name: string;
+    studentId: string;
+    userType: string;
+    course: string;
+    duration: string;
+    status: string;
+  } | null = null;
+  private packageStatusVersion = 0;
+  private packageStatusListener = (event: Event) => {
+    this.packageStatusVersion++;
+    const profile = (event as CustomEvent).detail?.profile;
+    this.updateProfileSummary(profile);
+    this.logPackageMatch(profile);
+    this.cdr.markForCheck();
+  };
 
   ngOnInit(): void {
     localStorage.removeItem('discount_tech');
     localStorage.removeItem('discount_smart');
     localStorage.removeItem('discount_combo');
+    window.addEventListener('teachly-package-status-changed', this.packageStatusListener);
+    this.updateProfileSummary();
+    this.logPackageMatch();
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('teachly-package-status-changed', this.packageStatusListener);
+    this.stopAutoScroll();
+    document.body.style.overflow = '';
+  }
+
+  ngAfterViewInit(): void {
+    this.startAutoScroll();
+  }
+
+  startAutoScroll(): void {
+    this.stopAutoScroll();
+    this.autoScrollInterval = setInterval(() => {
+      if (!this.pricingContainer?.nativeElement) return;
+      const el = this.pricingContainer.nativeElement;
+      
+      // Check if carousel scroll is needed (when overflow exists on mid/mob screens)
+      if (el.scrollWidth > el.clientWidth) {
+        const cardWidth = el.firstElementChild ? (el.firstElementChild as HTMLElement).offsetWidth + 16 : 320;
+        const maxScrollLeft = el.scrollWidth - el.clientWidth;
+        
+        if (el.scrollLeft + cardWidth >= maxScrollLeft - 10) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          el.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
+      }
+    }, 3000);
+  }
+
+  stopAutoScroll(): void {
+    if (this.autoScrollInterval) {
+      clearInterval(this.autoScrollInterval);
+      this.autoScrollInterval = null;
+    }
   }
 
   planMonths: Record<PlanKey, number> = {
@@ -64,8 +125,83 @@ export class PricingComponent {
     return this.paymentPrices[plan] * this.planMonths[plan];
   }
 
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
+
+  private clearExpiredPackage(): void {
+    sessionStorage.setItem('has_active_package', 'false');
+    sessionStorage.removeItem('active_package_key');
+    sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
+    this.packageStatusVersion++;
+  }
+
+  private updateProfileSummary(profile?: any): void {
+    const isLoggedIn = Boolean(sessionStorage.getItem('access_token'));
+    if (!isLoggedIn && !profile) {
+      this.profileSummary = null;
+      return;
+    }
+
+    const course = profile?.course || profile?.payment?.plan_name || sessionStorage.getItem('active_course') || '-';
+    const duration = profile?.duration || profile?.payment?.duration || '-';
+    const hasActivePackage = profile?.has_active_package ?? profile?.payment?.has_active_package ?? this.hasActivePackage();
+
+    this.profileSummary = {
+      name: profile?.first_name || sessionStorage.getItem('school_name') || 'User',
+      studentId: profile?.student_id || sessionStorage.getItem('student_id') || '-',
+      userType: profile?.user_type || sessionStorage.getItem('user_type') || '-',
+      course,
+      duration: duration === '-' ? '-' : `${duration} Month${Number(duration) > 1 ? 's' : ''}`,
+      status: hasActivePackage ? 'Active' : 'No active package',
+    };
+  }
+
+  private logPackageMatch(profile?: any): void {
+    const activePackageKey = sessionStorage.getItem('active_package_key');
+    const hasActivePackage = sessionStorage.getItem('has_active_package') === 'true';
+    const packageExpiresAt = sessionStorage.getItem('package_expires_at');
+    const plans = [
+      { key: 'school', title: 'School Plan' },
+      { key: 'schooltech', title: 'School Tech Plan' },
+      { key: 'tech', title: 'Tech Education Plan' },
+      { key: 'smart', title: 'Smart Education Plan' },
+      { key: 'combo', title: 'Tech & Smart Education Plan' },
+    ];
+
+    console.group('Pricing Section Package Match');
+    console.log('Profile/package data:', {
+      profile,
+      hasActivePackage,
+      activePackageKey,
+      packageExpiresAt,
+      course: profile?.course || profile?.payment?.plan_name || null,
+    });
+    console.table(
+      plans.map((plan) => ({
+        plan_key: plan.key,
+        plan_name: plan.title,
+        matched_with_bought_package: hasActivePackage && activePackageKey === plan.key,
+        button_text: hasActivePackage && activePackageKey === plan.key ? 'SELECTED' : 'BUY NOW',
+      }))
+    );
+    console.groupEnd();
+  }
+
   hasActivePackage(): boolean {
-    return sessionStorage.getItem('has_active_package') === 'true';
+    void this.packageStatusVersion;
+    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
+
+    if (this.isPackageExpired(sessionStorage.getItem('package_expires_at'))) {
+      this.clearExpiredPackage();
+      return false;
+    }
+
+    return true;
   }
 
   isPurchasedPlan(plan: string): boolean {
@@ -73,7 +209,7 @@ export class PricingComponent {
   }
 
   getBuyButtonText(plan: string): string {
-    return this.isPurchasedPlan(plan) ? 'SELECTED' : 'BUY NOW';
+    return this.isPurchasedPlan(plan) ? 'ACTIVE' : 'BUY NOW';
   }
 
   applyCoupon(plan: PlanKey, inputEl: HTMLInputElement): void {
@@ -90,7 +226,8 @@ export class PricingComponent {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(sessionStorage.getItem('user_id')) || null
+      student_id: Number(sessionStorage.getItem('user_id')) || null,
+      amount: this.getBasePrice(plan)
     };
 
     this.apiService.applyCoopon(data).subscribe({
@@ -124,6 +261,11 @@ export class PricingComponent {
   selectedPlanKey = 'tech';
 
   buySelectedPlan(): void {
+    if (this.isPurchasedPlan(this.selectedPlanKey)) {
+      this.toastService.show('This package is already active until expiry.', 'success');
+      return;
+    }
+
     this.showPopup = false;
     switch (this.selectedPlanKey) {
       case 'school':
@@ -307,7 +449,7 @@ export class PricingComponent {
 
   openModal(tab: 'login' | 'signup', isSchool: boolean = false, plan?: string): void {
     if (plan && this.isPurchasedPlan(plan)) {
-      this.toastService.show('This package is already selected.', 'success');
+      this.toastService.show('This package is already active until expiry.', 'success');
       return;
     }
 
@@ -335,7 +477,7 @@ export class PricingComponent {
       const planMonths = plan === 'school' || plan === 'schooltech' ? 12 : this.planMonths[plan as PlanKey];
 
       this.popupService.setPopupData({
-        planKey: plan,
+        planKey: plan as PackagePlanKey,
         planName: selectedPlan.title,
         taxableAmount,
         gstAmount,
@@ -361,6 +503,7 @@ export class PricingComponent {
     }
 
     this.showPopup = true;
+    document.body.style.overflow = 'hidden';
   }
 
   applyPopupCoupon(): void {
@@ -375,7 +518,8 @@ export class PricingComponent {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(sessionStorage.getItem('user_id')) || null
+      student_id: Number(sessionStorage.getItem('user_id')) || null,
+      amount: this.getBasePrice(plan)
     };
 
     this.apiService.applyCoopon(data).subscribe({
@@ -401,10 +545,18 @@ export class PricingComponent {
 
   closePopup(): void {
     this.showPopup = false;
+    document.body.style.overflow = '';
   }
 
   getPopupPrice(): number {
     return this.getPrice(this.selectedPlanKey as PlanKey);
+  }
+
+  onDurationChange(event: Event): void {
+    const month = Number((event.target as HTMLSelectElement).value);
+    if (this.selectedPlanKey === 'tech' || this.selectedPlanKey === 'smart' || this.selectedPlanKey === 'combo') {
+      this.selectMonth(this.selectedPlanKey as PlanKey, month);
+    }
   }
 
   selectMonth(plan: PlanKey, month: number): void {
@@ -429,6 +581,12 @@ export class PricingComponent {
       combo: 3459
     };
     return oldPrices[plan] * this.planMonths[plan];
+  }
+
+  getPriceForMonth(plan: string, month: number): number {
+    if (plan === 'school' || plan === 'schooltech') return 0;
+    const p = plan as PlanKey;
+    return (this.paymentPrices[p] || 0) * month;
   }
 
   getDuration(plan: PlanKey): string {
