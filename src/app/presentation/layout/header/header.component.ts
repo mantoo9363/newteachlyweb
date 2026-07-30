@@ -138,7 +138,7 @@ export class HeaderComponent implements OnInit {
     this.navigationMenu.forEach((menu) => {
       if (menu.type === 'link') {
         if (menu.title.toLowerCase().includes(query)) {
-          results.push({ title: menu.title, url: menu.url });
+          results.push({ title: menu.title, url: menu.url, requiresPlan: menu.requiresPlan });
         }
       } else if (menu.items) {
         menu.items.forEach((item: any) => {
@@ -148,6 +148,7 @@ export class HeaderComponent implements OnInit {
                 results.push({
                   title: `${menu.title} > ${item.title} > ${subItem.title}`,
                   url: subItem.url,
+                  requiresPlan: subItem.requiresPlan,
                 });
               }
             });
@@ -156,6 +157,7 @@ export class HeaderComponent implements OnInit {
               results.push({
                 title: `${menu.title} > ${item.title}`,
                 url: item.url,
+                requiresPlan: item.requiresPlan,
               });
             }
           }
@@ -187,6 +189,40 @@ export class HeaderComponent implements OnInit {
 
   private isPurchasedPlan(planKey: string): boolean {
     return this.hasPurchasedPackage() && sessionStorage.getItem('active_package_key') === planKey;
+  }
+
+  // The 3 individual plan states: Tech, Smart, and Combo (Tech & Smart together).
+  // Combo appears in both groups since it unlocks the whole system.
+  private readonly planGroups: Record<'tech' | 'smart', string[]> = {
+    tech: ['tech', 'combo'],
+    smart: ['smart', 'combo'],
+  };
+
+  private readonly planGroupLabels: Record<'tech' | 'smart', string> = {
+    tech: 'Tech Education Plan',
+    smart: 'Smart Education Plan',
+  };
+
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology'];
+
+  hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
+    if (!this.hasPurchasedPackage()) return false;
+    const activePlanKey = sessionStorage.getItem('active_package_key');
+    return !!activePlanKey && this.planGroups[group].includes(activePlanKey);
+  }
+
+  planGroupLabel(group: 'tech' | 'smart'): string {
+    return this.planGroupLabels[group];
+  }
+
+  isMenuItemAccessible(item: any): boolean {
+    if (!this.isLoggedIn) return false;
+    return item?.requiresPlan ? this.hasPlanGroupAccess(item.requiresPlan) : true;
+  }
+
+  isNavLinkAccessible(item: any): boolean {
+    if (item?.url && this.publicUrls.includes(this.getRoutePath(item.url))) return true;
+    return this.isMenuItemAccessible(item);
   }
 
   private isPackageExpired(expiresAt: string | null): boolean {
@@ -385,14 +421,24 @@ export class HeaderComponent implements OnInit {
   //this.closeSearchModal();
   //}
 
-  onSearchItemClick(url: string): void {
+  onSearchItemClick(url: string, requiresPlan?: 'tech' | 'smart'): void {
 
     this.closeSearchModal();
+
+    if (this.publicUrls.includes(this.getRoutePath(url))) {
+      this.router.navigateByUrl(url);
+      return;
+    }
 
     const token = sessionStorage.getItem('access_token');
 
     if (!token) {
       this.openModal('signup');
+      return;
+    }
+
+    if (requiresPlan && !this.hasPlanGroupAccess(requiresPlan)) {
+      this.openMessage(`Upgrade to the ${this.planGroupLabel(requiresPlan)} to access this content.`);
       return;
     }
 
@@ -418,29 +464,30 @@ export class HeaderComponent implements OnInit {
         {
           title: 'Board Curriculum',
           type: 'nested-dropdown',
+          requiresPlan: 'smart',
           items: [
-            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse' },
-            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse' },
-            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc' },
+            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart' },
+            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart' },
+            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart' },
 
-            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login' }
+            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login', requiresPlan: 'smart' }
           ]
         },
-        { title: 'CT/AI', url: '/ctai' },
+        { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },
 
         // { title: 'Computer Course', url: 'https://zenai.theteachly.com/school-courses/computer-course-school' },
-        { title: 'Essential Studies', url: '/iframe-view?url=https://zenai.theteachly.com/school-courses/aptitude60' },
-        { title: 'Project Work', url: '/iframe-view?url=https://zenai.theteachly.com/project-work/school-level' },
-        { title: 'Stem Simulators', url: '/simulator' }
+        { title: 'Essential Studies', url: '/iframe-view?url=https://zenai.theteachly.com/school-courses/aptitude60', requiresPlan: 'smart' },
+        { title: 'Project Work', url: '/iframe-view?url=https://zenai.theteachly.com/project-work/school-level', requiresPlan: 'smart' },
+        { title: 'Stem Simulators', url: '/simulator', requiresPlan: 'smart' }
       ]
     },
     {
       title: 'Simulations',
       type: 'dropdown',
       items: [
-        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module' },
-        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module' },
-        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module' },
+        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module', requiresPlan: 'tech' },
+        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
+        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
 
       ]
     },
@@ -449,11 +496,11 @@ export class HeaderComponent implements OnInit {
       title: 'Languages',
       type: 'dropdown',
       items: [
-        { title: 'ARABIC', url: '/iframe-view?url=https://zenai.theteachly.com/course/arabic-language' },
-        { title: 'GERMAN', url: '/iframe-view?url=https://zenai.theteachly.com/course/german-language' },
-        { title: 'SPANISH', url: '/iframe-view?url=https://zenai.theteachly.com/course/spanish-language' },
-        { title: 'FRENCH', url: '/iframe-view?url=https://zenai.theteachly.com/course/french-language' },
-        { title: 'SANSKRIT', url: '/iframe-view?url=https://zenai.theteachly.com/course/sanskrit' }
+        { title: 'ARABIC', url: '/iframe-view?url=https://zenai.theteachly.com/course/arabic-language', requiresPlan: 'smart' },
+        { title: 'GERMAN', url: '/iframe-view?url=https://zenai.theteachly.com/course/german-language', requiresPlan: 'smart' },
+        { title: 'SPANISH', url: '/iframe-view?url=https://zenai.theteachly.com/course/spanish-language', requiresPlan: 'smart' },
+        { title: 'FRENCH', url: '/iframe-view?url=https://zenai.theteachly.com/course/french-language', requiresPlan: 'smart' },
+        { title: 'SANSKRIT', url: '/iframe-view?url=https://zenai.theteachly.com/course/sanskrit', requiresPlan: 'smart' }
       ]
     },
     {
@@ -472,17 +519,17 @@ export class HeaderComponent implements OnInit {
       title: 'Competitive Exams',
       type: 'dropdown',
       items: [
-        { title: 'IELTS', url: '/iframe-view?url=https://zenai.theteachly.com/course/international-english-language-testing-system-ielts' },
+        { title: 'IELTS', url: '/iframe-view?url=https://zenai.theteachly.com/course/international-english-language-testing-system-ielts', requiresPlan: 'smart' },
 
-        { title: 'Engineering', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/engineering' },
-        { title: 'Medical', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/medical' },
-        { title: 'Bank Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/competitive-bank-exams' },
-        { title: 'Foundation', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/foundation' },
-        { title: 'SSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/staff-selection-commission-ssc' },
-        { title: 'Defence', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/defence' },
-        { title: 'UPSSSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/upsssc' },
-        { title: 'Railways', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/railways' },
-        { title: 'State Level Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/state-level-exams' }
+        { title: 'Engineering', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/engineering', requiresPlan: 'smart' },
+        { title: 'Medical', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/medical', requiresPlan: 'smart' },
+        { title: 'Bank Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/competitive-bank-exams', requiresPlan: 'smart' },
+        { title: 'Foundation', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/foundation', requiresPlan: 'smart' },
+        { title: 'SSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/staff-selection-commission-ssc', requiresPlan: 'smart' },
+        { title: 'Defence', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/defence', requiresPlan: 'smart' },
+        { title: 'UPSSSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/upsssc', requiresPlan: 'smart' },
+        { title: 'Railways', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/railways', requiresPlan: 'smart' },
+        { title: 'State Level Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/state-level-exams', requiresPlan: 'smart' }
       ]
     },
 
@@ -827,6 +874,14 @@ export class HeaderComponent implements OnInit {
         this.paymentSummary.couponCode = plan.couponCode || null;
       }
     });
+
+    this.popupService.signup$.subscribe((shouldOpen: boolean) => {
+      if (shouldOpen) {
+        this.openModal('signup');
+        this.popupService.closeSignup();
+      }
+    });
+
     this.translateService.setDefaultLang('en');
     this.selectedLanguage = '';
     this.translateService.use('en');
@@ -1608,9 +1663,7 @@ export class HeaderComponent implements OnInit {
   navigateWithLogin(url: string): void {
 
     // Home aur login page bina login ke open ho sakte hain
-    const publicUrls = ['/', '/about-us'];
-
-    if (publicUrls.includes(this.getRoutePath(url))) {
+    if (this.publicUrls.includes(this.getRoutePath(url))) {
       this.router.navigateByUrl(url);
       return;
     }
@@ -1628,5 +1681,30 @@ export class HeaderComponent implements OnInit {
       this.router.navigateByUrl(url);
     }
 
+  }
+
+  handleMenuLinkClick(event: Event, url: string, item?: any): void {
+    if (!url) return;
+
+    const path = this.getRoutePath(url);
+
+    if (this.publicUrls.includes(path)) {
+      return; // Allow standard routerLink navigation
+    }
+
+    if (!this.isLoggedIn) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
+      this.openModal('signup');
+      return;
+    }
+
+    if (item?.requiresPlan && !this.hasPlanGroupAccess(item.requiresPlan)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
+      this.openMessage(`Upgrade to the ${this.planGroupLabel(item.requiresPlan)} to access this content.`);
+    }
   }
 }

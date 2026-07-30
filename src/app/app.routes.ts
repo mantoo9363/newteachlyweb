@@ -10,6 +10,7 @@ import { IframeViewComponent } from './presentation/pages/iframe-view/iframe-vie
 import { PrivacyPolicyComponent } from './presentation/pages/privacy-policy/privacy-policy.component';
 import { TermsOfServiceComponent } from './presentation/pages/terms-of-service/terms-of-service.component';
 import { CtAiComponent } from './presentation/pages/ct-ai/ct-ai.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -20,27 +21,32 @@ export const routes: Routes = [
   {
     path: 'simulator',
     component: SimulatorComponent,
+    canActivate: [authGuard],
     title: 'Teachly | STEM virtual lab - Physics, Chemistry, Biology & Math'
   },
 
    {
     path: 'ctai',
     component: CtAiComponent,
+    canActivate: [authGuard],
     title: 'Teachly | CT-AI'
   },
   {
     path: 'view-simulator/:id',
     component: SimulatorDetailComponent,
+    canActivate: [authGuard],
     title: 'Teachly | Interactive Simulation Detail'
   },
   {
     path: 'curriculum-details',
     component: CurriculumDetailsComponent,
+    canActivate: [authGuard],
     title: 'Teachly | Curriculum Details'
   },
   {
     path: 'iframe-view',
     component: IframeViewComponent,
+    canActivate: [authGuard],
     title: 'Teachly | External Content'
   },
   {

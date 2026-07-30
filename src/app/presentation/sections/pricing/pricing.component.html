@@ -11,7 +11,13 @@
     <span class="chakra">☸</span>
   </div>
 
-  <div class="pricing-container">
+  <div 
+    class="pricing-container" 
+    #pricingContainer 
+    (mouseenter)="stopAutoScroll()" 
+    (mouseleave)="startAutoScroll()" 
+    (touchstart)="stopAutoScroll()" 
+    (touchend)="startAutoScroll()">
     <!-- LEFT CARD -->
     <div class="pricing-card school" [class.purchased-plan]="isPurchasedPlan('school')">
       <div class="crown-badge" *ngIf="isPurchasedPlan('school')">
@@ -317,7 +323,9 @@
         <i class="fas fa-crown"></i>
         <span>Your Package</span>
       </div>
-      <b><span class="best">Best Choice</span></b>
+      <div class="best-badge">
+        <i class="fas fa-star"></i> Best Choice
+      </div>
 
       <b>
         <h1><span class="plan-title">INDIVIDUAL</span></h1>
@@ -457,31 +465,23 @@
             </div>
           </div>
 
-          <!-- Monthly Plans -->
-          <div class="duration-list" *ngIf="selectedPlan.type !== 'yearly'">
-            <div class="duration active">
-              <span *ngIf="selectedPlanKey == 'tech'">
-                ₹{{ getPrice("tech") }} / {{ getDuration("tech") }}
-              </span>
-
-              <span *ngIf="selectedPlanKey == 'smart'">
-                ₹{{ getPrice("smart") }} / {{ getDuration("smart") }}
-              </span>
-
-              <span *ngIf="selectedPlanKey == 'combo'">
-                ₹{{ getPrice("combo") }} / {{ getDuration("combo") }}
-              </span>
-            </div>
-
-            <!--  <div class="duration">
-              <h5>6 Months</h5>
-              <span>Save 15%</span>
-            </div>-->
-
-            <!--<div class="duration">
-              <h5>12 Months</h5>
-              <span>Save 30%</span>
-            </div>-->
+          <!-- Monthly Plans Dropdown -->
+          <div class="duration-select-wrapper" *ngIf="selectedPlan.type !== 'yearly'">
+            <select
+              class="duration-dropdown"
+              [ngModel]="selectedPlanKey == 'tech' || selectedPlanKey == 'smart' || selectedPlanKey == 'combo' ? planMonths[selectedPlanKey] : 1"
+              (change)="onDurationChange($event)"
+            >
+              <option [value]="1">
+                ₹{{ getPriceForMonth(selectedPlanKey, 1) }} / 1 Month
+              </option>
+              <option [value]="6">
+                ₹{{ getPriceForMonth(selectedPlanKey, 6) }} / 6 Months
+              </option>
+              <option [value]="12">
+                ₹{{ getPriceForMonth(selectedPlanKey, 12) }} / 12 Months
+              </option>
+            </select>
           </div>
         </div>
 

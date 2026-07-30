@@ -60,10 +60,17 @@
                 class="topic-card h-100"
                 [class.has-image]="topic.image"
                 [class.clickable]="topic.hasReadMore !== false"
+                [class.locked]="!isTopicAccessible(topic)"
                 role="article"
                 [style.--topic-color]="topic.color"
                 (click)="topic.hasReadMore !== false ? onReadMore(topic) : null"
               >
+                @if (!isTopicAccessible(topic)) {
+                  <div class="lock-badge">
+                    <i class="fas fa-lock"></i>
+                  </div>
+                }
+
                 @if (topic.image) {
                   <div class="card-image-wrapper">
                     <img
@@ -126,10 +133,17 @@
           <div
             class="topic-card clickable"
             [class.has-image]="topic.image"
+            [class.locked]="!isTopicAccessible(topic)"
             role="article"
             [style.--topic-color]="topic.color"
             (click)="onReadMore(topic)"
           >
+            @if (!isTopicAccessible(topic)) {
+              <div class="lock-badge">
+                <i class="fas fa-lock"></i>
+              </div>
+            }
+
             @if (topic.image) {
               <div class="card-image-wrapper">
                 <img

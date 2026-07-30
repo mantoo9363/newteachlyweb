@@ -228,6 +228,36 @@
       color: var(--topic-color);
     }
   }
+
+  &.locked {
+    .card-title,
+    .card-description {
+      opacity: 0.6;
+    }
+
+    &:hover {
+      border-color: #ef4444;
+    }
+  }
+}
+
+.lock-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  background: rgba(15, 23, 42, 0.55);
+  color: #fff;
+  font-size: 13px;
+  backdrop-filter: blur(2px);
 }
 
 .card-image-wrapper {
