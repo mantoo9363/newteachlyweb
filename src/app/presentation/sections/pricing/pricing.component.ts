@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupService } from '../../../core/services/popup.service';
@@ -16,9 +16,12 @@ type PackagePlanKey = PlanKey | 'school' | 'schooltech';
   templateUrl: './pricing.component.html',
   styleUrls: ['./pricing.component.scss'],
 })
-export class PricingComponent implements OnInit, OnDestroy {
+export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() signupClick = new EventEmitter<boolean>();
+  @ViewChild('pricingContainer') pricingContainer!: ElementRef<HTMLDivElement>;
+
+  private autoScrollInterval: any = null;
 
   constructor(
     private popupService: PopupService,
@@ -57,6 +60,39 @@ export class PricingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('teachly-package-status-changed', this.packageStatusListener);
+    this.stopAutoScroll();
+    document.body.style.overflow = '';
+  }
+
+  ngAfterViewInit(): void {
+    this.startAutoScroll();
+  }
+
+  startAutoScroll(): void {
+    this.stopAutoScroll();
+    this.autoScrollInterval = setInterval(() => {
+      if (!this.pricingContainer?.nativeElement) return;
+      const el = this.pricingContainer.nativeElement;
+      
+      // Check if carousel scroll is needed (when overflow exists on mid/mob screens)
+      if (el.scrollWidth > el.clientWidth) {
+        const cardWidth = el.firstElementChild ? (el.firstElementChild as HTMLElement).offsetWidth + 16 : 320;
+        const maxScrollLeft = el.scrollWidth - el.clientWidth;
+        
+        if (el.scrollLeft + cardWidth >= maxScrollLeft - 10) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          el.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
+      }
+    }, 3000);
+  }
+
+  stopAutoScroll(): void {
+    if (this.autoScrollInterval) {
+      clearInterval(this.autoScrollInterval);
+      this.autoScrollInterval = null;
+    }
   }
 
   planMonths: Record<PlanKey, number> = {
@@ -190,7 +226,8 @@ export class PricingComponent implements OnInit, OnDestroy {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(sessionStorage.getItem('user_id')) || null
+      student_id: Number(sessionStorage.getItem('user_id')) || null,
+      amount: this.getBasePrice(plan)
     };
 
     this.apiService.applyCoopon(data).subscribe({
@@ -466,6 +503,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     }
 
     this.showPopup = true;
+    document.body.style.overflow = 'hidden';
   }
 
   applyPopupCoupon(): void {
@@ -480,7 +518,8 @@ export class PricingComponent implements OnInit, OnDestroy {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(sessionStorage.getItem('user_id')) || null
+      student_id: Number(sessionStorage.getItem('user_id')) || null,
+      amount: this.getBasePrice(plan)
     };
 
     this.apiService.applyCoopon(data).subscribe({
@@ -506,10 +545,18 @@ export class PricingComponent implements OnInit, OnDestroy {
 
   closePopup(): void {
     this.showPopup = false;
+    document.body.style.overflow = '';
   }
 
   getPopupPrice(): number {
     return this.getPrice(this.selectedPlanKey as PlanKey);
+  }
+
+  onDurationChange(event: Event): void {
+    const month = Number((event.target as HTMLSelectElement).value);
+    if (this.selectedPlanKey === 'tech' || this.selectedPlanKey === 'smart' || this.selectedPlanKey === 'combo') {
+      this.selectMonth(this.selectedPlanKey as PlanKey, month);
+    }
   }
 
   selectMonth(plan: PlanKey, month: number): void {
@@ -534,6 +581,12 @@ export class PricingComponent implements OnInit, OnDestroy {
       combo: 3459
     };
     return oldPrices[plan] * this.planMonths[plan];
+  }
+
+  getPriceForMonth(plan: string, month: number): number {
+    if (plan === 'school' || plan === 'schooltech') return 0;
+    const p = plan as PlanKey;
+    return (this.paymentPrices[p] || 0) * month;
   }
 
   getDuration(plan: PlanKey): string {

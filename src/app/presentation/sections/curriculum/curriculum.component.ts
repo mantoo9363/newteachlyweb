@@ -2,6 +2,8 @@ import { Component, HostListener, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angula
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
+import { PopupService } from '../../../core/services/popup.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 register();
 
@@ -19,7 +21,67 @@ export class CurriculumComponent implements OnInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
+    private popupService: PopupService,
+    private toastService: ToastService,
   ) {}
+
+  // The 3 individual plan states: Tech, Smart, and Combo (Tech & Smart together).
+  // Combo appears in both groups since it unlocks the whole system. Mirrors
+  // the same gating rules used in header.component.ts.
+  private readonly planGroups: Record<'tech' | 'smart', string[]> = {
+    tech: ['tech', 'combo'],
+    smart: ['smart', 'combo'],
+  };
+
+  private readonly planGroupLabels: Record<'tech' | 'smart', string> = {
+    tech: 'Tech Education Plan',
+    smart: 'Smart Education Plan',
+  };
+
+  get isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('access_token');
+  }
+
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
+
+  private hasPurchasedPackage(): boolean {
+    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
+    return !this.isPackageExpired(sessionStorage.getItem('package_expires_at'));
+  }
+
+  private hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
+    if (!this.hasPurchasedPackage()) return false;
+    const activePlanKey = sessionStorage.getItem('active_package_key');
+    return !!activePlanKey && this.planGroups[group].includes(activePlanKey);
+  }
+
+  isTopicAccessible(topic: any): boolean {
+    if (!topic.requiresPlan) return true;
+    return this.isLoggedIn && this.hasPlanGroupAccess(topic.requiresPlan);
+  }
+
+  private checkAccess(topic: any): boolean {
+    if (!topic.requiresPlan) return true;
+
+    if (!this.isLoggedIn) {
+      this.popupService.openSignup();
+      return false;
+    }
+
+    if (!this.hasPlanGroupAccess(topic.requiresPlan)) {
+      this.toastService.show(
+        `Upgrade to the ${this.planGroupLabels[topic.requiresPlan as 'tech' | 'smart']} to access this content.`,
+        'error'
+      );
+      return false;
+    }
+
+    return true;
+  }
 
   ngOnInit(): void {
     this.checkScreenSize();
@@ -46,6 +108,7 @@ export class CurriculumComponent implements OnInit {
       playUrl: 'https://circuit.theteachly.com',
       image: 'image/files/HD_01_CAD_Design_Module.png',
       btn:"Simulate Now",
+      requiresPlan: 'tech',
     },
     {
       id: 12,
@@ -58,6 +121,7 @@ export class CurriculumComponent implements OnInit {
       playUrl: '#',
       image: 'image/files/HD_04_Drone_Simulation_Module.png',
       btn:"Download Now",
+      requiresPlan: 'tech',
 
     },
     {
@@ -71,6 +135,7 @@ export class CurriculumComponent implements OnInit {
       btn:"Simulate Now",
       playUrl: 'https://drone.theteachly.com',
       image: 'image/files/HD_02_AI_Learning_Module.png',
+      requiresPlan: 'tech',
     },
     {
       id: 7,
@@ -81,6 +146,7 @@ export class CurriculumComponent implements OnInit {
         'Get instant, personalized support for any subject at any time. Our advanced AI tutor helps you overcome learning hurdles whenever they occur.',
       hasReadMore: true,
       image: 'image/files/HD_05_Ask_Doubt_Module.png',
+      requiresPlan: 'smart',
     },
     {
       id: 1,
@@ -91,6 +157,7 @@ export class CurriculumComponent implements OnInit {
         'Experience immersive learning with our powered virtual labs that bring complex theories to life through interactive experiments.',
       hasReadMore: true,
       image: 'image/Simulator.png',
+      requiresPlan: 'smart',
     },
   ];
 
@@ -103,6 +170,7 @@ export class CurriculumComponent implements OnInit {
       description:
         'Master new languages with ease using our advanced AI tools, focusing on pronunciation, grammar, and conversational skills.',
       image: 'image/Flags.png',
+      requiresPlan: 'smart',
     },
     {
       id: 4,
@@ -112,6 +180,7 @@ export class CurriculumComponent implements OnInit {
       description:
         'Prepare for various competitive exams like Olympiads, NTSE, and more with our specialized coaching and mock tests.',
       image: 'image/Competitive exams.png',
+      requiresPlan: 'smart',
     },
 
     {
@@ -156,6 +225,8 @@ export class CurriculumComponent implements OnInit {
   ];
 
   onReadMore(topic: any): void {
+    if (!this.checkAccess(topic)) return;
+
     if (topic.id === 1) {
       this.router.navigate(['/simulator']);
       return;
@@ -206,6 +277,8 @@ export class CurriculumComponent implements OnInit {
 
   onPlay(topic: any, event: Event): void {
     event.stopPropagation();
+    if (!this.checkAccess(topic)) return;
+
     if (this.isDesktop && topic.playUrl) {
       window.open(topic.playUrl, '_blank');
     }
