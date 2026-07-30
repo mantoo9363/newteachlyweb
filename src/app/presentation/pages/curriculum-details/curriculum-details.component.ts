@@ -48,6 +48,7 @@ openMessage(message: string) {
   showIframe = false; // Control iframe visibility
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
+  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
   private allModules: { [key: string]: any } = {
     '10': {
@@ -76,7 +77,8 @@ openMessage(message: string) {
       outcome: 'By the end, you won’t just understand design—you’ll be able to create it yourself.',
       video: '/image/CAD DEMO.mp4',
       image: '/image/CAD_IMAGE.png',
-      playUrl: 'https://circuit.theteachly.com'
+      // playUrl: 'https://circuit.theteachly.com'
+       playUrl: 'http://localhost:3001'
     },
    
     '12': {
@@ -196,7 +198,8 @@ learningLevels: [
 
   image: '/image/AI Learning.jpeg',
 
-  playUrl: 'https://aiab.theteachly.com/'
+  playUrl: 'http://localhost:3000/'
+  // playUrl: 'https://aiab.theteachly.com/'
 },
   };
 
@@ -206,7 +209,15 @@ learningLevels: [
     window.scrollTo(0, 0);
     this.route.queryParams.subscribe(params => {
       window.scrollTo(0, 0);
-      this.id = params['id'];
+      const nextId = params['id'] ?? null;
+      const isModuleChange = this.id !== nextId;
+
+      if (isModuleChange) {
+        this.showIframe = false;
+        this.iframeUrl = '';
+      }
+
+      this.id = nextId;
       this.title = params['title'];
 
       if (this.id && this.allModules[this.id]) {
@@ -303,6 +314,19 @@ learningLevels: [
     return;
   }
 
+  if (this.id === '13' && this.hasAiIframeLoginCookie()) {
+    this.iframeUrl = this.moduleData.playUrl;
+    this.showIframe = true;
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  if (this.id === '10') {
+    this.iframeUrl = this.moduleData.playUrl;
+    this.showIframe = true;
+    window.scrollTo(0, 0);
+    return;
+  }
 
 this.apiService.generateTempToken().subscribe({
   
@@ -310,12 +334,16 @@ this.apiService.generateTempToken().subscribe({
     const token = res.temp_token;
    // console.log(token);
 
-    window.location.href =
-      `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
+    this.iframeUrl = this.buildIframeUrl(this.moduleData.playUrl, { token });
+    this.showIframe = true;
+    window.scrollTo(0, 0);
   },
   error: (err) => {
     console.error(err);
-    alert('Token generation failed');
+    if (token && !sessionStorage.getItem('access_token')) {
+      sessionStorage.setItem('access_token', token);
+    }
+    this.openMessage('Simulation could not start. Please try again.');
   }
 });
 
@@ -332,9 +360,24 @@ this.apiService.generateTempToken().subscribe({
 
 }
 
+  private buildIframeUrl(baseUrl: string, params: Record<string, string>): string {
+    const url = new URL(baseUrl);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    return url.toString();
+  }
+
+  private hasAiIframeLoginCookie(): boolean {
+    return document.cookie
+      .split(';')
+      .some((cookie) => cookie.trim() === `${this.aiIframeLoginCookie}=true`);
+  }
+
   closeIframe(): void {
     this.showIframe = false;
     this.iframeUrl = '';
+    window.scrollTo(0, 0);
   }
 
   switchModule(moduleId: string): void {

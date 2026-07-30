@@ -126,6 +126,7 @@ export class HeaderComponent implements OnInit {
   searchQuery = signal('');
   public service = inject(ApiService);
   private readonly signupDraftStorageKey = 'teachly_signup_draft';
+  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
   private isRestoringSignupDraft = false;
   get filteredSearchItems() {
     const query = this.searchQuery().toLowerCase().trim();
@@ -1594,8 +1595,14 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('active_package_key');
     sessionStorage.removeItem('package_expires_at');
     sessionStorage.removeItem('active_course');
+    this.clearAiIframeLoginCookie();
     this.userMenuOpen = false;
     window.location.reload();
+  }
+
+  private clearAiIframeLoginCookie(): void {
+    document.cookie = `${this.aiIframeLoginCookie}=; path=/; max-age=0; SameSite=Lax`;
+    document.cookie = `${this.aiIframeLoginCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 
   navigateWithLogin(url: string): void {

@@ -1,12 +1,16 @@
-@if (!showIframe) {
 <app-header></app-header>
-}
 
 <div class="details-page" [class.full-screen]="showIframe">
   <div class="content-container">
     @if (showIframe) {
     <div class="iframe-wrapper">
       <div class="iframe-header">
+        <button (click)="closeIframe()" class="back-module-btn">
+          <i class="fas fa-arrow-left"></i> Back to Module
+        </button>
+        <button (click)="goBack()" class="back-home-btn">
+          <i class="fas fa-home"></i> Back to Home
+        </button>
         @if (simulationModules.length > 0) {
         <div class="module-selector">
           <span class="selector-label"><i class="fas fa-th-large"></i> Switch Module:</span>
@@ -18,7 +22,7 @@
         </div>
         }
         <button (click)="closeIframe()" class="close-btn">
-          <i class="fas fa-times"></i> Close Simulation
+          <i class="fas fa-times"></i> Close
         </button>
       </div>
       <app-iframe-embed [url]="iframeUrl" [title]="moduleData?.headline || 'Simulation'"></app-iframe-embed>
@@ -559,5 +563,3 @@
 @if (!showIframe) {
 <app-footer></app-footer>
 }
-
-
