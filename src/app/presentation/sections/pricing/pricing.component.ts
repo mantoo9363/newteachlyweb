@@ -7,6 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { FormsModule } from '@angular/forms';
 
 type PlanKey = 'tech' | 'smart' | 'combo';
+type PackagePlanKey = PlanKey | 'school' | 'schooltech';
 
 @Component({
   selector: 'app-pricing',
@@ -88,6 +89,21 @@ export class PricingComponent implements OnInit, OnDestroy {
     return this.paymentPrices[plan] * this.planMonths[plan];
   }
 
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
+
+  private clearExpiredPackage(): void {
+    sessionStorage.setItem('has_active_package', 'false');
+    sessionStorage.removeItem('active_package_key');
+    sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
+    this.packageStatusVersion++;
+  }
+
   private updateProfileSummary(profile?: any): void {
     const isLoggedIn = Boolean(sessionStorage.getItem('access_token'));
     if (!isLoggedIn && !profile) {
@@ -142,7 +158,14 @@ export class PricingComponent implements OnInit, OnDestroy {
 
   hasActivePackage(): boolean {
     void this.packageStatusVersion;
-    return sessionStorage.getItem('has_active_package') === 'true';
+    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
+
+    if (this.isPackageExpired(sessionStorage.getItem('package_expires_at'))) {
+      this.clearExpiredPackage();
+      return false;
+    }
+
+    return true;
   }
 
   isPurchasedPlan(plan: string): boolean {
@@ -150,7 +173,7 @@ export class PricingComponent implements OnInit, OnDestroy {
   }
 
   getBuyButtonText(plan: string): string {
-    return this.isPurchasedPlan(plan) ? 'SELECTED' : 'BUY NOW';
+    return this.isPurchasedPlan(plan) ? 'ACTIVE' : 'BUY NOW';
   }
 
   applyCoupon(plan: PlanKey, inputEl: HTMLInputElement): void {
@@ -201,6 +224,11 @@ export class PricingComponent implements OnInit, OnDestroy {
   selectedPlanKey = 'tech';
 
   buySelectedPlan(): void {
+    if (this.isPurchasedPlan(this.selectedPlanKey)) {
+      this.toastService.show('This package is already active until expiry.', 'success');
+      return;
+    }
+
     this.showPopup = false;
     switch (this.selectedPlanKey) {
       case 'school':
@@ -384,7 +412,7 @@ export class PricingComponent implements OnInit, OnDestroy {
 
   openModal(tab: 'login' | 'signup', isSchool: boolean = false, plan?: string): void {
     if (plan && this.isPurchasedPlan(plan)) {
-      this.toastService.show('This package is already selected.', 'success');
+      this.toastService.show('This package is already active until expiry.', 'success');
       return;
     }
 
@@ -412,7 +440,7 @@ export class PricingComponent implements OnInit, OnDestroy {
       const planMonths = plan === 'school' || plan === 'schooltech' ? 12 : this.planMonths[plan as PlanKey];
 
       this.popupService.setPopupData({
-        planKey: plan,
+        planKey: plan as PackagePlanKey,
         planName: selectedPlan.title,
         taxableAmount,
         gstAmount,

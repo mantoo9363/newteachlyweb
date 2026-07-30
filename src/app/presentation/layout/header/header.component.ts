@@ -173,23 +173,55 @@ export class HeaderComponent implements OnInit {
   }
 
   hasPurchasedPackage(): boolean {
-    return sessionStorage.getItem('has_active_package') === 'true';
+    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
+
+    if (this.isPackageExpired(sessionStorage.getItem('package_expires_at'))) {
+      this.clearPackageStatus();
+      this.notifyPackageStatusChanged();
+      return false;
+    }
+
+    return true;
   }
 
   private isPurchasedPlan(planKey: string): boolean {
     return this.hasPurchasedPackage() && sessionStorage.getItem('active_package_key') === planKey;
   }
 
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
+
+  private clearPackageStatus(): void {
+    sessionStorage.setItem('has_active_package', 'false');
+    sessionStorage.removeItem('active_package_key');
+    sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
+  }
+
   private getPlanKeyFromName(planName: string | null | undefined): string | null {
+    const normalizedName = planName?.trim().toLowerCase();
     const planMap: Record<string, string> = {
-      'School Plan': 'school',
-      'School Tech Plan': 'schooltech',
-      'Tech Education Plan': 'tech',
-      'Smart Education Plan': 'smart',
-      'Tech & Smart Education Plan': 'combo',
+      'school plan': 'school',
+      'school': 'school',
+      'school tech plan': 'schooltech',
+      'school tech': 'schooltech',
+      'tech education plan': 'tech',
+      'tech plan': 'tech',
+      'tech': 'tech',
+      'smart education plan': 'smart',
+      'smart plan': 'smart',
+      'smart': 'smart',
+      'tech & smart education plan': 'combo',
+      'tech & smart': 'combo',
+      'tech and smart': 'combo',
+      'combo': 'combo',
     };
 
-    return planName ? planMap[planName] || null : null;
+    return normalizedName ? planMap[normalizedName] || null : null;
   }
 
   private notifyPackageStatusChanged(profile?: any): void {
@@ -204,11 +236,12 @@ export class HeaderComponent implements OnInit {
   }
 
   private setPackageStatusFromResponse(res: any): void {
+    const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
     const hasActivePackage = Boolean(
       res?.user?.has_active_package ||
       res?.payment?.has_active_package ||
       res?.has_active_package
-    );
+    ) && !this.isPackageExpired(packageExpiresAt);
 
     sessionStorage.setItem('has_active_package', String(hasActivePackage));
 
@@ -225,7 +258,6 @@ export class HeaderComponent implements OnInit {
       sessionStorage.removeItem('active_package_key');
     }
 
-    const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
     if (packageExpiresAt && hasActivePackage) {
       sessionStorage.setItem('package_expires_at', packageExpiresAt);
     } else if (!hasActivePackage) {
@@ -233,9 +265,9 @@ export class HeaderComponent implements OnInit {
     }
 
     const activeCourse = res?.course || res?.payment?.plan_name;
-    if (activeCourse) {
+    if (activeCourse && hasActivePackage) {
       sessionStorage.setItem('active_course', activeCourse);
-    } else if (!hasActivePackage) {
+    } else {
       sessionStorage.removeItem('active_course');
     }
 
@@ -251,20 +283,31 @@ export class HeaderComponent implements OnInit {
         const activePayment = Array.isArray(payments)
           ? payments.find((payment: any) => payment?.is_active)
           : null;
-        const hasActivePackage = Boolean(activePayment);
+        const hasActivePackage = Boolean(activePayment) && !this.isPackageExpired(activePayment?.expires_at);
 
         sessionStorage.setItem('has_active_package', String(hasActivePackage));
 
-        if (activePayment?.active_package_key) {
-          sessionStorage.setItem('active_package_key', activePayment.active_package_key);
+        const activePackageKey =
+          activePayment?.active_package_key ||
+          this.getPlanKeyFromName(activePayment?.plan_name) ||
+          this.getPlanKeyFromName(activePayment?.course);
+
+        if (activePackageKey && hasActivePackage) {
+          sessionStorage.setItem('active_package_key', activePackageKey);
         } else {
           sessionStorage.removeItem('active_package_key');
         }
 
-        if (activePayment?.expires_at) {
+        if (activePayment?.expires_at && hasActivePackage) {
           sessionStorage.setItem('package_expires_at', activePayment.expires_at);
         } else {
           sessionStorage.removeItem('package_expires_at');
+        }
+
+        if (hasActivePackage && (activePayment?.course || activePayment?.plan_name)) {
+          sessionStorage.setItem('active_course', activePayment.course || activePayment.plan_name);
+        } else {
+          sessionStorage.removeItem('active_course');
         }
 
         this.notifyPackageStatusChanged(activePayment);
@@ -273,6 +316,7 @@ export class HeaderComponent implements OnInit {
         sessionStorage.removeItem('has_active_package');
         sessionStorage.removeItem('active_package_key');
         sessionStorage.removeItem('package_expires_at');
+        sessionStorage.removeItem('active_course');
         this.notifyPackageStatusChanged();
       }
     });
@@ -1195,7 +1239,7 @@ export class HeaderComponent implements OnInit {
 
     this.service.chaneStuLogin(data).subscribe({
 
-      next: (res: any) => {
+        next: (res: any) => {
 
   console.log(res);
 
