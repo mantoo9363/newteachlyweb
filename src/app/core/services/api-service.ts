@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../api/api-endpoints';
 
@@ -23,47 +23,93 @@ export class ApiService {
     });
   }
 
+  private request<T>(source: Observable<T>): Observable<T> {
+    return source.pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (this.isInvalidTokenError(error)) {
+          this.logoutForExpiredToken();
+        }
+
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private isInvalidTokenError(error: HttpErrorResponse): boolean {
+    return error.status === 401 || error.error?.detail === 'Invalid or expired token';
+  }
+
+  private logoutForExpiredToken(): void {
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('user_id');
+    sessionStorage.removeItem('student_id');
+    sessionStorage.removeItem('school_name');
+    sessionStorage.removeItem('user_type');
+    sessionStorage.removeItem('has_active_package');
+    sessionStorage.removeItem('active_package_key');
+    sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
+    localStorage.removeItem('teachly_signup_draft');
+
+    if (window.location.pathname !== '/') {
+      window.location.href = '/';
+      return;
+    }
+
+    window.location.reload();
+  }
+
   chaneStuRegister(data: any): Observable<any> {
-    return this.http.post(this.url(API_ENDPOINTS.chanelStudent.register), data);
+    return this.request(this.http.post(this.url(API_ENDPOINTS.chanelStudent.register), data));
   }
 
   chaneStuLogin(data: any): Observable<any> {
-    return this.http.post(this.url(API_ENDPOINTS.chanelStudent.login), data);
+    return this.request(this.http.post(this.url(API_ENDPOINTS.chanelStudent.login), data));
   }
 
   getProfile(): Observable<any> {
-    return this.http.get<any>(this.url(API_ENDPOINTS.chanelStudent.profile), {
-      headers: this.getAuthHeaders(),
-    });
+    return this.request(
+      this.http.get<any>(this.url(API_ENDPOINTS.chanelStudent.profile), {
+        headers: this.getAuthHeaders(),
+      })
+    );
   }
 
   createSchoolOrder(data: any): Observable<any> {
-    return this.http.post(this.url(API_ENDPOINTS.schoolPayment.createOrder), data, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.request(
+      this.http.post(this.url(API_ENDPOINTS.schoolPayment.createOrder), data, {
+        headers: this.getAuthHeaders(),
+      })
+    );
   }
 
   verifySchoolPayment(data: any): Observable<any> {
-    return this.http.post(this.url(API_ENDPOINTS.schoolPayment.verifyPayment), data, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.request(
+      this.http.post(this.url(API_ENDPOINTS.schoolPayment.verifyPayment), data, {
+        headers: this.getAuthHeaders(),
+      })
+    );
   }
 
   getSchoolPaymentHistory(userId: number): Observable<any> {
-    return this.http.get(this.url(API_ENDPOINTS.schoolPayment.history(userId)), {
-      headers: this.getAuthHeaders(),
-    });
+    return this.request(
+      this.http.get(this.url(API_ENDPOINTS.schoolPayment.history(userId)), {
+        headers: this.getAuthHeaders(),
+      })
+    );
   }
 
   applyCoopon(data: any): Observable<any> {
-    return this.http.post(this.url(API_ENDPOINTS.schoolPayment.applyCoupon), data);
+    return this.request(this.http.post(this.url(API_ENDPOINTS.schoolPayment.applyCoupon), data));
   }
 
   generateTempToken(): Observable<any> {
-    return this.http.post<any>(
-      this.url(API_ENDPOINTS.token.generateTempToken),
-      { user_id: '' },
-      { headers: this.getAuthHeaders() }
+    return this.request(
+      this.http.post<any>(
+        this.url(API_ENDPOINTS.token.generateTempToken),
+        { user_id: '' },
+        { headers: this.getAuthHeaders() }
+      )
     );
   }
 }

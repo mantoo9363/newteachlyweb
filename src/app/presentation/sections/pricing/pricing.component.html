@@ -5,9 +5,15 @@
     available in one place.
   </p>
 
+
+
   <div class="pricing-container">
     <!-- LEFT CARD -->
-    <div class="pricing-card school">
+    <div class="pricing-card school" [class.purchased-plan]="isPurchasedPlan('school')">
+      <div class="crown-badge" *ngIf="isPurchasedPlan('school')">
+        <i class="fas fa-crown"></i>
+        <span>Your Package</span>
+      </div>
       <h3>SCHOOL PLAN</h3>
       <h2>For Only School Owner’s</h2>
 
@@ -39,7 +45,11 @@
       <div class="school-offer-box">📅 Offer Valid Till 15 August 2026</div>
     </div>
 
-    <div class="pricing-card school">
+    <div class="pricing-card school" [class.purchased-plan]="isPurchasedPlan('schooltech')">
+      <div class="crown-badge" *ngIf="isPurchasedPlan('schooltech')">
+        <i class="fas fa-crown"></i>
+        <span>Your Package</span>
+      </div>
       <h3>SCHOOL TECH PLAN</h3>
       <h2>For Only School Owner’s</h2>
 
@@ -72,7 +82,11 @@
     </div>
 
     <!-- CARD 1 -->
-    <div class="pricing-card modern-card">
+    <div class="pricing-card modern-card" [class.purchased-plan]="isPurchasedPlan('tech')">
+      <div class="crown-badge" *ngIf="isPurchasedPlan('tech')">
+        <i class="fas fa-crown"></i>
+        <span>Your Package</span>
+      </div>
       <b>
         <h1><span class="plan-title">INDIVIDUAL</span></h1>
       </b>
@@ -158,7 +172,11 @@
     </div>
 
     <!-- CARD 2 -->
-    <div class="pricing-card modern-card">
+    <div class="pricing-card modern-card" [class.purchased-plan]="isPurchasedPlan('smart')">
+      <div class="crown-badge" *ngIf="isPurchasedPlan('smart')">
+        <i class="fas fa-crown"></i>
+        <span>Your Package</span>
+      </div>
       <b>
         <h1><span class="plan-title">INDIVIDUAL</span></h1>
       </b>
@@ -239,7 +257,11 @@
       </button>
     </div>
     <!-- CARD 5 -->
-    <div class="pricing-card modern-card highlight last-card">
+    <div class="pricing-card modern-card highlight last-card" [class.purchased-plan]="isPurchasedPlan('combo')">
+      <div class="crown-badge" *ngIf="isPurchasedPlan('combo')">
+        <i class="fas fa-crown"></i>
+        <span>Your Package</span>
+      </div>
       <b><span class="best">Best Choice</span></b>
 
       <b>

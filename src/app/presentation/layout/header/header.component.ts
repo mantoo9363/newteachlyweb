@@ -180,6 +180,29 @@ export class HeaderComponent implements OnInit {
     return this.hasPurchasedPackage() && sessionStorage.getItem('active_package_key') === planKey;
   }
 
+  private getPlanKeyFromName(planName: string | null | undefined): string | null {
+    const planMap: Record<string, string> = {
+      'School Plan': 'school',
+      'School Tech Plan': 'schooltech',
+      'Tech Education Plan': 'tech',
+      'Smart Education Plan': 'smart',
+      'Tech & Smart Education Plan': 'combo',
+    };
+
+    return planName ? planMap[planName] || null : null;
+  }
+
+  private notifyPackageStatusChanged(profile?: any): void {
+    window.dispatchEvent(new CustomEvent('teachly-package-status-changed', {
+      detail: {
+        profile,
+        hasActivePackage: sessionStorage.getItem('has_active_package') === 'true',
+        activePackageKey: sessionStorage.getItem('active_package_key'),
+        packageExpiresAt: sessionStorage.getItem('package_expires_at'),
+      },
+    }));
+  }
+
   private setPackageStatusFromResponse(res: any): void {
     const hasActivePackage = Boolean(
       res?.user?.has_active_package ||
@@ -189,7 +212,13 @@ export class HeaderComponent implements OnInit {
 
     sessionStorage.setItem('has_active_package', String(hasActivePackage));
 
-    const activePackageKey = res?.active_package_key || res?.payment?.active_package_key || res?.user?.active_package_key;
+    const activePackageKey =
+      res?.active_package_key ||
+      res?.payment?.active_package_key ||
+      res?.user?.active_package_key ||
+      this.getPlanKeyFromName(res?.course) ||
+      this.getPlanKeyFromName(res?.payment?.plan_name);
+
     if (activePackageKey && hasActivePackage) {
       sessionStorage.setItem('active_package_key', activePackageKey);
     } else if (!hasActivePackage) {
@@ -202,6 +231,15 @@ export class HeaderComponent implements OnInit {
     } else if (!hasActivePackage) {
       sessionStorage.removeItem('package_expires_at');
     }
+
+    const activeCourse = res?.course || res?.payment?.plan_name;
+    if (activeCourse) {
+      sessionStorage.setItem('active_course', activeCourse);
+    } else if (!hasActivePackage) {
+      sessionStorage.removeItem('active_course');
+    }
+
+    this.notifyPackageStatusChanged(res);
   }
 
   private syncPackageStatus(): void {
@@ -228,11 +266,14 @@ export class HeaderComponent implements OnInit {
         } else {
           sessionStorage.removeItem('package_expires_at');
         }
+
+        this.notifyPackageStatusChanged(activePayment);
       },
       error: () => {
         sessionStorage.removeItem('has_active_package');
         sessionStorage.removeItem('active_package_key');
         sessionStorage.removeItem('package_expires_at');
+        this.notifyPackageStatusChanged();
       }
     });
   }
@@ -240,6 +281,7 @@ export class HeaderComponent implements OnInit {
   private loadLoggedInProfile(): void {
     if (!sessionStorage.getItem('access_token')) return;
 
+    console.log('Calling profile API on home load');
     this.service.getProfile().subscribe({
       next: (profile: any) => {
         this.profileData = profile;
@@ -1507,6 +1549,7 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('has_active_package');
     sessionStorage.removeItem('active_package_key');
     sessionStorage.removeItem('package_expires_at');
+    sessionStorage.removeItem('active_course');
     this.userMenuOpen = false;
     window.location.reload();
   }

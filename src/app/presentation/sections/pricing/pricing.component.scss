@@ -16,10 +16,74 @@
 
   .subtitle {
     max-width: 750px;
-    margin: 0 auto 30px;
+    margin: 0 auto 18px;
     color: #777;
     font-size: 14px;
     line-height: 1.6;
+  }
+}
+
+.profile-summary {
+  max-width: 960px;
+  margin: 0 auto 30px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(110px, 1fr));
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(126, 34, 206, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(36, 20, 64, 0.08);
+}
+
+.profile-summary-item {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8f6ff;
+  text-align: left;
+
+  span {
+    display: block;
+    margin-bottom: 4px;
+    color: #777;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  strong {
+    display: block;
+    color: #1f1430;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.profile-summary-item.wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .profile-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-summary-item.wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-summary-item.wide {
+    grid-column: span 1;
   }
 }
 
@@ -44,6 +108,8 @@
 
 .pricing-card,
 .modern-card {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   max-width: 360px;
   min-height: auto;
@@ -61,6 +127,52 @@
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 
   transition: 0.35s;
+}
+
+.pricing-card.purchased-plan {
+  padding-top: 54px;
+  border: 3px solid #f7c948;
+  box-shadow:
+    0 22px 55px rgba(126, 34, 206, 0.22),
+    0 0 0 6px rgba(247, 201, 72, 0.18);
+  transform: translateY(-6px);
+}
+
+.pricing-card.purchased-plan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(247, 201, 72, 0.18), transparent 32%);
+}
+
+.crown-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffcf33, #ff9f1c);
+  color: #341600;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 10px 22px rgba(255, 159, 28, 0.35);
+}
+
+.crown-badge i {
+  font-size: 13px;
+}
+
+.purchased-plan .buy-btn,
+.purchased-plan .buy-outline {
+  cursor: default;
+  background: linear-gradient(135deg, #f7c948, #ff9f1c) !important;
+  color: #2b1600 !important;
+  box-shadow: none;
 }
 
 .pricing-card:hover,

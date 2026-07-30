@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupService } from '../../../core/services/popup.service';
@@ -15,23 +15,47 @@ type PlanKey = 'tech' | 'smart' | 'combo';
   templateUrl: './pricing.component.html',
   styleUrls: ['./pricing.component.scss'],
 })
-export class PricingComponent {
+export class PricingComponent implements OnInit, OnDestroy {
 
   @Output() signupClick = new EventEmitter<boolean>();
 
   constructor(
     private popupService: PopupService,
     private apiService: ApiService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   couponCode = 'TEACH50';
   popupCouponCode = '';
+  profileSummary: {
+    name: string;
+    studentId: string;
+    userType: string;
+    course: string;
+    duration: string;
+    status: string;
+  } | null = null;
+  private packageStatusVersion = 0;
+  private packageStatusListener = (event: Event) => {
+    this.packageStatusVersion++;
+    const profile = (event as CustomEvent).detail?.profile;
+    this.updateProfileSummary(profile);
+    this.logPackageMatch(profile);
+    this.cdr.markForCheck();
+  };
 
   ngOnInit(): void {
     localStorage.removeItem('discount_tech');
     localStorage.removeItem('discount_smart');
     localStorage.removeItem('discount_combo');
+    window.addEventListener('teachly-package-status-changed', this.packageStatusListener);
+    this.updateProfileSummary();
+    this.logPackageMatch();
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('teachly-package-status-changed', this.packageStatusListener);
   }
 
   planMonths: Record<PlanKey, number> = {
@@ -64,7 +88,60 @@ export class PricingComponent {
     return this.paymentPrices[plan] * this.planMonths[plan];
   }
 
+  private updateProfileSummary(profile?: any): void {
+    const isLoggedIn = Boolean(sessionStorage.getItem('access_token'));
+    if (!isLoggedIn && !profile) {
+      this.profileSummary = null;
+      return;
+    }
+
+    const course = profile?.course || profile?.payment?.plan_name || sessionStorage.getItem('active_course') || '-';
+    const duration = profile?.duration || profile?.payment?.duration || '-';
+    const hasActivePackage = profile?.has_active_package ?? profile?.payment?.has_active_package ?? this.hasActivePackage();
+
+    this.profileSummary = {
+      name: profile?.first_name || sessionStorage.getItem('school_name') || 'User',
+      studentId: profile?.student_id || sessionStorage.getItem('student_id') || '-',
+      userType: profile?.user_type || sessionStorage.getItem('user_type') || '-',
+      course,
+      duration: duration === '-' ? '-' : `${duration} Month${Number(duration) > 1 ? 's' : ''}`,
+      status: hasActivePackage ? 'Active' : 'No active package',
+    };
+  }
+
+  private logPackageMatch(profile?: any): void {
+    const activePackageKey = sessionStorage.getItem('active_package_key');
+    const hasActivePackage = sessionStorage.getItem('has_active_package') === 'true';
+    const packageExpiresAt = sessionStorage.getItem('package_expires_at');
+    const plans = [
+      { key: 'school', title: 'School Plan' },
+      { key: 'schooltech', title: 'School Tech Plan' },
+      { key: 'tech', title: 'Tech Education Plan' },
+      { key: 'smart', title: 'Smart Education Plan' },
+      { key: 'combo', title: 'Tech & Smart Education Plan' },
+    ];
+
+    console.group('Pricing Section Package Match');
+    console.log('Profile/package data:', {
+      profile,
+      hasActivePackage,
+      activePackageKey,
+      packageExpiresAt,
+      course: profile?.course || profile?.payment?.plan_name || null,
+    });
+    console.table(
+      plans.map((plan) => ({
+        plan_key: plan.key,
+        plan_name: plan.title,
+        matched_with_bought_package: hasActivePackage && activePackageKey === plan.key,
+        button_text: hasActivePackage && activePackageKey === plan.key ? 'SELECTED' : 'BUY NOW',
+      }))
+    );
+    console.groupEnd();
+  }
+
   hasActivePackage(): boolean {
+    void this.packageStatusVersion;
     return sessionStorage.getItem('has_active_package') === 'true';
   }
 
