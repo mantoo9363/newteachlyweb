@@ -106,7 +106,7 @@ openMessage(message: string) {
       outcome: 'You gain real understanding of how drones are built and controlled—without ever needing physical hardware.',
       video: '/image/Drone Demo.mp4',
       image: '/image/DRONE_IMAGE.png',
-      playUrl: 'https://drone.theteachly.com'
+      downloadUrl: 'https://apifuturexcamp.theteachly.com/uploads/Teachly%20Drone%20Simulator.rar'
     },
    '13': {
   headline: 'AI LEARNING MODULE',
@@ -290,46 +290,45 @@ learningLevels: [
   }*/
 
 
-   launchSimulation(): void {
+launchSimulation(): void {
 
-  const token = sessionStorage.getItem('access_token');
 
- // console.log(token);
+ 
 
-  if (!token) {
+  // ID 12 -> Download
+  if (this.id === '12') {
+    window.open(
+      'https://apifuturexcamp.theteachly.com/uploads/Teachly%20Drone%20Simulator.zip',
+      '_blank'
+    );
+    return;
+  }
 
-    this.headerComponent?.openModal('login');
+  // ID 10 & 13 -> Simulation
+  if (this.id === '10' || this.id === '13') {
+
+    const token = sessionStorage.getItem('access_token');
+
+    if (!token) {
+      this.headerComponent?.openModal('login');
+      return;
+    }
+
+    this.apiService.generateTempToken().subscribe({
+      next: (res) => {
+        window.location.href =
+          `${this.moduleData.playUrl}?token=${encodeURIComponent(res.temp_token)}`;
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Token generation failed');
+      }
+    });
 
     return;
   }
 
-
-this.apiService.generateTempToken().subscribe({
-  
-  next: (res) => {
-    const token = res.temp_token;
-   // console.log(token);
-
-    window.location.href =
-      `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
-  },
-  error: (err) => {
-    console.error(err);
-    alert('Token generation failed');
-  }
-});
-
-
-
-
-
-  // console.log(token);
-
- //window.location.href =
-   // `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
-
-    //console.log(window.location.href);
-
+  alert(`Invalid Module ID: ${this.id}`);
 }
 
   closeIframe(): void {
