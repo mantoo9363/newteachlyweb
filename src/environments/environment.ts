@@ -7,7 +7,7 @@ export const environment = {
     droneDownload: 'https://apifuturexcamp.theteachly.com/uploads/Teachly%20Drone%20Simulator.zip',
   },
   studentPanel: {
-    loginUrl: 'https://student.theteachly.com/auth/login',
-    ssoUrl: 'http://localhost:4201/auth/sso',
+    loginUrl: 'http://localhost:60518/auth/login',
+    ssoUrl: 'http://localhost:60518/auth/sso',
   },
 };
