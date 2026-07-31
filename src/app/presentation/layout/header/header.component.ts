@@ -484,7 +484,7 @@ export class HeaderComponent implements OnInit {
             { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart' },
             { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart' },
 
-            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login', requiresPlan: 'smart' }
+            { title: 'UP Board', url: 'http://localhost:60518/auth/login', requiresPlan: 'smart' }
           ]
         },
         { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },

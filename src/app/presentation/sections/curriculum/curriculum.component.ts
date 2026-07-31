@@ -256,7 +256,7 @@ export class CurriculumComponent implements OnInit {
     }
 
     if (topic.id === 7) {
-      window.open('https://student.theteachly.com/auth/login', '_blank');
+      window.open('http://localhost:65134/auth/login', '_blank');
       return;
     }
 
