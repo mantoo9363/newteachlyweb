@@ -95,7 +95,9 @@ export class HeaderComponent implements OnInit {
   activeDropdown = signal<string | null>(null);
   activeSubDropdown = signal<string | null>(null);
   isSignupOpen = false;
-  activeTab: 'login' | 'signup' = 'signup';
+  activeTab: 'login' | 'signup' | 'forgot' = 'signup';
+  forgotPasswordForm!: FormGroup;
+  forgotPasswordSubmitted = false;
   showMessageModal = false;
   userMenuOpen = false;
   showLoginPassword = false;
@@ -1030,6 +1032,10 @@ export class HeaderComponent implements OnInit {
       password: ['', Validators.required],
     });
 
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+    });
+
     this.signupForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
 
@@ -1309,6 +1315,27 @@ export class HeaderComponent implements OnInit {
   }
   switchTab(tab: 'login' | 'signup') {
     this.activeTab = tab;
+  }
+
+  openForgotPassword(): void {
+    this.forgotPasswordForm.reset();
+    this.forgotPasswordSubmitted = false;
+    this.activeTab = 'forgot';
+  }
+
+  backToLoginFromForgot(): void {
+    this.forgotPasswordSubmitted = false;
+    this.activeTab = 'login';
+  }
+
+  // Dummy flow for now — no backend endpoint wired up yet.
+  submitForgotPassword(): void {
+    if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
+      return;
+    }
+
+    this.forgotPasswordSubmitted = true;
   }
 
   // 🔐 LOGIN FUNCTION

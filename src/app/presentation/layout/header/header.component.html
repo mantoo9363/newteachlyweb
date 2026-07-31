@@ -328,8 +328,54 @@
           </button>
         </div>
 
+        <div class="forgot-password-row">
+          <a class="forgot-password-link" (click)="openForgotPassword()">Forgot password?</a>
+        </div>
+
         <button type="submit" class="submit-btn">Login</button>
       </form>
+      }
+
+      <!-- FORGOT PASSWORD FORM -->
+      @if (activeTab === "forgot") {
+      <div class="signup-header">
+        <h3>Forgot Password</h3>
+        <p>Enter your email to reset your password</p>
+      </div>
+
+      @if (!forgotPasswordSubmitted) {
+      <form [formGroup]="forgotPasswordForm" (ngSubmit)="submitForgotPassword()" class="signup-form">
+        <div class="input-group">
+          <input type="email" formControlName="email" placeholder="Email">
+        </div>
+
+        <div class="error" *ngIf="forgotPasswordForm.get('email')?.touched &&
+            forgotPasswordForm.get('email')?.errors?.['required']">
+
+          Email is required.
+
+        </div>
+
+        <div class="error" *ngIf="forgotPasswordForm.get('email')?.touched &&
+            forgotPasswordForm.get('email')?.errors?.['email']">
+
+          Enter a valid email address.
+
+        </div>
+
+        <button type="submit" class="submit-btn">Send Reset Link</button>
+
+        <div class="forgot-password-row centered">
+          <a class="forgot-password-link" (click)="backToLoginFromForgot()">Back to Login</a>
+        </div>
+      </form>
+      } @else {
+      <div class="forgot-password-success">
+        <i class="fas fa-envelope-circle-check"></i>
+        <p>If an account exists for {{ forgotPasswordForm.value.email }}, a password reset link has been sent.</p>
+        <button type="button" class="submit-btn" (click)="backToLoginFromForgot()">Back to Login</button>
+      </div>
+      }
       }
 
       <!-- SIGNUP FORM -->

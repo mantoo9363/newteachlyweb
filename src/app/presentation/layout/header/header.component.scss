@@ -1439,6 +1439,46 @@
   }
 }
 
+.forgot-password-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 12px;
+
+  &.centered {
+    justify-content: center;
+    margin: 12px 0 0;
+  }
+}
+
+.forgot-password-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7c3aed;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.forgot-password-success {
+  text-align: center;
+  padding: 8px 0 4px;
+
+  i {
+    font-size: 32px;
+    color: #7c3aed;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+}
+
 /* Button */
 .submit-btn {
   width: 100%;
