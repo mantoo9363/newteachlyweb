@@ -14,7 +14,7 @@
           <li class="nav-item" (mouseenter)="setActiveDropdown(menu.title)" (mouseleave)="setActiveDropdown(null)">
             @if (menu.type === "link") {
             @if (menu.url && menu.url.startsWith("http")) {
-            <a [attr.href]="isNavLinkAccessible(menu) ? menu.url : null" [attr.target]="isNavLinkAccessible(menu) ? '_blank' : null" class="nav-link" [class.disabled-link]="!isNavLinkAccessible(menu)" (click)="handleMenuLinkClick($event, menu.url, menu)">
+            <a [attr.href]="isNavLinkAccessible(menu) ? getMenuHref(menu.url) : null" [attr.target]="isNavLinkAccessible(menu) ? '_blank' : null" class="nav-link" [class.disabled-link]="!isNavLinkAccessible(menu)" (click)="handleMenuLinkClick($event, menu.url, menu)">
               @if (menu.icon) {
               <i [class]="menu.icon" class="nav-icon-animated"></i>
               }
@@ -77,7 +77,7 @@
                     track subItem.title
                     ) {
                     @if (subItem.url.startsWith("http")) {
-                    <a [attr.href]="isMenuItemAccessible(subItem) ? subItem.url : null" [attr.target]="isMenuItemAccessible(subItem) ? '_blank' : null" class="dropdown-item" [class.disabled-link]="!isMenuItemAccessible(subItem)" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
+                    <a [attr.href]="isMenuItemAccessible(subItem) ? getMenuHref(subItem.url) : null" [attr.target]="isMenuItemAccessible(subItem) ? '_blank' : null" class="dropdown-item" [class.disabled-link]="!isMenuItemAccessible(subItem)" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
                       {{ subItem.title }}
                       @if (!isMenuItemAccessible(subItem)) {
                         <i class="fas fa-lock lock-icon"></i>
@@ -99,7 +99,7 @@
                 </div>
                 } @else {
                 @if (item.url.startsWith("http")) {
-                <a [attr.href]="isMenuItemAccessible(item) ? item.url : null" [attr.target]="isMenuItemAccessible(item) ? '_blank' : null" class="dropdown-item" [class.disabled-link]="!isMenuItemAccessible(item)" (click)="handleMenuLinkClick($event, item.url, item)">
+                <a [attr.href]="isMenuItemAccessible(item) ? getMenuHref(item.url) : null" [attr.target]="isMenuItemAccessible(item) ? '_blank' : null" class="dropdown-item" [class.disabled-link]="!isMenuItemAccessible(item)" (click)="handleMenuLinkClick($event, item.url, item)">
                   {{ item.title }}
                   @if (!isMenuItemAccessible(item)) {
                     <i class="fas fa-lock lock-icon"></i>
@@ -185,7 +185,7 @@
       <div class="mobile-section">
         @if (menu.type === "link") {
         @if (menu.url && menu.url.startsWith("http")) {
-        <a [attr.href]="isNavLinkAccessible(menu) ? menu.url : null" [attr.target]="isNavLinkAccessible(menu) ? '_blank' : null" class="mobile-section-header no-chevron" [class.disabled-link]="!isNavLinkAccessible(menu)" (click)="closeMobileMenu(); handleMenuLinkClick($event, menu.url, menu)">
+        <a [attr.href]="isNavLinkAccessible(menu) ? getMenuHref(menu.url) : null" [attr.target]="isNavLinkAccessible(menu) ? '_blank' : null" class="mobile-section-header no-chevron" [class.disabled-link]="!isNavLinkAccessible(menu)" (click)="closeMobileMenu(); handleMenuLinkClick($event, menu.url, menu)">
           @if (menu.icon) {
           <i [class]="menu.icon" class="mobile-icon"></i>
           }
@@ -244,7 +244,7 @@
             <div class="mobile-nested-links">
               @for (subItem of item.items; track subItem.title) {
               @if (subItem.url.startsWith("http")) {
-              <a [attr.href]="isMenuItemAccessible(subItem) ? subItem.url : null" [attr.target]="isMenuItemAccessible(subItem) ? '_blank' : null" class="mobile-link" [class.disabled-link]="!isMenuItemAccessible(subItem)" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
+              <a [attr.href]="isMenuItemAccessible(subItem) ? getMenuHref(subItem.url) : null" [attr.target]="isMenuItemAccessible(subItem) ? '_blank' : null" class="mobile-link" [class.disabled-link]="!isMenuItemAccessible(subItem)" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
                 {{ subItem.title }}
                 @if (!isMenuItemAccessible(subItem)) {
                   <i class="fas fa-lock lock-icon"></i>
@@ -265,7 +265,7 @@
           </div>
           } @else {
           @if (item.url.startsWith("http")) {
-          <a [attr.href]="isMenuItemAccessible(item) ? item.url : null" [attr.target]="isMenuItemAccessible(item) ? '_blank' : null" class="mobile-link" [class.disabled-link]="!isMenuItemAccessible(item)" (click)="handleMenuLinkClick($event, item.url, item)">
+          <a [attr.href]="isMenuItemAccessible(item) ? getMenuHref(item.url) : null" [attr.target]="isMenuItemAccessible(item) ? '_blank' : null" class="mobile-link" [class.disabled-link]="!isMenuItemAccessible(item)" (click)="handleMenuLinkClick($event, item.url, item)">
             {{ item.title }}
             @if (!isMenuItemAccessible(item)) {
               <i class="fas fa-lock lock-icon"></i>

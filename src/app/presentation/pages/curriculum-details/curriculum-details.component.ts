@@ -7,6 +7,7 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { IframeEmbedComponent } from '../../components/iframe-embed/iframe-embed.component';
 import { ApiService } from '../../../core/services/api-service';
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -49,6 +50,7 @@ openMessage(message: string) {
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
+  private readonly simulatorUrls = environment.simulatorUrls;
 
   private allModules: { [key: string]: any } = {
     '10': {
@@ -77,8 +79,7 @@ openMessage(message: string) {
       outcome: 'By the end, you won’t just understand design—you’ll be able to create it yourself.',
       video: '/image/CAD DEMO.mp4',
       image: '/image/CAD_IMAGE.png',
-      // playUrl: 'https://circuit.theteachly.com'
-       playUrl: 'http://localhost:3001'
+      playUrl: this.simulatorUrls.circuit
     },
    
     '12': {
@@ -108,7 +109,7 @@ openMessage(message: string) {
       outcome: 'You gain real understanding of how drones are built and controlled—without ever needing physical hardware.',
       video: '/image/Drone Demo.mp4',
       image: '/image/DRONE_IMAGE.png',
-      playUrl: 'https://drone.theteachly.com'
+      playUrl: this.simulatorUrls.droneDownload
     },
    '13': {
   headline: 'AI LEARNING MODULE',
@@ -198,8 +199,7 @@ learningLevels: [
 
   image: '/image/AI Learning.jpeg',
 
-  playUrl: 'http://localhost:3000/'
-  // playUrl: 'https://aiab.theteachly.com/'
+  playUrl: this.simulatorUrls.ai
 },
   };
 
@@ -321,10 +321,8 @@ learningLevels: [
     return;
   }
 
-  if (this.id === '10') {
-    this.iframeUrl = this.moduleData.playUrl;
-    this.showIframe = true;
-    window.scrollTo(0, 0);
+  if (this.id === '12') {
+    window.location.href = this.simulatorUrls.droneDownload;
     return;
   }
 
@@ -334,7 +332,8 @@ this.apiService.generateTempToken().subscribe({
     const token = res.temp_token;
    // console.log(token);
 
-    this.iframeUrl = this.buildIframeUrl(this.moduleData.playUrl, { token });
+    this.iframeUrl =
+      `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
     this.showIframe = true;
     window.scrollTo(0, 0);
   },
@@ -359,14 +358,6 @@ this.apiService.generateTempToken().subscribe({
     //console.log(window.location.href);
 
 }
-
-  private buildIframeUrl(baseUrl: string, params: Record<string, string>): string {
-    const url = new URL(baseUrl);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    return url.toString();
-  }
 
   private hasAiIframeLoginCookie(): boolean {
     return document.cookie

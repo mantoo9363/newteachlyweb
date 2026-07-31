@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/services/api-service';
 import { PopupService } from '../../../core/services/popup.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 const LANGUAGE_MAP: { [key: string]: string } = {
   ENG: 'en',
@@ -127,6 +128,8 @@ export class HeaderComponent implements OnInit {
   public service = inject(ApiService);
   private readonly signupDraftStorageKey = 'teachly_signup_draft';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
+  private readonly studentPanelSsoUrl = environment.studentPanel.ssoUrl;
+  private readonly studentPanelLoginUrl = environment.studentPanel.loginUrl;
   private isRestoringSignupDraft = false;
   get filteredSearchItems() {
     const query = this.searchQuery().toLowerCase().trim();
@@ -848,6 +851,25 @@ export class HeaderComponent implements OnInit {
       params[key] = decodeURIComponent(value);
     });
     return params;
+  }
+
+  getMenuHref(url: string): string | null {
+    if (this.isStudentPanelLoginUrl(url)) {
+      return this.buildStudentPanelSsoUrl();
+    }
+
+    return url;
+  }
+
+  private isStudentPanelLoginUrl(url: string): boolean {
+    return url === this.studentPanelLoginUrl;
+  }
+
+  private buildStudentPanelSsoUrl(): string {
+    const token = sessionStorage.getItem('access_token');
+    if (!token) return this.studentPanelLoginUrl;
+
+    return `${this.studentPanelSsoUrl}?token=${encodeURIComponent(token)}`;
   }
 
   constructor(
@@ -1705,6 +1727,14 @@ export class HeaderComponent implements OnInit {
       event.stopPropagation();
       this.closeMobileMenu();
       this.openMessage(`Upgrade to the ${this.planGroupLabel(item.requiresPlan)} to access this content.`);
+      return;
+    }
+
+    if (this.isStudentPanelLoginUrl(url)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
+      window.open(this.buildStudentPanelSsoUrl(), '_blank');
     }
   }
 }
