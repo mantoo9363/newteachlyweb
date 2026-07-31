@@ -9,11 +9,11 @@ import { API_ENDPOINTS } from '../api/api-endpoints';
 })
 export class ApiService {
 
-  //private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
-  private readonly baseUrl = 'http://127.0.0.1:8000';
+  private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
+  // private readonly baseUrl = 'http://127.0.0.1:8000';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private url(endpoint: string): string {
     return `${this.baseUrl}${endpoint}`;

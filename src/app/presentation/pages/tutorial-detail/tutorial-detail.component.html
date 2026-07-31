@@ -1,0 +1,17 @@
+<app-header></app-header>
+
+<div class="tutorial-page">
+  <app-tutorial-article
+    [tutorial]="tutorial()"
+    [upNext]="upNext()"
+    [loading]="loading()"
+    [isLoggedIn]="isLoggedIn"
+    [isSubscribed]="isSubscribed"
+    [errorMessage]="errorMessage()"
+    (selectUpNext)="goToTutorial($event)"
+    (login)="onLogin()"
+    (upgrade)="onUpgrade()">
+  </app-tutorial-article>
+</div>
+
+<app-footer></app-footer>

@@ -3,564 +3,672 @@
 <div class="details-page" [class.full-screen]="showIframe">
   <div class="content-container">
     @if (showIframe) {
-    <div class="iframe-wrapper">
-      <div class="iframe-header">
-        <button (click)="closeIframe()" class="back-module-btn">
-          <i class="fas fa-arrow-left"></i> Back to Module
-        </button>
-        <button (click)="goBack()" class="back-home-btn">
-          <i class="fas fa-home"></i> Back to Home
-        </button>
-        @if (simulationModules.length > 0) {
-        <div class="module-selector">
-          <span class="selector-label"><i class="fas fa-th-large"></i> Switch Module:</span>
-          <select #moduleSelect [value]="id" (change)="switchModule(moduleSelect.value)" class="module-dropdown">
-            @for (module of simulationModules; track module.id) {
-            <option [value]="module.id">{{ module.name }}</option>
-            }
-          </select>
+      <div class="iframe-wrapper">
+        <div class="iframe-header">
+          <button (click)="closeIframe()" class="back-module-btn">
+            <i class="fas fa-arrow-left"></i> Back to Module
+          </button>
+          <button (click)="goBack()" class="back-home-btn">
+            <i class="fas fa-home"></i> Back to Home
+          </button>
+          @if (simulationModules.length > 0) {
+            <div class="module-selector">
+              <span class="selector-label"
+                ><i class="fas fa-th-large"></i> Switch Module:</span
+              >
+              <select
+                #moduleSelect
+                [value]="id"
+                (change)="switchModule(moduleSelect.value)"
+                class="module-dropdown"
+              >
+                @for (module of simulationModules; track module.id) {
+                  <option [value]="module.id">{{ module.name }}</option>
+                }
+              </select>
+            </div>
+          }
+          <button (click)="closeIframe()" class="close-btn">
+            <i class="fas fa-times"></i> Close
+          </button>
         </div>
-        }
-        <button (click)="closeIframe()" class="close-btn">
-          <i class="fas fa-times"></i> Close
-        </button>
+        <app-iframe-embed
+          [url]="iframeUrl"
+          [title]="moduleData?.headline || 'Simulation'"
+        ></app-iframe-embed>
       </div>
-      <app-iframe-embed [url]="iframeUrl" [title]="moduleData?.headline || 'Simulation'"></app-iframe-embed>
-    </div>
     }
 
     @if (moduleData) {
-    <div class="mythos-hero-header">
-      <div class="mythos-header-left">
-        <span class="badge-modern">
-          <svg class="badge-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 0C8 4.4 4.4 8 0 8C4.4 8 8 11.6 8 16C8 11.6 11.6 8 16 8C11.6 8 8 4.4 8 0Z" fill="currentColor" />
-          </svg>
-          {{ moduleData.headline }}
-        </span>
+      <div class="mythos-hero-header">
+        <div class="mythos-header-left">
+          <span class="badge-modern">
+            <svg
+              class="badge-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 0C8 4.4 4.4 8 0 8C4.4 8 8 11.6 8 16C8 11.6 11.6 8 16 8C11.6 8 8 4.4 8 0Z"
+                fill="currentColor"
+              />
+            </svg>
+            {{ moduleData.headline }}
+          </span>
 
-        <div class="">
-          <h1 class="mythos-hero-title">
-            @if (id === "10") {
-            Design <span class="text-accent blue">3D </span>CAD
-            <br />
-            With <span class="text-accent blue">Circuits</span>.
-            } @else if (id === "11") {
-            Build & Test <span class="text-accent green">Circuits</span>
-            <br />
-            Without Hardware
-            } @else if (id === "12") {
-            Design & <span class="text-accent orange">Fly</span> <br /><span class="text-accent orange">Drones</span>
-            Virtually
-            } @else if (id === "13") {
-            Unlock <span class="text-accent purple">The</span> Power <br />
-            of <span class="text-accent purple">AI </span>Learning
-            } @else {
-            {{ moduleData.subHeadline }}
+          <div class="">
+            <h1 class="mythos-hero-title">
+              @if (id === "10") {
+                Design <span class="text-accent blue">3D </span>CAD
+                <br />
+                With <span class="text-accent blue">Circuits</span>.
+              } @else if (id === "11") {
+                Build & Test <span class="text-accent green">Circuits</span>
+                <br />
+                Without Hardware
+              } @else if (id === "12") {
+                Design & <span class="text-accent orange">Fly</span> <br /><span
+                  class="text-accent orange"
+                  >Drones</span
+                >
+                Virtually
+              } @else if (id === "13") {
+                Unlock <span class="text-accent purple">The</span> Power <br />
+                of <span class="text-accent purple">AI </span>Learning
+              } @else {
+                {{ moduleData.subHeadline }}
+              }
+            </h1>
+          </div>
+          <div class="mythos-actions">
+            @if (moduleData.playUrl || id === "12") {
+              <button
+                (click)="launchSimulation()"
+                class="button-uiverse primary"
+              >
+                <div class="dots_border"></div>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="sparkle"
+                >
+                  ...
+                </svg>
+
+                <span class="text_button">
+                  {{
+                    id === "10" || id === "13" ? "Simulate Now" : "Download Now"
+                  }}
+                </span>
+              </button>
             }
-          </h1>
-        </div>
-       <div class="mythos-actions">
 
-  @if (moduleData.playUrl || id === "12") {
-    <button (click)="launchSimulation()" class="button-uiverse primary">
-      <div class="dots_border"></div>
-
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="sparkle">
-        ...
-      </svg>
-
-      <span class="text_button">
-        {{ id === "10" || id === "13" ? "Simulate Now" : "Download Now" }}
-      </span>
-    </button>
-  }
-
-  <button (click)="goBack()" class="button-uiverse secondary">
-    <span class="text_button">
-      <i class="fas fa-arrow-left"></i> Back To Home
-    </span>
-  </button>
-
-</div>
-        <!-- Action Buttons -->
-      </div>
-
-      <div class="mythos-header-right">
-        <div class="right-panel-card">
-          <!-- Decorative corner accent -->
-          <div class="panel-corner-accent"></div>
-
-          <!-- Description Block -->
-          <div class="right-content-block">
-            <div class="section-label">
-              <i class="fas fa-info-circle"></i>
-              <span>About This Module</span>
-            </div>
-            <p class="mythos-description">{{ moduleData.description }}</p>
+            <button (click)="goBack()" class="button-uiverse secondary">
+              <span class="text_button">
+                <i class="fas fa-arrow-left"></i> Back To Home
+              </span>
+            </button>
           </div>
-
-          <!-- Stats Row -->
-          <div class="quick-stats">
-            <div class="stat-item">
-              <div class="stat-icon-wrap lessons">
-                <i class="fas fa-book-open"></i>
-              </div>
-              <div class="stat-text">
-                <span class="stat-value">{{
-                  id === "13" ? "50+" : "12"
-                  }}</span>
-                <span class="stat-label">Lessons</span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-icon-wrap rating">
-                <i class="fas fa-star"></i>
-              </div>
-              <div class="stat-text">
-                <span class="stat-value">{{
-                  id === "13" ? "4.9" : "4.8"
-                  }}</span>
-                <span class="stat-label">Rating</span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-icon-wrap students">
-                <i class="fas fa-users"></i>
-              </div>
-              <div class="stat-text">
-                <span class="stat-value">{{
-                  id === "13" ? "2.4k" : "860"
-                  }}</span>
-                <span class="stat-label">Students</span>
-              </div>
-            </div>
-          </div>
+          <!-- Action Buttons -->
         </div>
-      </div>
-    </div>
 
-    <!-- Connecting Arch Divider -->
-    <div class="mythos-arch-divider">
-      <svg viewBox="0 0 1200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 40 C300 10, 900 10, 1200 40" stroke="#E2E8F0" stroke-width="2" />
-      </svg>
-    </div>
+        <div class="mythos-header-right">
+          <div class="right-panel-card">
+            <!-- Decorative corner accent -->
+            <div class="panel-corner-accent"></div>
 
-    <!-- Sub-Hero Horizontal Specs Row -->
-    @if (isSubscribed) {
-    <div class="mythos-specs-bar">
-      <div class="">
-        <span class="spec-pill active">Interactive 3D</span>
-        <span class="spec-pill">Self-Paced Lab</span>
-        <span class="spec-pill">No Setup</span>
-        <span class="spec-pill">Instant Feedback</span>
-      </div>
-
-
-      <div class="">
-        <button (click)="scrollToSection('.info-grid')" class="spec-btn">
-          <i class="fas fa-file-alt"></i> Syllabus Guide
-        </button>
-        <button (click)="scrollToSection('.info-card.highlight')" class="spec-btn">
-          <i class="fas fa-certificate"></i> Lab Certificate
-        </button>
-      </div>
-    </div>
-    }
-
-    <!-- MythosAI Style 3-Column Gallery/Project Grid -->
-    <div class="mythos-grid-section">
-      <!-- Column 1: Left Card -->
-      <div class="mythos-grid-card left-card" (click)="scrollToSection('.info-card:nth-of-type(1)')">
-        <div class="card-bg-overlay"></div>
-        <div class="card-image-placeholder left-image"></div>
-        <div class="card-content">
-          <span class="card-tag">Core Theory</span>
-          <h3 class="card-title">Concept & Mechanics</h3>
-          <p class="card-desc">
-            Understand flight dynamics, control systems, and aerodynamics.
-          </p>
-          <div class="card-action">
-            <span class="author">By Teachly Lab</span>
-            <div class="card-buttons">
-              <!-- <button class="read-more-button">Read More</button> -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Column 2: Center Card (Video Player!) -->
-      <div class="mythos-grid-card center-card">
-        @if (moduleData.video) {
-        <div class="video-collage">
-          <!-- Floating Element 1: Active Classmates Card -->
-
-          <div class="video-wrapper-card">
-            <div class="video-header">
-              <div class="dots">
-                <span></span><span></span><span></span>
+            <!-- Description Block -->
+            <div class="right-content-block">
+              <div class="section-label">
+                <i class="fas fa-info-circle"></i>
+                <span>About This Module</span>
               </div>
-              <div class="title-bar">Module Preview</div>
+              <p class="mythos-description">{{ moduleData.description }}</p>
             </div>
-            <div class="video-container" [class.locked]="!isSubscribed && selectedLecture">
-              @if (!isSubscribed && selectedLecture) {
-              <div class="lock-overlay">
-                <div class="lock-content">
-                  <i class="fas fa-lock"></i>
-                  <h3>Premium Content</h3>
-                  <p>
-                    Subscribe to unlock all 50+ AI masterclass lectures.
-                  </p>
-                  <button (click)="unlockContent()" class="button-uiverse primary">
-                    <div class="dots_border"></div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="sparkle">
-                      <path class="path" stroke-linejoin="round" stroke-linecap="round" stroke="black" fill="black"
-                        d="M14.187 8.096L15 5.25L15.813 8.096C16.0231 8.83114 16.4171 9.50062 16.9577 10.0413C17.4984 10.5819 18.1679 10.9759 18.903 11.186L21.75 12L18.904 12.813C18.1689 13.0231 17.4994 13.4171 16.9587 13.9577C16.4181 14.4984 16.0241 15.1679 15.814 15.903L15 18.75L14.187 15.904C13.9769 15.1689 13.5829 14.4994 13.0423 13.9587C12.5016 13.4181 11.8321 13.0241 11.097 12.814L8.25 12L11.096 11.187C11.8311 10.9769 12.5006 10.5829 13.0413 10.0423C13.5819 9.50162 13.9759 8.83214 14.186 8.097L14.187 8.096Z">
-                      </path>
-                      <path class="path" stroke-linejoin="round" stroke-linecap="round" stroke="black" fill="black"
-                        d="M6 14.25L5.741 15.285C5.59267 15.8785 5.28579 16.4206 4.85319 16.8532C4.42059 17.2858 3.87853 17.5927 3.285 17.741L2.25 18L3.285 18.259C3.87853 18.4073 4.42059 18.7142 4.85319 19.1468C5.28579 19.5794 5.59267 20.715L6 21.75L6.259 20.715C6.40725 20.1216 6.71398 19.5796 7.14639 19.147C7.5788 18.7144 8.12065 18.4075 8.714 18.259L9.75 18L8.714 17.741C8.12065 17.5925 7.5788 17.2856 7.14639 16.853C6.71398 16.4204 6.40725 15.8784 6.259 15.285L6 14.25Z">
-                      </path>
-                      <path class="path" stroke-linejoin="round" stroke-linecap="round" stroke="black" fill="black"
-                        d="M6.5 4L6.303 4.5915C6.24777 4.75718 6.15472 4.90774 6.03123 5.03123C5.90774 5.15472 5.75718 5.24777 5.5915 5.303L5 5.5L5.5915 5.697C5.75718 5.75223 5.90774 5.84528 6.03123 5.96877C6.15472 6.09226 6.24777 6.24282 6.303 6.4085L6.5 7L6.697 6.4085C6.75223 6.24282 6.84528 6.09226 6.96877 5.96877C7.09226 5.84528 7.24282 5.75223 7.4085 5.697L8 5.5L7.4085 5.303C7.24282 5.24777 7.09226 5.15472 6.96877 5.03123C6.84528 4.90774 6.75223 4.75718 6.697 4.5915L6.5 4Z">
-                      </path>
-                    </svg>
-                    <span class="text_button"><i class="fas fa-unlock"></i> Unlock Now</span>
-                  </button>
+
+            <!-- Stats Row -->
+            <div class="quick-stats">
+              <div class="stat-item">
+                <div class="stat-icon-wrap lessons">
+                  <i class="fas fa-book-open"></i>
+                </div>
+                <div class="stat-text">
+                  <span class="stat-value">{{
+                    id === "13" ? "50+" : "12"
+                  }}</span>
+                  <span class="stat-label">Lessons</span>
                 </div>
               </div>
-              }
-              <video #moduleVideo [controls]="isSubscribed || !selectedLecture" playsinline class="module-video"
-                [poster]="moduleData.image" preload="metadata">
-                <source [src]="
+              <div class="stat-item">
+                <div class="stat-icon-wrap rating">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-text">
+                  <span class="stat-value">{{
+                    id === "13" ? "4.9" : "4.8"
+                  }}</span>
+                  <span class="stat-label">Rating</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon-wrap students">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-text">
+                  <span class="stat-value">{{
+                    id === "13" ? "2.4k" : "860"
+                  }}</span>
+                  <span class="stat-label">Students</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connecting Arch Divider -->
+      <div class="mythos-arch-divider">
+        <svg
+          viewBox="0 0 1200 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 40 C300 10, 900 10, 1200 40"
+            stroke="#E2E8F0"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+
+      <!-- Sub-Hero Horizontal Specs Row -->
+      @if (isSubscribed) {
+        <div class="mythos-specs-bar">
+          <div class="">
+            <span class="spec-pill active">Interactive 3D</span>
+            <span class="spec-pill">Self-Paced Lab</span>
+            <span class="spec-pill">No Setup</span>
+            <span class="spec-pill">Instant Feedback</span>
+          </div>
+
+          <div class="">
+            <button (click)="scrollToSection('.info-grid')" class="spec-btn">
+              <i class="fas fa-file-alt"></i> Syllabus Guide
+            </button>
+            <button
+              (click)="scrollToSection('.info-card.highlight')"
+              class="spec-btn"
+            >
+              <i class="fas fa-certificate"></i> Lab Certificate
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- MythosAI Style 3-Column Gallery/Project Grid -->
+      <div class="mythos-grid-section">
+        <!-- Column 1: Left Card -->
+        <div
+          class="mythos-grid-card left-card"
+          (click)="scrollToSection('.info-card:nth-of-type(1)')"
+        >
+          <div class="card-bg-overlay"></div>
+          <div class="card-image-placeholder left-image"></div>
+          <div class="card-content">
+            <span class="card-tag">Core Theory</span>
+            <h3 class="card-title">Concept & Mechanics</h3>
+            <p class="card-desc">
+              Understand flight dynamics, control systems, and aerodynamics.
+            </p>
+            <div class="card-action">
+              <span class="author">By Teachly Lab</span>
+              <div class="card-buttons">
+                <!-- <button class="read-more-button">Read More</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Center Card (Video Player!) -->
+        <div class="mythos-grid-card center-card">
+          @if (moduleData.video) {
+            <div class="video-collage">
+              <!-- Floating Element 1: Active Classmates Card -->
+
+              <div class="video-wrapper-card">
+                <div class="video-header">
+                  <div class="dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="title-bar">Module Preview</div>
+                </div>
+                <div
+                  class="video-container"
+                  [class.locked]="!isSubscribed && selectedLecture"
+                >
+                  @if (!isSubscribed && selectedLecture) {
+                    <div class="lock-overlay">
+                      <div class="lock-content">
+                        <i class="fas fa-lock"></i>
+                        <h3>Premium Content</h3>
+                        <p>
+                          Subscribe to unlock all 50+ AI masterclass lectures.
+                        </p>
+                        <button
+                          (click)="unlockContent()"
+                          class="button-uiverse primary"
+                        >
+                          <div class="dots_border"></div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            class="sparkle"
+                          >
+                            <path
+                              class="path"
+                              stroke-linejoin="round"
+                              stroke-linecap="round"
+                              stroke="black"
+                              fill="black"
+                              d="M14.187 8.096L15 5.25L15.813 8.096C16.0231 8.83114 16.4171 9.50062 16.9577 10.0413C17.4984 10.5819 18.1679 10.9759 18.903 11.186L21.75 12L18.904 12.813C18.1689 13.0231 17.4994 13.4171 16.9587 13.9577C16.4181 14.4984 16.0241 15.1679 15.814 15.903L15 18.75L14.187 15.904C13.9769 15.1689 13.5829 14.4994 13.0423 13.9587C12.5016 13.4181 11.8321 13.0241 11.097 12.814L8.25 12L11.096 11.187C11.8311 10.9769 12.5006 10.5829 13.0413 10.0423C13.5819 9.50162 13.9759 8.83214 14.186 8.097L14.187 8.096Z"
+                            ></path>
+                            <path
+                              class="path"
+                              stroke-linejoin="round"
+                              stroke-linecap="round"
+                              stroke="black"
+                              fill="black"
+                              d="M6 14.25L5.741 15.285C5.59267 15.8785 5.28579 16.4206 4.85319 16.8532C4.42059 17.2858 3.87853 17.5927 3.285 17.741L2.25 18L3.285 18.259C3.87853 18.4073 4.42059 18.7142 4.85319 19.1468C5.28579 19.5794 5.59267 20.715L6 21.75L6.259 20.715C6.40725 20.1216 6.71398 19.5796 7.14639 19.147C7.5788 18.7144 8.12065 18.4075 8.714 18.259L9.75 18L8.714 17.741C8.12065 17.5925 7.5788 17.2856 7.14639 16.853C6.71398 16.4204 6.40725 15.8784 6.259 15.285L6 14.25Z"
+                            ></path>
+                            <path
+                              class="path"
+                              stroke-linejoin="round"
+                              stroke-linecap="round"
+                              stroke="black"
+                              fill="black"
+                              d="M6.5 4L6.303 4.5915C6.24777 4.75718 6.15472 4.90774 6.03123 5.03123C5.90774 5.15472 5.75718 5.24777 5.5915 5.303L5 5.5L5.5915 5.697C5.75718 5.75223 5.90774 5.84528 6.03123 5.96877C6.15472 6.09226 6.24777 6.24282 6.303 6.4085L6.5 7L6.697 6.4085C6.75223 6.24282 6.84528 6.09226 6.96877 5.96877C7.09226 5.84528 7.24282 5.75223 7.4085 5.697L8 5.5L7.4085 5.303C7.24282 5.24777 7.09226 5.15472 6.96877 5.03123C6.84528 4.90774 6.75223 4.75718 6.697 4.5915L6.5 4Z"
+                            ></path>
+                          </svg>
+                          <span class="text_button"
+                            ><i class="fas fa-unlock"></i> Unlock Now</span
+                          >
+                        </button>
+                      </div>
+                    </div>
+                  }
+                  <video
+                    #moduleVideo
+                    [controls]="isSubscribed || !selectedLecture"
+                    playsinline
+                    class="module-video"
+                    [poster]="moduleData.image"
+                    preload="metadata"
+                  >
+                    <source
+                      [src]="
                         selectedLecture
                           ? selectedLecture.video
                           : moduleData.video
-                      " type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-        </div>
-        }
-        @if (selectedLecture) {
-        <div class="lecture-info-card animate-up">
-          <div class="info-tag">
-            <span class="pulse-dot"></span> Now Playing
-          </div>
-          <h4>{{ selectedLecture.title }}</h4>
-          <p>{{ selectedLecture.description }}</p>
-        </div>
-        }
-      </div>
-
-      <!-- Column 3: Right Card -->
-      <div class="mythos-grid-card right-card" (click)="scrollToSection('.info-card.highlight')">
-        <div class="card-bg-overlay"></div>
-        <div class="card-image-placeholder right-image"></div>
-        <div class="card-content">
-          <span class="card-tag">Lab Outcome</span>
-          <h3 class="card-title">Verified Badge</h3>
-          <p class="card-desc">
-            Showcase your skills by earning the certification credentials.
-          </p>
-          <div class="card-action">
-            <span class="author">By Teachly Academy</span>
-            <div class="card-buttons">
-              <button class="read-more-button">Read More</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-grid">
-   @if (id === "13" && moduleData.learningLevels) {
-
-<div class="modules-accordion">
-
-  @for (
-    level of moduleData.learningLevels;
-    track level.title;
-    let mIdx = $index
-  ) {
-
-  <div class="module-card animate-up" [style.--delay]="mIdx * 0.1 + 's'">
-
-    <div
-      class="module-card-header"
-      [class.expanded]="expandedSections() === level.title"
-      (click)="
-        expandedSections.set(
-          expandedSections() === level.title ? null : level.title
-        )
-      "
-    >
-
-      <div class="module-info">
-        <span class="module-badge">
-          LEVEL {{ mIdx + 1 }}
-        </span>
-
-        <h3>{{ level.title }}</h3>
-      </div>
-
-      <div class="module-actions">
-        <span class="lecture-count">
-          {{ level.outcomes.length }} Outcomes
-        </span>
-
-        <i class="fas fa-chevron-down toggle-icon"></i>
-      </div>
-
-    </div>
-
-    @if (expandedSections() === level.title) {
-
-    <div class="lecture-list-container">
-
-      <div class="lecture-grid-modern">
-
-        @for (item of level.outcomes; track item; let idx = $index) {
-
-        <div class="lecture-card-modern">
-
-          <div class="lecture-status">
-            <span class="lecture-id">
-              {{ idx + 1 }}
-            </span>
-          </div>
-
-          <div class="lecture-content">
-            <h4>{{ item }}</h4>
-          </div>
-
-          <div class="lecture-play">
-            <i class="fas fa-check-circle"></i>
-          </div>
-
-        </div>
-
-        }
-
-      </div>
-
-    </div>
-
-    }
-
-  </div>
-
-  }
-
-</div>
-
-} @else if (id === "13" && moduleData.lectures) {
-
-<div class="info-card wide animate-up lecture-list-card" style="--delay: 0.1s">
-
-  <div class="icon-box">
-    <i class="fas fa-play-circle"></i>
-  </div>
-
-  <h3>{{ moduleData.moduleTitle }}</h3>
-
-  <div class="lecture-grid">
-
-    @for (lecture of moduleData.lectures; track lecture.id) {
-
-    <div
-      class="lecture-item"
-      [class.active]="selectedLecture?.id === lecture.id"
-      (click)="selectLecture(lecture)"
-    >
-
-      <div class="lecture-num">
-        {{ lecture.id }}
-      </div>
-
-      <div class="lecture-details">
-        <h4>{{ lecture.title }}</h4>
-        <p>{{ lecture.description }}</p>
-      </div>
-
-      <div class="play-icon">
-
-        @if (isSubscribed) {
-
-        <i
-          class="fas"
-          [class.fa-pause]="selectedLecture?.id === lecture.id"
-          [class.fa-play]="selectedLecture?.id !== lecture.id">
-        </i>
-
-        } @else {
-
-        <i class="fas fa-lock"></i>
-
-        }
-
-      </div>
-
-    </div>
-
-    }
-
-  </div>
-
-</div>
-
-}
-
-      <!-- What You Do Card -->
-      <div class="info-card animate-up what-you-do-card" style="--delay: 0.1s">
-        <div class="card-glow"></div>
-        <div class="card-header-accent">
-          <div class="icon-box-modern tasks"><i class="fas fa-tasks"></i></div>
-          <h3>What You Do</h3>
-        </div>
-        <div class="card-body">
-          <ul class="check-list-modern">
-            @for (item of moduleData.whatYouDo; track item) {
-            <li class="check-item-animated">
-              <div class="check-bullet"><i class="fas fa-check"></i></div>
-              <span>{{ item }}</span>
-            </li>
-            }
-          </ul>
-        </div>
-      </div>
-
-      <!-- How It Works Card -->
-      <div class="info-card animate-up how-it-works-card" style="--delay: 0.2s">
-        <div class="card-glow"></div>
-        <div class="card-header-accent">
-          <div class="icon-box-modern cog"><i class="fas fa-cog"></i></div>
-          <h3>How It Works</h3>
-        </div>
-        <div class="card-body">
-          @let flow = getHowItWorksSteps(moduleData.howItWorks);
-          @if (flow.steps.length > 0) {
-          <div class="stepped-flow">
-            @for (step of flow.steps; track step; let idx = $index) {
-            <div class="flow-step">
-              <div class="step-num-container">
-                <div class="step-num">{{ idx + 1 }}</div>
-                @if (idx < flow.steps.length - 1) { <div class="step-connector">
+                      "
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
+            </div>
+          }
+          @if (selectedLecture) {
+            <div class="lecture-info-card animate-up">
+              <div class="info-tag">
+                <span class="pulse-dot"></span> Now Playing
+              </div>
+              <h4>{{ selectedLecture.title }}</h4>
+              <p>{{ selectedLecture.description }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Column 3: Right Card -->
+        <div
+          class="mythos-grid-card right-card"
+          (click)="scrollToSection('.info-card.highlight')"
+        >
+          <div class="card-bg-overlay"></div>
+          <div class="card-image-placeholder right-image"></div>
+          <div class="card-content">
+            <span class="card-tag">Lab Outcome</span>
+            <h3 class="card-title">Verified Badge</h3>
+            <p class="card-desc">
+              Showcase your skills by earning the certification credentials.
+            </p>
+            <div class="card-action">
+              <span class="author">By Teachly Academy</span>
+              <div class="card-buttons">
+                <button
+                  class="read-more-button"
+                  (click)="goToTutorial(); $event.stopPropagation()"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        @if (id === "13" && moduleData.learningLevels) {
+          <div class="modules-accordion">
+            @for (
+              level of moduleData.learningLevels;
+              track level.title;
+              let mIdx = $index
+            ) {
+              <div
+                class="module-card animate-up"
+                [style.--delay]="mIdx * 0.1 + 's'"
+              >
+                <div
+                  class="module-card-header"
+                  [class.expanded]="expandedSections() === level.title"
+                  (click)="
+                    expandedSections.set(
+                      expandedSections() === level.title ? null : level.title
+                    )
+                  "
+                >
+                  <div class="module-info">
+                    <span class="module-badge"> LEVEL {{ mIdx + 1 }} </span>
+
+                    <h3>{{ level.title }}</h3>
+                  </div>
+
+                  <div class="module-actions">
+                    <span class="lecture-count">
+                      {{ level.outcomes.length }} Outcomes
+                    </span>
+
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                  </div>
+                </div>
+
+                @if (expandedSections() === level.title) {
+                  <div class="lecture-list-container">
+                    <div class="lecture-grid-modern">
+                      @for (
+                        item of level.outcomes;
+                        track item;
+                        let idx = $index
+                      ) {
+                        <div class="lecture-card-modern">
+                          <div class="lecture-status">
+                            <span class="lecture-id">
+                              {{ idx + 1 }}
+                            </span>
+                          </div>
+
+                          <div class="lecture-content">
+                            <h4>{{ item }}</h4>
+                          </div>
+
+                          <div class="lecture-play">
+                            <i class="fas fa-check-circle"></i>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @else if (id === "13" && moduleData.lectures) {
+          <div
+            class="info-card wide animate-up lecture-list-card"
+            style="--delay: 0.1s"
+          >
+            <div class="icon-box">
+              <i class="fas fa-play-circle"></i>
+            </div>
+
+            <h3>{{ moduleData.moduleTitle }}</h3>
+
+            <div class="lecture-grid">
+              @for (lecture of moduleData.lectures; track lecture.id) {
+                <div
+                  class="lecture-item"
+                  [class.active]="selectedLecture?.id === lecture.id"
+                  (click)="selectLecture(lecture)"
+                >
+                  <div class="lecture-num">
+                    {{ lecture.id }}
+                  </div>
+
+                  <div class="lecture-details">
+                    <h4>{{ lecture.title }}</h4>
+                    <p>{{ lecture.description }}</p>
+                  </div>
+
+                  <div class="play-icon">
+                    @if (isSubscribed) {
+                      <i
+                        class="fas"
+                        [class.fa-pause]="selectedLecture?.id === lecture.id"
+                        [class.fa-play]="selectedLecture?.id !== lecture.id"
+                      >
+                      </i>
+                    } @else {
+                      <i class="fas fa-lock"></i>
+                    }
+                  </div>
+                </div>
               }
             </div>
-            <div class="step-text">{{ step }}</div>
           </div>
-          }
-        </div>
-        @if (flow.note) {
-        <div class="flow-note-banner">
-          <i class="fas fa-info-circle"></i>
-          <span>{{ flow.note }}</span>
-        </div>
         }
-        } @else {
-        <p class="card-text">{{ moduleData.howItWorks }}</p>
-        }
-      </div>
-    </div>
 
-    <!-- Why This Matters Wide Card -->
-    <div class="info-card wide animate-up why-matters-card" style="--delay: 0.3s">
-      <div class="card-glow"></div>
-      <div class="card-split">
-        <div class="split-left">
+        <!-- What You Do Card -->
+        <div
+          class="info-card animate-up what-you-do-card"
+          style="--delay: 0.1s"
+        >
+          <div class="card-glow"></div>
           <div class="card-header-accent">
-            <div class="icon-box-modern star"><i class="fas fa-star"></i></div>
-            <h3>Why This Matters</h3>
+            <div class="icon-box-modern tasks">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <h3>What You Do</h3>
           </div>
-          <p class="intro-text-modern">{{ moduleData.whyThisMatters.intro }}</p>
-          <ul class="star-list-modern">
-            @for (point of moduleData.whyThisMatters.points; track point) {
-            <li class="star-item-animated">
-              <div class="star-bullet"><i class="fas fa-star"></i></div>
-              <span>{{ point }}</span>
-            </li>
+          <div class="card-body">
+            <ul class="check-list-modern">
+              @for (item of moduleData.whatYouDo; track item) {
+                <li class="check-item-animated">
+                  <div class="check-bullet"><i class="fas fa-check"></i></div>
+                  <span>{{ item }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <!-- How It Works Card -->
+        <div
+          class="info-card animate-up how-it-works-card"
+          style="--delay: 0.2s"
+        >
+          <div class="card-glow"></div>
+          <div class="card-header-accent">
+            <div class="icon-box-modern cog"><i class="fas fa-cog"></i></div>
+            <h3>How It Works</h3>
+          </div>
+          <div class="card-body">
+            @let flow = getHowItWorksSteps(moduleData.howItWorks);
+            @if (flow.steps.length > 0) {
+              <div class="stepped-flow">
+                @for (step of flow.steps; track step; let idx = $index) {
+                  <div class="flow-step">
+                    <div class="step-num-container">
+                      <div class="step-num">{{ idx + 1 }}</div>
+                      @if (idx < flow.steps.length - 1) {
+                        <div class="step-connector"></div>
+                      }
+                    </div>
+                    <div class="step-text">{{ step }}</div>
+                  </div>
+                }
+              </div>
+              @if (flow.note) {
+                <div class="flow-note-banner">
+                  <i class="fas fa-info-circle"></i>
+                  <span>{{ flow.note }}</span>
+                </div>
+              }
+            } @else {
+              <p class="card-text">{{ moduleData.howItWorks }}</p>
             }
-          </ul>
-        </div>
-        @if (moduleData.image) {
-        <div class="split-right">
-          <div class="image-frame-modern">
-            <img [src]="moduleData.image" [alt]="moduleData.headline" class="module-image-modern" />
-            <div class="image-overlay-glow"></div>
           </div>
         </div>
-        }
-      </div>
-    </div>
 
-    <!-- What You Learn Card -->
-    <div class="info-card animate-up what-learn-card" style="--delay: 0.4s">
-      <div class="card-glow"></div>
-      <div class="card-header-accent">
-        <div class="icon-box-modern learn"><i class="fas fa-graduation-cap"></i></div>
-        <h3>What You Learn</h3>
-      </div>
-      <div class="card-body">
-        <div class="chips-container">
-          @for (learn of moduleData.whatYouLearn; track learn; let lIdx = $index) {
-          <div class="learn-chip animate-chip" [style.--chip-delay]="(lIdx * 0.1) + 's'">
-            <div class="chip-icon-box"><i class="fas fa-lightbulb"></i></div>
-            <span class="chip-label">{{ learn }}</span>
+        <!-- Why This Matters Wide Card -->
+        <div
+          class="info-card wide animate-up why-matters-card"
+          style="--delay: 0.3s"
+        >
+          <div class="card-glow"></div>
+          <div class="card-split">
+            <div class="split-left">
+              <div class="card-header-accent">
+                <div class="icon-box-modern star">
+                  <i class="fas fa-star"></i>
+                </div>
+                <h3>Why This Matters</h3>
+              </div>
+              <p class="intro-text-modern">
+                {{ moduleData.whyThisMatters.intro }}
+              </p>
+              <ul class="star-list-modern">
+                @for (point of moduleData.whyThisMatters.points; track point) {
+                  <li class="star-item-animated">
+                    <div class="star-bullet"><i class="fas fa-star"></i></div>
+                    <span>{{ point }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+            @if (moduleData.image) {
+              <div class="split-right">
+                <div class="image-frame-modern">
+                  <img
+                    [src]="moduleData.image"
+                    [alt]="moduleData.headline"
+                    class="module-image-modern"
+                  />
+                  <div class="image-overlay-glow"></div>
+                </div>
+              </div>
+            }
           </div>
-          }
+        </div>
+
+        <!-- What You Learn Card -->
+        <div class="info-card animate-up what-learn-card" style="--delay: 0.4s">
+          <div class="card-glow"></div>
+          <div class="card-header-accent">
+            <div class="icon-box-modern learn">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3>What You Learn</h3>
+          </div>
+          <div class="card-body">
+            <div class="chips-container">
+              @for (
+                learn of moduleData.whatYouLearn;
+                track learn;
+                let lIdx = $index
+              ) {
+                <div
+                  class="learn-chip animate-chip"
+                  [style.--chip-delay]="lIdx * 0.1 + 's'"
+                >
+                  <div class="chip-icon-box">
+                    <i class="fas fa-lightbulb"></i>
+                  </div>
+                  <span class="chip-label">{{ learn }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Outcome Card -->
+        <div
+          class="info-card highlight animate-up outcome-card-modern"
+          style="--delay: 0.5s"
+        >
+          <div class="outcome-gradient-bg"></div>
+          <div class="outcome-glow"></div>
+          <div class="card-content-wrap">
+            <div class="outcome-header">
+              <div class="icon-box-modern award">
+                <i class="fas fa-award"></i>
+              </div>
+              <h3>Outcome</h3>
+            </div>
+            <p class="outcome-text-modern">{{ moduleData.outcome }}</p>
+          </div>
+          <div class="outcome-illustration">
+            <svg
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="floating-illustration"
+            >
+              <circle
+                cx="100"
+                cy="100"
+                r="80"
+                stroke="rgba(255, 255, 255, 0.05)"
+                stroke-width="2"
+                stroke-dasharray="8 6"
+              />
+              <path
+                d="M100 40 L120 85 L165 90 L130 125 L140 170 L100 145 L60 170 L70 125 L35 90 L80 85 Z"
+                fill="rgba(255, 255, 255, 0.03)"
+                stroke="rgba(255, 255, 255, 0.05)"
+                stroke-width="1.5"
+              />
+            </svg>
+            <i class="fas fa-rocket rocket-icon-animated"></i>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Outcome Card -->
-    <div class="info-card highlight animate-up outcome-card-modern" style="--delay: 0.5s">
-      <div class="outcome-gradient-bg"></div>
-      <div class="outcome-glow"></div>
-      <div class="card-content-wrap">
-        <div class="outcome-header">
-          <div class="icon-box-modern award"><i class="fas fa-award"></i></div>
-          <h3>Outcome</h3>
-        </div>
-        <p class="outcome-text-modern">{{ moduleData.outcome }}</p>
+    } @else {
+      <div class="fallback-hero">
+        <h1 class="hero-title">{{ title }}</h1>
+        <p class="description">Details for module {{ id }} coming soon...</p>
+        <button (click)="goBack()" class="button-uiverse secondary">
+          <span class="text_button"
+            ><i class="fas fa-arrow-left"></i> Back to Curriculum</span
+          >
+        </button>
       </div>
-      <div class="outcome-illustration">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="floating-illustration">
-          <circle cx="100" cy="100" r="80" stroke="rgba(255, 255, 255, 0.05)" stroke-width="2" stroke-dasharray="8 6" />
-          <path d="M100 40 L120 85 L165 90 L130 125 L140 170 L100 145 L60 170 L70 125 L35 90 L80 85 Z"
-            fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1.5" />
-        </svg>
-        <i class="fas fa-rocket rocket-icon-animated"></i>
-      </div>
-    </div>
+    }
   </div>
-  } @else {
-  <div class="fallback-hero">
-    <h1 class="hero-title">{{ title }}</h1>
-    <p class="description">Details for module {{ id }} coming soon...</p>
-    <button (click)="goBack()" class="button-uiverse secondary">
-      <span class="text_button"><i class="fas fa-arrow-left"></i> Back to Curriculum</span>
-    </button>
-  </div>
-  }
-</div>
 </div>
 
-  <div class="message-overlay" *ngIf="showMessageModal">
-    <div class="message-modal">
+<div class="message-overlay" *ngIf="showMessageModal">
+  <div class="message-modal">
+    <p>{{ message }}</p>
 
-      <p>{{ message }}</p>
-
-      <button (click)="closeMessage()">OK</button>
-
-    </div>
+    <button (click)="closeMessage()">OK</button>
   </div>
-
-
-
+</div>
 
 @if (!showIframe) {
-<app-footer></app-footer>
+  <app-footer></app-footer>
 }

@@ -1,0 +1,82 @@
+@if (loading) {
+<div class="tutorial-loading">
+  <div class="spinner"></div>
+  <p>Loading lesson...</p>
+</div>
+} @else if (!tutorial) {
+<div class="tutorial-not-found">
+  <p>{{ errorMessage || "We couldn't find this lesson." }}</p>
+</div>
+} @else {
+<div class="tutorial-layout">
+
+  <!-- Main lesson column -->
+  <div class="tutorial-main">
+    <div class="tutorial-hero-card">
+      <div class="tutorial-hero-image" [style.backgroundImage]="backgroundUrl(tutorial.heroImage)"></div>
+      <div class="tutorial-hero-body">
+        <span class="lesson-type-badge">{{ tutorial.type }}</span>
+        <h2 class="tutorial-hero-title">{{ tutorial.title }}</h2>
+        <p class="tutorial-hero-hint">Start with the notes below. Related lessons are available in the Up next list.</p>
+      </div>
+    </div>
+
+    <div class="tutorial-meta-row">
+      <span class="tag tag-category">{{ tutorial.category | uppercase }}</span>
+      @if (tutorial.isPremium) {
+      <span class="tag tag-premium"><i class="fas fa-lock"></i> PREMIUM</span>
+      }
+      <span class="tag-time">{{ relativeTime(tutorial.publishedAt) }}</span>
+    </div>
+
+    <h1 class="tutorial-title">{{ tutorial.title }}</h1>
+
+    @if (!isSubscribed) {
+    <div class="tutorial-body-card teaser">
+      <div class="teaser-lock"><i class="fas fa-lock"></i></div>
+      @if (!isLoggedIn) {
+      <p>Log in to read the complete content of this lesson.</p>
+      <button (click)="login.emit()" class="button-uiverse primary">
+        <span class="text_button">Log In</span>
+      </button>
+      } @else {
+      <p>This lesson is part of the Tech Education Plan. Upgrade to unlock full access.</p>
+      <button (click)="upgrade.emit()" class="button-uiverse primary">
+        <span class="text_button">Upgrade Plan</span>
+      </button>
+      }
+    </div>
+    } @else if (tutorial.bodyHtml) {
+    <div class="tutorial-body-card" [innerHTML]="tutorial.bodyHtml"></div>
+    } @else {
+    <div class="tutorial-body-card empty">
+      <p>coming soon</p>
+    </div>
+    }
+  </div>
+
+  <!-- Up next sidebar -->
+  <aside class="tutorial-sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-list-ul"></i>
+      <span>Up next</span>
+    </div>
+    <div class="up-next-list">
+      @for (item of upNext; track item.id) {
+      <button class="up-next-card" (click)="selectUpNext.emit(item.id)">
+        <div class="up-next-thumb" [style.backgroundImage]="backgroundUrl(item.thumbnail)">
+          @if (item.isPremium) {
+          <span class="thumb-lock"><i class="fas fa-lock"></i> PREMIUM</span>
+          }
+        </div>
+        <div class="up-next-info">
+          <span class="up-next-title">{{ item.title }}</span>
+          <span class="up-next-category">{{ item.category }}</span>
+          <span class="up-next-time">{{ relativeTime(item.publishedAt) }}</span>
+        </div>
+      </button>
+      }
+    </div>
+  </aside>
+</div>
+}

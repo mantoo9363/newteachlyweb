@@ -126,43 +126,43 @@ openMessage(message: string) {
     'Build Real-world AI Projects & Portfolios'
   ],
 
-learningLevels: [
-  {
-    level: 'LEVEL 1',
-    title: 'AI Explorer',
-    lessons: 4,
-    outcomes: [
-      'Understand the fundamentals of Artificial Intelligence.',
-      'Learn Prompt Engineering.',
-      'Use modern AI tools.',
-      'Build a strong AI foundation.'
-    ]
-  },
-  {
-    level: 'LEVEL 2',
-    title: 'AI Foundations',
-    lessons: 5,
-    outcomes: [
-      'Python for AI',
-      'Machine Learning',
-      'Deep Learning',
-      'Student Performance Predictor',
-      'AI Model Basics'
-    ]
-  },
-  {
-    level: 'LEVEL 3',
-    title: 'AI Engineer',
-    lessons: 5,
-    outcomes: [
-      'LLMs',
-      'Generative AI',
-      'AI Agents',
-      'MLOps',
-      'Deploy AI Applications'
-    ]
-  }
-],
+// learningLevels: [
+//   {
+//     level: 'LEVEL 1',
+//     title: 'AI Explorer',
+//     lessons: 4,
+//     outcomes: [
+//       'Understand the fundamentals of Artificial Intelligence.',
+//       'Learn Prompt Engineering.',
+//       'Use modern AI tools.',
+//       'Build a strong AI foundation.'
+//     ]
+//   },
+//   {
+//     level: 'LEVEL 2',
+//     title: 'AI Foundations',
+//     lessons: 5,
+//     outcomes: [
+//       'Python for AI',
+//       'Machine Learning',
+//       'Deep Learning',
+//       'Student Performance Predictor',
+//       'AI Model Basics'
+//     ]
+//   },
+//   {
+//     level: 'LEVEL 3',
+//     title: 'AI Engineer',
+//     lessons: 5,
+//     outcomes: [
+//       'LLMs',
+//       'Generative AI',
+//       'AI Agents',
+//       'MLOps',
+//       'Deploy AI Applications'
+//     ]
+//   }
+// ],
 
   howItWorks:
     'Learn AI → Build Projects → Deploy AI Applications → Become Industry Ready.',
@@ -369,6 +369,21 @@ this.apiService.generateTempToken().subscribe({
     this.showIframe = false;
     this.iframeUrl = '';
     window.scrollTo(0, 0);
+  }
+
+  private moduleCategory(): string {
+    const categories: { [key: string]: string } = {
+      '10': 'Robotics',
+      '12': 'Drone',
+      '13': 'AI'
+    };
+    return (this.id && categories[this.id]) || 'Drone';
+  }
+
+  goToTutorial(): void {
+    // The tutorial page itself resolves the category to an actual lesson id
+    // (and handles the login/plan gating) - this button just has to navigate.
+    this.router.navigate(['/tutorial/category', this.moduleCategory()]);
   }
 
   switchModule(moduleId: string): void {

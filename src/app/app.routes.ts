@@ -3,6 +3,7 @@ import { HomePageComponent } from './presentation/pages/home/home.component';
 import { SimulatorComponent } from './presentation/pages/simulator/simulator.component';
 import { SimulatorDetailComponent } from './presentation/pages/simulator-detail/simulator-detail.component';
 import { CurriculumDetailsComponent } from './presentation/pages/curriculum-details/curriculum-details.component';
+import { TutorialDetailComponent } from './presentation/pages/tutorial-detail/tutorial-detail.component';
 import { AboutUsComponent } from './presentation/pages/about-us/about-us.component';
 import { CognitiveSkillProfileComponent } from './presentation/pages/cognitive-skill-profile/cognitive-skill-profile.component';
 import { ChildPsychologyComponent } from './presentation/pages/child-psychology/child-psychology.component';
@@ -38,10 +39,22 @@ export const routes: Routes = [
     title: 'Teachly | Interactive Simulation Detail'
   },
   {
+    // TODO: re-add canActivate: [authGuard] once tutorial preview/review is done
     path: 'curriculum-details',
     component: CurriculumDetailsComponent,
-    canActivate: [authGuard],
     title: 'Teachly | Curriculum Details'
+  },
+  {
+    // TODO: re-add canActivate: [authGuard] once tutorial preview/review is done
+    path: 'tutorial/category/:category',
+    component: TutorialDetailComponent,
+    title: 'Teachly | Tutorial'
+  },
+  {
+    // TODO: re-add canActivate: [authGuard] once tutorial preview/review is done
+    path: 'tutorial/:id',
+    component: TutorialDetailComponent,
+    title: 'Teachly | Tutorial'
   },
   {
     path: 'iframe-view',

@@ -206,7 +206,9 @@ export class HeaderComponent implements OnInit {
     smart: 'Smart Education Plan',
   };
 
-  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology'];
+  // Routes that no longer require authGuard (see app.routes.ts) - the pages themselves
+  // handle login/plan gating, so nav links to them should stay navigable for guests.
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details'];
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
@@ -219,13 +221,20 @@ export class HeaderComponent implements OnInit {
   }
 
   isMenuItemAccessible(item: any): boolean {
+    if (item?.url && this.publicUrls.includes(this.getRoutePath(item.url))) return true;
     if (!this.isLoggedIn) return false;
     return item?.requiresPlan ? this.hasPlanGroupAccess(item.requiresPlan) : true;
   }
 
   isNavLinkAccessible(item: any): boolean {
-    if (item?.url && this.publicUrls.includes(this.getRoutePath(item.url))) return true;
     return this.isMenuItemAccessible(item);
+  }
+
+  // Purely a visual "premium content" hint (lock badge / greyed-out styling).
+  // Kept separate from isMenuItemAccessible so public-preview pages (e.g. curriculum-details)
+  // stay clickable/navigable while still signalling that a plan is required.
+  isMenuItemLocked(item: any): boolean {
+    return !!item?.requiresPlan && (!this.isLoggedIn || !this.hasPlanGroupAccess(item.requiresPlan));
   }
 
   private isPackageExpired(expiresAt: string | null): boolean {
@@ -488,9 +497,9 @@ export class HeaderComponent implements OnInit {
       title: 'Simulations',
       type: 'dropdown',
       items: [
-        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module', requiresPlan: 'tech' },
-        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
-        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
+        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module' },
+        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module' },
+        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module' },
 
       ]
     },
@@ -1347,8 +1356,7 @@ export class HeaderComponent implements OnInit {
   sessionStorage.setItem('school_name', res.user.first_name);
   sessionStorage.setItem('user_type', res.user.user_type || '');
   this.setPackageStatusFromResponse(res);
-
-  this.headermsg = "Login Successfully";
+  
   this.closeSignupModal();
 
   // Dashboard
