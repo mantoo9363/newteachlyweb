@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { PopupService } from '../../../core/services/popup.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 register();
 
@@ -17,6 +18,7 @@ register();
 })
 export class CurriculumComponent implements OnInit {
   isDesktop = true;
+  private readonly simulatorUrls = environment.simulatorUrls;
 
   constructor(
     private router: Router,
@@ -105,7 +107,7 @@ export class CurriculumComponent implements OnInit {
       description:
         'Design and create 3D models directly in your browser using an easy-to-use CAD workspace. Learn how real-world products are designed by building and modifying objects step-by-step.',
       hasReadMore: true,
-      playUrl: 'https://circuit.theteachly.com',
+      playUrl: this.simulatorUrls.circuit,
       image: 'image/files/HD_01_CAD_Design_Module.png',
       btn:"Simulate Now",
       requiresPlan: 'tech',
@@ -118,7 +120,7 @@ export class CurriculumComponent implements OnInit {
       description:
         'Assemble and control drones in a Virtual Lab environment. Learn how drones work, behave, and are controlled—without any physical risk.',
       hasReadMore: true,
-      playUrl: '#',
+      playUrl: this.simulatorUrls.droneDownload,
       image: 'image/files/HD_04_Drone_Simulation_Module.png',
       btn:"Download Now",
       requiresPlan: 'tech',
@@ -133,7 +135,7 @@ export class CurriculumComponent implements OnInit {
         'Master the fundamentals of Artificial Intelligence. Understand how machines learn, think, and solve complex problems through hands-on AI experiments.',
       hasReadMore: true,
       btn:"Simulate Now",
-      playUrl: 'https://drone.theteachly.com',
+      playUrl: this.simulatorUrls.ai,
       image: 'image/files/HD_02_AI_Learning_Module.png',
       requiresPlan: 'tech',
     },

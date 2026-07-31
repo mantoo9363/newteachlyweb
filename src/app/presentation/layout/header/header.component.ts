@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/services/api-service';
 import { PopupService } from '../../../core/services/popup.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 const LANGUAGE_MAP: { [key: string]: string } = {
   ENG: 'en',
@@ -94,7 +95,9 @@ export class HeaderComponent implements OnInit {
   activeDropdown = signal<string | null>(null);
   activeSubDropdown = signal<string | null>(null);
   isSignupOpen = false;
-  activeTab: 'login' | 'signup' = 'signup';
+  activeTab: 'login' | 'signup' | 'forgot' = 'signup';
+  forgotPasswordForm!: FormGroup;
+  forgotPasswordSubmitted = false;
   showMessageModal = false;
   userMenuOpen = false;
   showLoginPassword = false;
@@ -126,6 +129,9 @@ export class HeaderComponent implements OnInit {
   searchQuery = signal('');
   public service = inject(ApiService);
   private readonly signupDraftStorageKey = 'teachly_signup_draft';
+  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
+  private readonly studentPanelSsoUrl = environment.studentPanel.ssoUrl;
+  private readonly studentPanelLoginUrl = environment.studentPanel.loginUrl;
   private isRestoringSignupDraft = false;
   get filteredSearchItems() {
     const query = this.searchQuery().toLowerCase().trim();
@@ -202,7 +208,9 @@ export class HeaderComponent implements OnInit {
     smart: 'Smart Education Plan',
   };
 
-  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology'];
+  // Routes that no longer require authGuard (see app.routes.ts) - the pages themselves
+  // handle login/plan gating, so nav links to them should stay navigable for guests.
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details'];
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
@@ -215,13 +223,20 @@ export class HeaderComponent implements OnInit {
   }
 
   isMenuItemAccessible(item: any): boolean {
+    if (item?.url && this.publicUrls.includes(this.getRoutePath(item.url))) return true;
     if (!this.isLoggedIn) return false;
     return item?.requiresPlan ? this.hasPlanGroupAccess(item.requiresPlan) : true;
   }
 
   isNavLinkAccessible(item: any): boolean {
-    if (item?.url && this.publicUrls.includes(this.getRoutePath(item.url))) return true;
     return this.isMenuItemAccessible(item);
+  }
+
+  // Purely a visual "premium content" hint (lock badge / greyed-out styling).
+  // Kept separate from isMenuItemAccessible so public-preview pages (e.g. curriculum-details)
+  // stay clickable/navigable while still signalling that a plan is required.
+  isMenuItemLocked(item: any): boolean {
+    return !!item?.requiresPlan && (!this.isLoggedIn || !this.hasPlanGroupAccess(item.requiresPlan));
   }
 
   private isPackageExpired(expiresAt: string | null): boolean {
@@ -484,9 +499,9 @@ export class HeaderComponent implements OnInit {
       title: 'Simulations',
       type: 'dropdown',
       items: [
-        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module', requiresPlan: 'tech' },
-        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
-        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module', requiresPlan: 'tech' },
+        { title: 'AI visualization LAB', url: '/curriculum-details?id=13&title=AI%20Learning%20Module' },
+        { title: 'Robotics Simulator', url: '/curriculum-details?id=10&title=Robotics%20Virtual%20Lab%20Module' },
+        { title: 'Drone Simulator', url: '/curriculum-details?id=12&title=Drone%20Virtual%20Lab%20Module' },
 
       ]
     },
@@ -849,6 +864,25 @@ export class HeaderComponent implements OnInit {
     return params;
   }
 
+  getMenuHref(url: string): string | null {
+    if (this.isStudentPanelLoginUrl(url)) {
+      return this.buildStudentPanelSsoUrl();
+    }
+
+    return url;
+  }
+
+  private isStudentPanelLoginUrl(url: string): boolean {
+    return url === this.studentPanelLoginUrl;
+  }
+
+  private buildStudentPanelSsoUrl(): string {
+    const token = sessionStorage.getItem('access_token');
+    if (!token) return this.studentPanelLoginUrl;
+
+    return `${this.studentPanelSsoUrl}?token=${encodeURIComponent(token)}`;
+  }
+
   constructor(
     private translateService: TranslateService,
     private ngZone: NgZone,
@@ -996,6 +1030,10 @@ export class HeaderComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+    });
+
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
     });
 
     this.signupForm = this.fb.group({
@@ -1279,6 +1317,27 @@ export class HeaderComponent implements OnInit {
     this.activeTab = tab;
   }
 
+  openForgotPassword(): void {
+    this.forgotPasswordForm.reset();
+    this.forgotPasswordSubmitted = false;
+    this.activeTab = 'forgot';
+  }
+
+  backToLoginFromForgot(): void {
+    this.forgotPasswordSubmitted = false;
+    this.activeTab = 'login';
+  }
+
+  // Dummy flow for now — no backend endpoint wired up yet.
+  submitForgotPassword(): void {
+    if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
+      return;
+    }
+
+    this.forgotPasswordSubmitted = true;
+  }
+
   // 🔐 LOGIN FUNCTION
   onLogin() {
 
@@ -1324,8 +1383,7 @@ export class HeaderComponent implements OnInit {
   sessionStorage.setItem('school_name', res.user.first_name);
   sessionStorage.setItem('user_type', res.user.user_type || '');
   this.setPackageStatusFromResponse(res);
-
-  this.headermsg = "Login Successfully";
+  
   this.closeSignupModal();
 
   // Dashboard
@@ -1649,8 +1707,14 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('active_package_key');
     sessionStorage.removeItem('package_expires_at');
     sessionStorage.removeItem('active_course');
+    this.clearAiIframeLoginCookie();
     this.userMenuOpen = false;
     window.location.reload();
+  }
+
+  private clearAiIframeLoginCookie(): void {
+    document.cookie = `${this.aiIframeLoginCookie}=; path=/; max-age=0; SameSite=Lax`;
+    document.cookie = `${this.aiIframeLoginCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 
   navigateWithLogin(url: string): void {
@@ -1698,6 +1762,14 @@ export class HeaderComponent implements OnInit {
       event.stopPropagation();
       this.closeMobileMenu();
       this.openMessage(`Upgrade to the ${this.planGroupLabel(item.requiresPlan)} to access this content.`);
+      return;
+    }
+
+    if (this.isStudentPanelLoginUrl(url)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
+      window.open(this.buildStudentPanelSsoUrl(), '_blank');
     }
   }
 }

@@ -11,8 +11,9 @@ export class ApiService {
 
   private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
   // private readonly baseUrl = 'http://127.0.0.1:8000';
+  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private url(endpoint: string): string {
     return `${this.baseUrl}${endpoint}`;
@@ -25,10 +26,10 @@ export class ApiService {
     });
   }
 
-  private request<T>(source: Observable<T>): Observable<T> {
+  private request<T>(source: Observable<T>, logoutOnAuthError = true): Observable<T> {
     return source.pipe(
       catchError((error: HttpErrorResponse) => {
-        if (this.isInvalidTokenError(error)) {
+        if (logoutOnAuthError && this.isInvalidTokenError(error)) {
           this.logoutForExpiredToken();
         }
 
@@ -52,6 +53,7 @@ export class ApiService {
     sessionStorage.removeItem('package_expires_at');
     sessionStorage.removeItem('active_course');
     localStorage.removeItem('teachly_signup_draft');
+    this.clearAiIframeLoginCookie();
 
     if (window.location.pathname !== '/') {
       window.location.href = '/';
@@ -59,6 +61,11 @@ export class ApiService {
     }
 
     window.location.reload();
+  }
+
+  private clearAiIframeLoginCookie(): void {
+    document.cookie = `${this.aiIframeLoginCookie}=; path=/; max-age=0; SameSite=Lax`;
+    document.cookie = `${this.aiIframeLoginCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 
   chaneStuRegister(data: any): Observable<any> {

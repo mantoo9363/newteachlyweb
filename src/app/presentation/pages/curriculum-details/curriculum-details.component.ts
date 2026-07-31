@@ -7,6 +7,7 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { IframeEmbedComponent } from '../../components/iframe-embed/iframe-embed.component';
 import { ApiService } from '../../../core/services/api-service';
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -48,6 +49,8 @@ openMessage(message: string) {
   showIframe = false; // Control iframe visibility
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
+  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
+  private readonly simulatorUrls = environment.simulatorUrls;
 
   private allModules: { [key: string]: any } = {
     '10': {
@@ -76,7 +79,7 @@ openMessage(message: string) {
       outcome: 'By the end, you won’t just understand design—you’ll be able to create it yourself.',
       video: '/image/CAD DEMO.mp4',
       image: '/image/CAD_IMAGE.png',
-      playUrl: 'https://circuit.theteachly.com'
+      playUrl: this.simulatorUrls.circuit
     },
    
     '12': {
@@ -106,7 +109,7 @@ openMessage(message: string) {
       outcome: 'You gain real understanding of how drones are built and controlled—without ever needing physical hardware.',
       video: '/image/Drone Demo.mp4',
       image: '/image/DRONE_IMAGE.png',
-      downloadUrl: 'https://apifuturexcamp.theteachly.com/uploads/Teachly%20Drone%20Simulator.rar'
+      playUrl: this.simulatorUrls.droneDownload
     },
    '13': {
   headline: 'AI LEARNING MODULE',
@@ -123,43 +126,43 @@ openMessage(message: string) {
     'Build Real-world AI Projects & Portfolios'
   ],
 
-learningLevels: [
-  {
-    level: 'LEVEL 1',
-    title: 'AI Explorer',
-    lessons: 4,
-    outcomes: [
-      'Understand the fundamentals of Artificial Intelligence.',
-      'Learn Prompt Engineering.',
-      'Use modern AI tools.',
-      'Build a strong AI foundation.'
-    ]
-  },
-  {
-    level: 'LEVEL 2',
-    title: 'AI Foundations',
-    lessons: 5,
-    outcomes: [
-      'Python for AI',
-      'Machine Learning',
-      'Deep Learning',
-      'Student Performance Predictor',
-      'AI Model Basics'
-    ]
-  },
-  {
-    level: 'LEVEL 3',
-    title: 'AI Engineer',
-    lessons: 5,
-    outcomes: [
-      'LLMs',
-      'Generative AI',
-      'AI Agents',
-      'MLOps',
-      'Deploy AI Applications'
-    ]
-  }
-],
+// learningLevels: [
+//   {
+//     level: 'LEVEL 1',
+//     title: 'AI Explorer',
+//     lessons: 4,
+//     outcomes: [
+//       'Understand the fundamentals of Artificial Intelligence.',
+//       'Learn Prompt Engineering.',
+//       'Use modern AI tools.',
+//       'Build a strong AI foundation.'
+//     ]
+//   },
+//   {
+//     level: 'LEVEL 2',
+//     title: 'AI Foundations',
+//     lessons: 5,
+//     outcomes: [
+//       'Python for AI',
+//       'Machine Learning',
+//       'Deep Learning',
+//       'Student Performance Predictor',
+//       'AI Model Basics'
+//     ]
+//   },
+//   {
+//     level: 'LEVEL 3',
+//     title: 'AI Engineer',
+//     lessons: 5,
+//     outcomes: [
+//       'LLMs',
+//       'Generative AI',
+//       'AI Agents',
+//       'MLOps',
+//       'Deploy AI Applications'
+//     ]
+//   }
+// ],
 
   howItWorks:
     'Learn AI → Build Projects → Deploy AI Applications → Become Industry Ready.',
@@ -196,7 +199,7 @@ learningLevels: [
 
   image: '/image/AI Learning.jpeg',
 
-  playUrl: 'https://aiab.theteachly.com/'
+  playUrl: this.simulatorUrls.ai
 },
   };
 
@@ -206,7 +209,15 @@ learningLevels: [
     window.scrollTo(0, 0);
     this.route.queryParams.subscribe(params => {
       window.scrollTo(0, 0);
-      this.id = params['id'];
+      const nextId = params['id'] ?? null;
+      const isModuleChange = this.id !== nextId;
+
+      if (isModuleChange) {
+        this.showIframe = false;
+        this.iframeUrl = '';
+      }
+
+      this.id = nextId;
       this.title = params['title'];
 
       if (this.id && this.allModules[this.id]) {
@@ -290,50 +301,89 @@ learningLevels: [
   }*/
 
 
-launchSimulation(): void {
+   launchSimulation(): void {
 
+  const token = sessionStorage.getItem('access_token');
 
- 
+ // console.log(token);
 
-  // ID 12 -> Download
+  if (!token) {
+
+    this.headerComponent?.openModal('login');
+
+    return;
+  }
+
+  if (this.id === '13' && this.hasAiIframeLoginCookie()) {
+    this.iframeUrl = this.moduleData.playUrl;
+    this.showIframe = true;
+    window.scrollTo(0, 0);
+    return;
+  }
+
   if (this.id === '12') {
-    window.open(
-      'https://apifuturexcamp.theteachly.com/uploads/Teachly%20Drone%20Simulator.zip',
-      '_blank'
-    );
+    window.location.href = this.simulatorUrls.droneDownload;
     return;
   }
 
-  // ID 10 & 13 -> Simulation
-  if (this.id === '10' || this.id === '13') {
+this.apiService.generateTempToken().subscribe({
+  
+  next: (res) => {
+    const token = res.temp_token;
+   // console.log(token);
 
-    const token = sessionStorage.getItem('access_token');
-
-    if (!token) {
-      this.headerComponent?.openModal('login');
-      return;
+    this.iframeUrl =
+      `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
+    this.showIframe = true;
+    window.scrollTo(0, 0);
+  },
+  error: (err) => {
+    console.error(err);
+    if (token && !sessionStorage.getItem('access_token')) {
+      sessionStorage.setItem('access_token', token);
     }
-
-    this.apiService.generateTempToken().subscribe({
-      next: (res) => {
-        window.location.href =
-          `${this.moduleData.playUrl}?token=${encodeURIComponent(res.temp_token)}`;
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Token generation failed');
-      }
-    });
-
-    return;
+    this.openMessage('Simulation could not start. Please try again.');
   }
+});
 
-  alert(`Invalid Module ID: ${this.id}`);
+
+
+
+
+  // console.log(token);
+
+ //window.location.href =
+   // `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
+
+    //console.log(window.location.href);
+
 }
+
+  private hasAiIframeLoginCookie(): boolean {
+    return document.cookie
+      .split(';')
+      .some((cookie) => cookie.trim() === `${this.aiIframeLoginCookie}=true`);
+  }
 
   closeIframe(): void {
     this.showIframe = false;
     this.iframeUrl = '';
+    window.scrollTo(0, 0);
+  }
+
+  private moduleCategory(): string {
+    const categories: { [key: string]: string } = {
+      '10': 'Robotics',
+      '12': 'Drone',
+      '13': 'AI'
+    };
+    return (this.id && categories[this.id]) || 'Drone';
+  }
+
+  goToTutorial(): void {
+    // The tutorial page itself resolves the category to an actual lesson id
+    // (and handles the login/plan gating) - this button just has to navigate.
+    this.router.navigate(['/tutorial/category', this.moduleCategory()]);
   }
 
   switchModule(moduleId: string): void {
