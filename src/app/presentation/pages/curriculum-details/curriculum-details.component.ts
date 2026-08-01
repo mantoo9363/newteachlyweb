@@ -49,29 +49,34 @@ openMessage(message: string) {
   showIframe = false; // Control iframe visibility
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
+  studentsCount = '';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
   private readonly simulatorUrls = environment.simulatorUrls;
 
   private allModules: { [key: string]: any } = {
     '10': {
       headline: 'Robotics & 3D CAD LAB',
-      subHeadline: 'Design Real-World Products — From Scratch',
-      description: 'Learn how engineers think by creating and modifying 3D models in a simple, browser-based CAD environment.',
+      subHeadline: 'From Circuits to 3D Models — Build Real-World Products',
+      description: 'Learn how engineers think by building electronic circuits, then creating and modifying 3D models in a simple, browser-based environment.',
       whatYouDo: [
+        'Build and test simple electronic circuits',
+        'Connect components like resistors, LEDs, and switches',
         'Create 3D objects like cubes, spheres, and structures',
         'Resize, scale, and modify designs in real-time',
         'Build components that can be used in real systems'
       ],
-      howItWorks: 'Start with basic shapes → modify them → combine them → create usable designs. No prior experience needed.',
+      howItWorks: 'Start with circuit basics → build and test connections → move into 3D modeling → combine shapes → create usable designs. No prior experience needed.',
       whyThisMatters: {
-        intro: 'Most students only see designs. Here, you actually build them.',
+        intro: 'Most students only see designs. Here, you actually build them — starting with the electronics that make them work.',
         points: [
+          'Understand core electronics and circuit logic',
           'Understand product design fundamentals',
           'Visualize ideas in 3D',
           'Develop problem-solving through design thinking'
         ]
       },
       whatYouLearn: [
+        'Circuit building and electronics basics',
         '3D modeling basics',
         'Spatial understanding',
         'Design logic used in real industries'
@@ -79,7 +84,10 @@ openMessage(message: string) {
       outcome: 'By the end, you won’t just understand design—you’ll be able to create it yourself.',
       video: '/image/CAD DEMO.mp4',
       image: '/image/CAD_IMAGE.png',
-      playUrl: this.simulatorUrls.circuit
+      playUrl: this.simulatorUrls.circuit,
+      lessons: '450+  ',
+      rating: '10',
+      students: '20K'
     },
    
     '12': {
@@ -109,7 +117,10 @@ openMessage(message: string) {
       outcome: 'You gain real understanding of how drones are built and controlled—without ever needing physical hardware.',
       video: '/image/Drone Demo.mp4',
       image: '/image/DRONE_IMAGE.png',
-      playUrl: this.simulatorUrls.droneDownload
+      playUrl: this.simulatorUrls.droneDownload,
+      lessons: '30+',
+      rating: '10',
+      students: '20k'
     },
    '13': {
   headline: 'AI LEARNING MODULE',
@@ -171,10 +182,10 @@ openMessage(message: string) {
     intro:
       'Artificial Intelligence is transforming every industry. Learning AI today prepares students for tomorrow’s careers.',
     points: [
-      'Master future-ready AI skills',
+      'Build future-ready AI skills',
       'Learn through hands-on projects',
-      'Become industry ready',
-      'Build an impressive AI portfolio'
+      'Prepare for AI careers',
+      'Become industry ready'
     ]
   },
 
@@ -193,13 +204,18 @@ openMessage(message: string) {
   ],
 
   outcome:
-    'Complete your journey from AI Explorer to AI Engineer by building production-ready AI applications and becoming industry ready.',
+    'Understand core AI concepts and principles, Build and apply AI solutions through hands-on projects, Develop industry-ready AI engineering skills',
 
   video: '/video/AI COURSE-20260511T100451Z-3-001/AI COURSE/1.Intro To AI Pro Series.mp4',
 
   image: '/image/AI Learning.jpeg',
 
-  playUrl: this.simulatorUrls.ai
+  playUrl: this.simulatorUrls.ai,
+
+  lessons: '30+',
+  rating: '10',
+  students: '20k',
+  hidePreviewControls: true
 },
   };
 
@@ -224,6 +240,10 @@ openMessage(message: string) {
         this.moduleData = this.allModules[this.id];
         // Don't auto-select first lecture so module intro video plays first
         this.selectedLecture = null;
+        this.studentsCount = this.generateRandomStudentsCount();
+        if (isModuleChange) {
+          this.reloadModulePreviewVideo();
+        }
       }
 
       // Populate simulation modules
@@ -232,6 +252,19 @@ openMessage(message: string) {
       console.log('Curriculum Details - ID:', this.id);
       console.log('Curriculum Details - Title:', this.title);
       console.log('Module Data:', this.moduleData);
+    });
+  }
+
+  private generateRandomStudentsCount(): string {
+    const count = Math.floor(Math.random() * (20 - 2 + 1)) + 2;
+    return `${count}k`;
+  }
+
+  private reloadModulePreviewVideo(): void {
+    // Defer until Angular has updated the <source> src for the new module
+    setTimeout(() => {
+      const videoElement = document.querySelector('.module-video') as HTMLVideoElement | null;
+      videoElement?.load();
     });
   }
 
@@ -391,6 +424,9 @@ this.apiService.generateTempToken().subscribe({
       this.id = moduleId;
       this.moduleData = this.allModules[moduleId];
       this.iframeUrl = this.moduleData.playUrl;
+      this.studentsCount = this.generateRandomStudentsCount();
+      this.selectedLecture = null;
+      this.reloadModulePreviewVideo();
     }
   }
 }

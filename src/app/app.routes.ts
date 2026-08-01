@@ -11,6 +11,7 @@ import { IframeViewComponent } from './presentation/pages/iframe-view/iframe-vie
 import { PrivacyPolicyComponent } from './presentation/pages/privacy-policy/privacy-policy.component';
 import { TermsOfServiceComponent } from './presentation/pages/terms-of-service/terms-of-service.component';
 import { CtAiComponent } from './presentation/pages/ct-ai/ct-ai.component';
+import { ResetPasswordComponent } from './presentation/pages/reset-password/reset-password.component';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -18,6 +19,16 @@ export const routes: Routes = [
     path: '',
     component: HomePageComponent,
     title: 'Teachly | Interactive STEM Simulations & Learning Platform'
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    title: 'Teachly | Reset Password'
+  },
+  {
+    path: 'reset-password/:token',
+    component: ResetPasswordComponent,
+    title: 'Teachly | Reset Password'
   },
   {
     path: 'simulator',

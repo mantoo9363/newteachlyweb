@@ -167,6 +167,21 @@
       }
     }
   }
+
+  &.board-match {
+    color: #16a34a;
+    font-weight: 600;
+
+    .board-unlock-icon {
+      font-size: 11px;
+      color: #16a34a;
+      margin-left: 4px;
+    }
+
+    &:hover {
+      color: #15803d;
+    }
+  }
 }
 
 .dropdown-trigger {
@@ -273,6 +288,29 @@
 
       .lock-icon {
         color: #ef4444;
+      }
+    }
+  }
+
+  &.board-match {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #16a34a;
+    font-weight: 600;
+
+    .board-unlock-icon {
+      font-size: 11px;
+      color: #16a34a;
+      margin-left: 8px;
+    }
+
+    &:hover {
+      background: rgba(22, 163, 74, 0.08);
+      color: #15803d;
+
+      .board-unlock-icon {
+        color: #15803d;
       }
     }
   }
