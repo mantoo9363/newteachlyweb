@@ -5,6 +5,7 @@ import { PopupService } from '../../../core/services/popup.service';
 import { ApiService } from '../../../core/services/api-service';
 import { ToastService } from '../../../core/services/toast.service';
 import { FormsModule } from '@angular/forms';
+import { AuthStorageService } from '../../../core/services/auth-storage.service';
 
 type PlanKey = 'tech' | 'smart' | 'combo';
 type PackagePlanKey = PlanKey | 'school' | 'schooltech';
@@ -27,7 +28,8 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
     private popupService: PopupService,
     private apiService: ApiService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authStorage: AuthStorageService
   ) { }
 
   couponCode = 'TEACH50';
@@ -133,28 +135,30 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private clearExpiredPackage(): void {
-    sessionStorage.setItem('has_active_package', 'false');
-    sessionStorage.removeItem('active_package_key');
-    sessionStorage.removeItem('package_expires_at');
-    sessionStorage.removeItem('active_course');
+    this.authStorage.setItem('has_active_package', 'false');
+    this.authStorage.removeItem('active_package_key');
+    this.authStorage.removeItem('active_package_keys');
+    this.authStorage.removeItem('active_plan_expiries');
+    this.authStorage.removeItem('package_expires_at');
+    this.authStorage.removeItem('active_course');
     this.packageStatusVersion++;
   }
 
   private updateProfileSummary(profile?: any): void {
-    const isLoggedIn = Boolean(sessionStorage.getItem('access_token'));
+    const isLoggedIn = this.authStorage.isLoggedIn();
     if (!isLoggedIn && !profile) {
       this.profileSummary = null;
       return;
     }
 
-    const course = profile?.course || profile?.payment?.plan_name || sessionStorage.getItem('active_course') || '-';
+    const course = profile?.course || profile?.payment?.plan_name || this.authStorage.getItem('active_course') || '-';
     const duration = profile?.duration || profile?.payment?.duration || '-';
     const hasActivePackage = profile?.has_active_package ?? profile?.payment?.has_active_package ?? this.hasActivePackage();
 
     this.profileSummary = {
-      name: profile?.first_name || sessionStorage.getItem('school_name') || 'User',
-      studentId: profile?.student_id || sessionStorage.getItem('student_id') || '-',
-      userType: profile?.user_type || sessionStorage.getItem('user_type') || '-',
+      name: profile?.first_name || this.authStorage.getItem('school_name') || 'User',
+      studentId: profile?.student_id || this.authStorage.getItem('student_id') || '-',
+      userType: profile?.user_type || this.authStorage.getItem('user_type') || '-',
       course,
       duration: duration === '-' ? '-' : `${duration} Month${Number(duration) > 1 ? 's' : ''}`,
       status: hasActivePackage ? 'Active' : 'No active package',
@@ -162,9 +166,9 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private logPackageMatch(profile?: any): void {
-    const activePackageKey = sessionStorage.getItem('active_package_key');
-    const hasActivePackage = sessionStorage.getItem('has_active_package') === 'true';
-    const packageExpiresAt = sessionStorage.getItem('package_expires_at');
+    const activePackageKeys = this.authStorage.getActivePackageKeys();
+    const hasActivePackage = activePackageKeys.length > 0;
+    const packageExpiresAt = this.authStorage.getItem('package_expires_at');
     const plans = [
       { key: 'school', title: 'School Plan' },
       { key: 'schooltech', title: 'School Tech Plan' },
@@ -177,7 +181,7 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Profile/package data:', {
       profile,
       hasActivePackage,
-      activePackageKey,
+      activePackageKeys,
       packageExpiresAt,
       course: profile?.course || profile?.payment?.plan_name || null,
     });
@@ -185,8 +189,8 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
       plans.map((plan) => ({
         plan_key: plan.key,
         plan_name: plan.title,
-        matched_with_bought_package: hasActivePackage && activePackageKey === plan.key,
-        button_text: hasActivePackage && activePackageKey === plan.key ? 'SELECTED' : 'BUY NOW',
+        matched_with_bought_package: this.authStorage.isPlanActive(plan.key),
+        button_text: this.authStorage.isPlanActive(plan.key) ? 'SELECTED' : 'BUY NOW',
       }))
     );
     console.groupEnd();
@@ -194,9 +198,7 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   hasActivePackage(): boolean {
     void this.packageStatusVersion;
-    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
-
-    if (this.isPackageExpired(sessionStorage.getItem('package_expires_at'))) {
+    if (!this.authStorage.hasActivePackage()) {
       this.clearExpiredPackage();
       return false;
     }
@@ -205,7 +207,8 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   isPurchasedPlan(plan: string): boolean {
-    return this.hasActivePackage() && sessionStorage.getItem('active_package_key') === plan;
+    void this.packageStatusVersion;
+    return this.authStorage.isPlanActive(plan);
   }
 
   getBuyButtonText(plan: string): string {
@@ -226,7 +229,7 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(sessionStorage.getItem('user_id')) || null,
+      student_id: Number(this.authStorage.getItem('user_id')) || null,
       amount: this.getBasePrice(plan)
     };
 
@@ -518,7 +521,7 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
       coupon_code: code,
       plan_key: plan,
       plan_duration: this.planMonths[plan],
-      student_id: Number(sessionStorage.getItem('user_id')) || null,
+      student_id: Number(this.authStorage.getItem('user_id')) || null,
       amount: this.getBasePrice(plan)
     };
 

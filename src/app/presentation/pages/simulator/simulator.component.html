@@ -13,7 +13,7 @@
 
         <h3 class="filter-title" (click)="toggleClasses()">
           CLASSES
-          <span>{{ showClasses ? '⌄' : '>' }}</span>
+          <i class="fas fa-chevron-right toggle-icon" [class.expanded]="showClasses"></i>
         </h3>
 
         @if(showClasses){
@@ -22,7 +22,7 @@
               <div
                 class="subject-header"
                 (click)="selectClassGroup(group)"
-                [class.active]="selectedClassGroup === group">
+                [class.active]="isActiveClassGroup(group)">
                 <span class="subject-name">
                   {{ group }}
                 </span>
@@ -37,9 +37,7 @@
 
         <h3 class="filter-title" (click)="showSubjects = !showSubjects">
           SUBJECT
-          <span class="toggle">
-            {{ showSubjects ? '⌄' : '>' }}
-          </span>
+          <i class="fas fa-chevron-right toggle-icon" [class.expanded]="showSubjects"></i>
         </h3>
 
         @if(showSubjects){
@@ -60,9 +58,7 @@
                     </span>
                   </label>
 
-                  <span class="arrow">
-                    {{ expandedSubjects.has(subject.name) ? '⌄' : '>' }}
-                  </span>
+                  <i class="fas fa-chevron-right toggle-icon" [class.expanded]="expandedSubjects.has(subject.name)"></i>
                 </div>
 
                 @if(expandedSubjects.has(subject.name)){

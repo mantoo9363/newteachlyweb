@@ -26,8 +26,8 @@
   position: sticky;
   // top: 110px; // Spacing below fixed header
   // height: calc(100vh - 130px);
-  top: 70px;                  // Header ki height ke according adjust karo
-  height: calc(100vh - 70px); // Same value yahan bhi
+  top: 70px;                      // Header ki height ke according adjust karo
+  max-height: calc(100vh - 90px); // Sirf overflow hone par hi scroll ho, warna content jitni hi height
   overflow-y: auto;
   padding-right: 12px;
   scrollbar-width: none; // Hide for clean look
@@ -68,10 +68,16 @@
       color: #1a1a1a;
       margin-bottom: 1.5rem;
       display: flex;
+      align-items: center;
       justify-content: space-between;
       letter-spacing: 1px;
       text-transform: uppercase;
       opacity: 0.8;
+      cursor: pointer;
+
+      .toggle-icon {
+        opacity: 0.8;
+      }
     }
 
     .filter-content {
@@ -175,15 +181,27 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
   transition: all 0.2s ease;
+
+  &:hover {
+    background: #f7f8fa;
+  }
 }
 
-.arrow {
+.toggle-icon {
   margin-left: auto;
-  font-size: 18px;
-  font-weight: 600;
-  color: #666;
+  font-size: 0.75rem;
+  color: #999;
   flex-shrink: 0;
+  transition: transform 0.25s ease, color 0.2s ease;
+
+  &.expanded {
+    transform: rotate(90deg);
+    color: #0062FF;
+  }
 }
 .subject-name{
     flex:1;

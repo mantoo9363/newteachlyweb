@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
 import { ApiService } from './api-service';
+import { AuthStorageService } from './auth-storage.service';
 
 export type PlanGroup = 'tech' | 'smart';
 
@@ -24,21 +25,23 @@ export class PlanAccessService {
 
   private classLevel$: Observable<string | null> | undefined;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private authStorage: AuthStorageService
+  ) {}
 
   isLoggedIn(): boolean {
-    return !!sessionStorage.getItem('access_token');
+    return this.authStorage.isLoggedIn();
   }
 
   hasPurchasedPackage(): boolean {
-    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
-    return !this.isPackageExpired(sessionStorage.getItem('package_expires_at'));
+    return this.authStorage.hasActivePackage();
   }
 
   hasPlanGroupAccess(group: PlanGroup): boolean {
     if (!this.isLoggedIn() || !this.hasPurchasedPackage()) return false;
-    const activePlanKey = sessionStorage.getItem('active_package_key');
-    return !!activePlanKey && this.planGroups[group].includes(activePlanKey);
+    const activePlanKeys = this.authStorage.getActivePackageKeys();
+    return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }
 
   planGroupLabel(group: PlanGroup): string {

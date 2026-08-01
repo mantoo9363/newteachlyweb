@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../api/api-endpoints';
+import { AuthStorageService } from './auth-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +14,17 @@ export class ApiService {
    //private readonly baseUrl = 'http://127.0.0.1:8000';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authStorage: AuthStorageService
+  ) { }
 
   private url(endpoint: string): string {
     return `${this.baseUrl}${endpoint}`;
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const accessToken = sessionStorage.getItem('access_token');
+    const accessToken = this.authStorage.getToken();
     return new HttpHeaders({
       Authorization: `Bearer ${accessToken || ''}`,
     });
@@ -43,15 +47,7 @@ export class ApiService {
   }
 
   private logoutForExpiredToken(): void {
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('user_id');
-    sessionStorage.removeItem('student_id');
-    sessionStorage.removeItem('school_name');
-    sessionStorage.removeItem('user_type');
-    sessionStorage.removeItem('has_active_package');
-    sessionStorage.removeItem('active_package_key');
-    sessionStorage.removeItem('package_expires_at');
-    sessionStorage.removeItem('active_course');
+    this.authStorage.clearAuth();
     localStorage.removeItem('teachly_signup_draft');
     this.clearAiIframeLoginCookie();
 
@@ -73,7 +69,7 @@ export class ApiService {
   }
 
   chaneStuLogin(data: any): Observable<any> {
-    return this.request(this.http.post(this.url(API_ENDPOINTS.chanelStudent.login), data));
+    return this.request(this.http.post(this.url(API_ENDPOINTS.chanelStudent.login), data), false);
   }
 
   getProfile(): Observable<any> {

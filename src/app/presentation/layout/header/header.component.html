@@ -318,6 +318,14 @@
         <div class="input-group">
           <input type="email" formControlName="email" placeholder="Email">
         </div>
+        <div class="error" *ngIf="loginForm.get('email')?.touched &&
+            loginForm.get('email')?.errors?.['required']">
+          Email is required.
+        </div>
+        <div class="error" *ngIf="loginForm.get('email')?.touched &&
+            loginForm.get('email')?.errors?.['email']">
+          Please enter a valid email.
+        </div>
 
         <div class="input-group password-group">
           <input [type]="showLoginPassword ? 'text' : 'password'" placeholder="Password"
@@ -327,12 +335,22 @@
             <i class="fas" [class.fa-eye]="!showLoginPassword" [class.fa-eye-slash]="showLoginPassword"></i>
           </button>
         </div>
+        <div class="error" *ngIf="loginForm.get('password')?.touched &&
+            loginForm.get('password')?.errors?.['required']">
+          Password is required.
+        </div>
+        <div class="error" *ngIf="loginErrorMessage">
+          {{ loginErrorMessage }}
+        </div>
 
         <div class="forgot-password-row">
           <a class="forgot-password-link" (click)="openForgotPassword()">Forgot password?</a>
         </div>
 
-        <button type="submit" class="submit-btn">Login</button>
+        <button type="submit" class="submit-btn" [disabled]="isLoginLoading">
+          <span class="btn-spinner" *ngIf="isLoginLoading"></span>
+          {{ isLoginLoading ? 'Logging in...' : 'Login' }}
+        </button>
       </form>
       }
 

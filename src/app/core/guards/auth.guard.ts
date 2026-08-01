@@ -1,9 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { PopupService } from '../services/popup.service';
+import { AuthStorageService } from '../services/auth-storage.service';
 
 export const authGuard: CanActivateFn = () => {
-  if (sessionStorage.getItem('access_token')) {
+  const authStorage = inject(AuthStorageService);
+
+  if (authStorage.isLoggedIn()) {
     return true;
   }
 
