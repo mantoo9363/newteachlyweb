@@ -41,13 +41,19 @@ export class SimulatorComponent implements OnInit {
     compatibility: ['HTML5', 'Flash', 'Java']
   };
 
-  showClasses = false;
+  showClasses = true;
 
   classGroups = [
     'Class 1-5',
     'Class 6-10',
     'Class 11-University'
   ];
+
+  private classGroupKeyMap: Record<string, '1-5' | '6-10' | '11-university'> = {
+    'Class 1-5': '1-5',
+    'Class 6-10': '6-10',
+    'Class 11-University': '11-university'
+  };
 
   selectedSubjects = new Set<string>();
   selectedGrades = new Set<string>();
@@ -88,10 +94,14 @@ export class SimulatorComponent implements OnInit {
     this.showClasses = !this.showClasses;
   }
 
+  isActiveClassGroup(group: string): boolean {
+    return this.selectedClassGroup === this.classGroupKeyMap[group];
+  }
+
   selectClassGroup(group: string) {
     console.log("Clicked:", group);
 
-  this.selectedClassGroup = group as '1-5' | '6-10' | '11-university';
+  this.selectedClassGroup = this.classGroupKeyMap[group];
 
   this.selectedGrades.clear();
 
@@ -282,7 +292,7 @@ openVideo(sim: Simulator) {
     this.selectedVideo.set(null);
   }
 
-  showSubjects = false;
+  showSubjects = true;
 
 expandedSubjects = new Set<string>();
 
