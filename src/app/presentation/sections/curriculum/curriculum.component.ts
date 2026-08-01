@@ -5,6 +5,7 @@ import { register } from 'swiper/element/bundle';
 import { PopupService } from '../../../core/services/popup.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { environment } from '../../../../environments/environment';
+import { AuthStorageService } from '../../../core/services/auth-storage.service';
 
 register();
 
@@ -25,6 +26,7 @@ export class CurriculumComponent implements OnInit {
     private translate: TranslateService,
     private popupService: PopupService,
     private toastService: ToastService,
+    private authStorage: AuthStorageService,
   ) {}
 
   // The 3 individual plan states: Tech, Smart, and Combo (Tech & Smart together).
@@ -41,24 +43,17 @@ export class CurriculumComponent implements OnInit {
   };
 
   get isLoggedIn(): boolean {
-    return !!sessionStorage.getItem('access_token');
-  }
-
-  private isPackageExpired(expiresAt: string | null): boolean {
-    if (!expiresAt) return false;
-    const expiryTime = Date.parse(expiresAt);
-    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+    return this.authStorage.isLoggedIn();
   }
 
   private hasPurchasedPackage(): boolean {
-    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
-    return !this.isPackageExpired(sessionStorage.getItem('package_expires_at'));
+    return this.authStorage.hasActivePackage();
   }
 
   private hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
-    const activePlanKey = sessionStorage.getItem('active_package_key');
-    return !!activePlanKey && this.planGroups[group].includes(activePlanKey);
+    const activePlanKeys = this.authStorage.getActivePackageKeys();
+    return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }
 
   isTopicAccessible(topic: any): boolean {

@@ -26,6 +26,7 @@ import { ApiService } from '../../../core/services/api-service';
 import { PopupService } from '../../../core/services/popup.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { environment } from '../../../../environments/environment';
+import { AuthStorageService } from '../../../core/services/auth-storage.service';
 
 const LANGUAGE_MAP: { [key: string]: string } = {
   ENG: 'en',
@@ -96,6 +97,8 @@ export class HeaderComponent implements OnInit {
   activeSubDropdown = signal<string | null>(null);
   isSignupOpen = false;
   activeTab: 'login' | 'signup' | 'forgot' = 'signup';
+  loginErrorMessage = '';
+  isLoginLoading = false;
   forgotPasswordForm!: FormGroup;
   forgotPasswordSubmitted = false;
   showMessageModal = false;
@@ -181,9 +184,7 @@ export class HeaderComponent implements OnInit {
   }
 
   hasPurchasedPackage(): boolean {
-    if (sessionStorage.getItem('has_active_package') !== 'true') return false;
-
-    if (this.isPackageExpired(sessionStorage.getItem('package_expires_at'))) {
+    if (!this.authStorage.hasActivePackage()) {
       this.clearPackageStatus();
       this.notifyPackageStatusChanged();
       return false;
@@ -193,7 +194,7 @@ export class HeaderComponent implements OnInit {
   }
 
   private isPurchasedPlan(planKey: string): boolean {
-    return this.hasPurchasedPackage() && sessionStorage.getItem('active_package_key') === planKey;
+    return this.authStorage.isPlanActive(planKey);
   }
 
   // The 3 individual plan states: Tech, Smart, and Combo (Tech & Smart together).
@@ -214,8 +215,8 @@ export class HeaderComponent implements OnInit {
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
-    const activePlanKey = sessionStorage.getItem('active_package_key');
-    return !!activePlanKey && this.planGroups[group].includes(activePlanKey);
+    const activePlanKeys = this.authStorage.getActivePackageKeys();
+    return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }
 
   planGroupLabel(group: 'tech' | 'smart'): string {
@@ -247,10 +248,12 @@ export class HeaderComponent implements OnInit {
   }
 
   private clearPackageStatus(): void {
-    sessionStorage.setItem('has_active_package', 'false');
-    sessionStorage.removeItem('active_package_key');
-    sessionStorage.removeItem('package_expires_at');
-    sessionStorage.removeItem('active_course');
+    this.authStorage.setItem('has_active_package', 'false');
+    this.authStorage.removeItem('active_package_key');
+    this.authStorage.removeItem('active_package_keys');
+    this.authStorage.removeItem('active_plan_expiries');
+    this.authStorage.removeItem('package_expires_at');
+    this.authStorage.removeItem('active_course');
   }
 
   private getPlanKeyFromName(planName: string | null | undefined): string | null {
@@ -279,24 +282,53 @@ export class HeaderComponent implements OnInit {
     window.dispatchEvent(new CustomEvent('teachly-package-status-changed', {
       detail: {
         profile,
-        hasActivePackage: sessionStorage.getItem('has_active_package') === 'true',
-        activePackageKey: sessionStorage.getItem('active_package_key'),
-        packageExpiresAt: sessionStorage.getItem('package_expires_at'),
+        hasActivePackage: this.authStorage.getItem('has_active_package') === 'true',
+        activePackageKey: this.authStorage.getItem('active_package_key'),
+        activePackageKeys: this.authStorage.getActivePackageKeys(),
+        packageExpiresAt: this.authStorage.getItem('package_expires_at'),
       },
     }));
   }
 
   private setPackageStatusFromResponse(res: any): void {
+    const activePlans = Array.isArray(res?.active_plans)
+      ? res.active_plans.filter((plan: any) =>
+          plan?.has_active_package !== false &&
+          plan?.is_expired !== true &&
+          !this.isPackageExpired(plan?.expires_at)
+        )
+      : [];
+    const activePlanKeysFromPlans = activePlans
+      .map((plan: any) => plan?.active_package_key || this.getPlanKeyFromName(plan?.plan_name))
+      .filter(Boolean);
+    const activePackageKeys = Array.from(new Set([
+      ...(Array.isArray(res?.active_package_keys) ? res.active_package_keys : []),
+      ...activePlanKeysFromPlans,
+      res?.active_package_key,
+      res?.payment?.active_package_key,
+      res?.user?.active_package_key,
+      this.getPlanKeyFromName(res?.course),
+      this.getPlanKeyFromName(res?.payment?.plan_name),
+    ].filter(Boolean)));
+    const planExpiries = activePlans.reduce((expiries: Record<string, string>, plan: any) => {
+      const planKey = plan?.active_package_key || this.getPlanKeyFromName(plan?.plan_name);
+      if (planKey && plan?.expires_at) {
+        expiries[planKey] = plan.expires_at;
+      }
+      return expiries;
+    }, {});
     const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
-    const hasActivePackage = Boolean(
-      res?.user?.has_active_package ||
-      res?.payment?.has_active_package ||
-      res?.has_active_package
-    ) && !this.isPackageExpired(packageExpiresAt);
+    const hasActivePackage = activePackageKeys.length > 0 || (
+      Boolean(
+        res?.user?.has_active_package ||
+        res?.payment?.has_active_package ||
+        res?.has_active_package
+      ) && !this.isPackageExpired(packageExpiresAt)
+    );
 
-    sessionStorage.setItem('has_active_package', String(hasActivePackage));
+    this.authStorage.setItem('has_active_package', String(hasActivePackage));
 
-    const activePackageKey =
+    const activePackageKey = activePackageKeys[0] ||
       res?.active_package_key ||
       res?.payment?.active_package_key ||
       res?.user?.active_package_key ||
@@ -304,77 +336,109 @@ export class HeaderComponent implements OnInit {
       this.getPlanKeyFromName(res?.payment?.plan_name);
 
     if (activePackageKey && hasActivePackage) {
-      sessionStorage.setItem('active_package_key', activePackageKey);
+      this.authStorage.setItem('active_package_key', activePackageKey);
+      this.authStorage.setItem('active_package_keys', JSON.stringify(activePackageKeys));
+      this.authStorage.setItem('active_plan_expiries', JSON.stringify(planExpiries));
     } else if (!hasActivePackage) {
-      sessionStorage.removeItem('active_package_key');
+      this.authStorage.removeItem('active_package_key');
+      this.authStorage.removeItem('active_package_keys');
+      this.authStorage.removeItem('active_plan_expiries');
     }
 
     if (packageExpiresAt && hasActivePackage) {
-      sessionStorage.setItem('package_expires_at', packageExpiresAt);
+      this.authStorage.setItem('package_expires_at', packageExpiresAt);
     } else if (!hasActivePackage) {
-      sessionStorage.removeItem('package_expires_at');
+      this.authStorage.removeItem('package_expires_at');
     }
 
-    const activeCourse = res?.course || res?.payment?.plan_name;
+    const activeCourse = activePlans.map((plan: any) => plan?.plan_name).filter(Boolean).join(', ') || res?.course || res?.payment?.plan_name;
     if (activeCourse && hasActivePackage) {
-      sessionStorage.setItem('active_course', activeCourse);
+      this.authStorage.setItem('active_course', activeCourse);
     } else {
-      sessionStorage.removeItem('active_course');
+      this.authStorage.removeItem('active_course');
     }
 
     this.notifyPackageStatusChanged(res);
   }
 
   private syncPackageStatus(): void {
-    const userId = Number(sessionStorage.getItem('user_id'));
-    if (!sessionStorage.getItem('access_token') || !userId) return;
+    const userId = Number(this.authStorage.getItem('user_id'));
+    if (!this.authStorage.getToken() || !userId) return;
 
     this.service.getSchoolPaymentHistory(userId).subscribe({
       next: (payments: any) => {
-        const activePayment = Array.isArray(payments)
-          ? payments.find((payment: any) => payment?.is_active)
-          : null;
-        const hasActivePackage = Boolean(activePayment) && !this.isPackageExpired(activePayment?.expires_at);
+        const activePayments = Array.isArray(payments)
+          ? payments.filter((payment: any) => payment?.is_active && !this.isPackageExpired(payment?.expires_at))
+          : [];
+        const activePayment = activePayments[0] || null;
+        const hasActivePackage = activePayments.length > 0;
 
-        sessionStorage.setItem('has_active_package', String(hasActivePackage));
+        this.authStorage.setItem('has_active_package', String(hasActivePackage));
 
-        const activePackageKey =
-          activePayment?.active_package_key ||
-          this.getPlanKeyFromName(activePayment?.plan_name) ||
-          this.getPlanKeyFromName(activePayment?.course);
+        const activePackageKeys = Array.from(new Set(
+          activePayments
+            .map((payment: any) =>
+              payment?.active_package_key ||
+              this.getPlanKeyFromName(payment?.plan_name) ||
+              this.getPlanKeyFromName(payment?.course)
+            )
+            .filter(Boolean)
+        ));
+        const activePackageKey = activePackageKeys[0];
+        const planExpiries = activePayments.reduce((expiries: Record<string, string>, payment: any) => {
+          const planKey =
+            payment?.active_package_key ||
+            this.getPlanKeyFromName(payment?.plan_name) ||
+            this.getPlanKeyFromName(payment?.course);
+          if (planKey && payment?.expires_at) {
+            expiries[planKey] = payment.expires_at;
+          }
+          return expiries;
+        }, {});
 
         if (activePackageKey && hasActivePackage) {
-          sessionStorage.setItem('active_package_key', activePackageKey);
+          this.authStorage.setItem('active_package_key', activePackageKey);
+          this.authStorage.setItem('active_package_keys', JSON.stringify(activePackageKeys));
+          this.authStorage.setItem('active_plan_expiries', JSON.stringify(planExpiries));
         } else {
-          sessionStorage.removeItem('active_package_key');
+          this.authStorage.removeItem('active_package_key');
+          this.authStorage.removeItem('active_package_keys');
+          this.authStorage.removeItem('active_plan_expiries');
         }
 
         if (activePayment?.expires_at && hasActivePackage) {
-          sessionStorage.setItem('package_expires_at', activePayment.expires_at);
+          this.authStorage.setItem('package_expires_at', activePayment.expires_at);
         } else {
-          sessionStorage.removeItem('package_expires_at');
+          this.authStorage.removeItem('package_expires_at');
         }
 
-        if (hasActivePackage && (activePayment?.course || activePayment?.plan_name)) {
-          sessionStorage.setItem('active_course', activePayment.course || activePayment.plan_name);
+        const activeCourse = activePayments
+          .map((payment: any) => payment?.course || payment?.plan_name)
+          .filter(Boolean)
+          .join(', ');
+
+        if (hasActivePackage && activeCourse) {
+          this.authStorage.setItem('active_course', activeCourse);
         } else {
-          sessionStorage.removeItem('active_course');
+          this.authStorage.removeItem('active_course');
         }
 
         this.notifyPackageStatusChanged(activePayment);
       },
       error: () => {
-        sessionStorage.removeItem('has_active_package');
-        sessionStorage.removeItem('active_package_key');
-        sessionStorage.removeItem('package_expires_at');
-        sessionStorage.removeItem('active_course');
+        this.authStorage.removeItem('has_active_package');
+        this.authStorage.removeItem('active_package_key');
+        this.authStorage.removeItem('active_package_keys');
+        this.authStorage.removeItem('active_plan_expiries');
+        this.authStorage.removeItem('package_expires_at');
+        this.authStorage.removeItem('active_course');
         this.notifyPackageStatusChanged();
       }
     });
   }
 
   private loadLoggedInProfile(): void {
-    if (!sessionStorage.getItem('access_token')) return;
+    if (!this.authStorage.getToken()) return;
 
     console.log('Calling profile API on home load');
     this.service.getProfile().subscribe({
@@ -382,19 +446,19 @@ export class HeaderComponent implements OnInit {
         this.profileData = profile;
 
         if (profile?.user_id) {
-          sessionStorage.setItem('user_id', String(profile.user_id));
+          this.authStorage.setItem('user_id', String(profile.user_id));
         }
 
         if (profile?.student_id) {
-          sessionStorage.setItem('student_id', profile.student_id);
+          this.authStorage.setItem('student_id', profile.student_id);
         }
 
         if (profile?.first_name) {
-          sessionStorage.setItem('school_name', profile.first_name);
+          this.authStorage.setItem('school_name', profile.first_name);
         }
 
         if (profile?.user_type) {
-          sessionStorage.setItem('user_type', profile.user_type);
+          this.authStorage.setItem('user_type', profile.user_type);
         }
 
         this.setPackageStatusFromResponse(profile);
@@ -444,7 +508,7 @@ export class HeaderComponent implements OnInit {
       return;
     }
 
-    const token = sessionStorage.getItem('access_token');
+    const token = this.authStorage.getToken();
 
     if (!token) {
       this.openModal('signup');
@@ -484,7 +548,7 @@ export class HeaderComponent implements OnInit {
             { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart' },
             { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart' },
 
-            { title: 'UP Board', url: 'http://localhost:60518/auth/login', requiresPlan: 'smart' }
+            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login', requiresPlan: 'smart' }
           ]
         },
         { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },
@@ -877,7 +941,7 @@ export class HeaderComponent implements OnInit {
   }
 
   private buildStudentPanelSsoUrl(): string {
-    const token = sessionStorage.getItem('access_token');
+    const token = this.authStorage.getToken();
     if (!token) return this.studentPanelLoginUrl;
 
     return `${this.studentPanelSsoUrl}?token=${encodeURIComponent(token)}`;
@@ -891,6 +955,7 @@ export class HeaderComponent implements OnInit {
     private popupService: PopupService,
     private renderer: Renderer2,
     private toastService: ToastService,
+    private authStorage: AuthStorageService,
   ) { }
 
   ngOnInit(): void {
@@ -1031,6 +1096,14 @@ export class HeaderComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
+    this.loginForm.valueChanges.subscribe(() => {
+      this.loginErrorMessage = '';
+      const passwordControl = this.loginForm.get('password');
+      if (passwordControl?.errors?.['invalidCredentials']) {
+        const { invalidCredentials, ...remainingErrors } = passwordControl.errors;
+        passwordControl.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
+      }
+    });
 
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -1165,14 +1238,15 @@ export class HeaderComponent implements OnInit {
         return;
       }
 
-        this.paymentSummary.userid= Number(sessionStorage.getItem('user_id')),
-      this.paymentSummary.schoolId= sessionStorage.getItem('student_id'),
-      this.paymentSummary.schoolName= sessionStorage.getItem('school_name'),
+        this.paymentSummary.userid= Number(this.authStorage.getItem('user_id')),
+      this.paymentSummary.schoolId= this.authStorage.getItem('student_id'),
+      this.paymentSummary.schoolName= this.authStorage.getItem('school_name'),
       this.showPaymentPopup = true;
       return;
     }
 
     this.activeTab = tab;
+    this.loginErrorMessage = '';
     this.isSchoolSignup = isSchool;
     this.isSignupOpen = true;
     this.resetSignupFormWithDraft(tab);
@@ -1205,6 +1279,7 @@ export class HeaderComponent implements OnInit {
     }
   }
   closeSignupModal() {
+    if (this.isLoginLoading) return;
     this.isSignupOpen = false;
   }
 
@@ -1274,7 +1349,7 @@ export class HeaderComponent implements OnInit {
       return;
     }
 
-    sessionStorage.setItem('school_name', this.profileForm.value.name);
+    this.authStorage.setItem('school_name', this.profileForm.value.name);
     this.closeProfileModal();
     this.openMessage('Profile updated successfully.');
   }
@@ -1315,6 +1390,7 @@ export class HeaderComponent implements OnInit {
   }
   switchTab(tab: 'login' | 'signup') {
     this.activeTab = tab;
+    this.loginErrorMessage = '';
   }
 
   openForgotPassword(): void {
@@ -1340,6 +1416,9 @@ export class HeaderComponent implements OnInit {
 
   // 🔐 LOGIN FUNCTION
   onLogin() {
+    if (this.isLoginLoading) return;
+
+    this.loginErrorMessage = '';
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -1351,9 +1430,11 @@ export class HeaderComponent implements OnInit {
       password: this.loginForm.value.password
     };
 
+    this.isLoginLoading = true;
     this.service.chaneStuLogin(data).subscribe({
 
         next: (res: any) => {
+  this.isLoginLoading = false;
 
   console.log(res);
 
@@ -1377,11 +1458,11 @@ export class HeaderComponent implements OnInit {
   }
 
   // Login Success
-  sessionStorage.setItem("access_token", res.access_token);
-  sessionStorage.setItem('user_id', res.user.user_id.toString());
-  sessionStorage.setItem('student_id', res.user.student_id);
-  sessionStorage.setItem('school_name', res.user.first_name);
-  sessionStorage.setItem('user_type', res.user.user_type || '');
+  this.authStorage.setItem("access_token", res.access_token);
+  this.authStorage.setItem('user_id', res.user.user_id.toString());
+  this.authStorage.setItem('student_id', res.user.student_id);
+  this.authStorage.setItem('school_name', res.user.first_name);
+  this.authStorage.setItem('user_type', res.user.user_type || '');
   this.setPackageStatusFromResponse(res);
   
   this.closeSignupModal();
@@ -1392,8 +1473,13 @@ export class HeaderComponent implements OnInit {
 },
 
       error: (err: any) => {
+        this.isLoginLoading = false;
         console.log(err);
-        this.openMessage(err.error?.detail || "Login failed. Please try again.");
+        const message = this.getApiErrorMessage(err) || "Invalid email or password.";
+        this.loginErrorMessage = message;
+        this.loginForm.get('password')?.setErrors({ invalidCredentials: true });
+        this.loginForm.get('password')?.markAsTouched();
+        this.toastService.show(message, 'error');
       }
 
     });
@@ -1448,14 +1534,14 @@ export class HeaderComponent implements OnInit {
         const registeredUser = res.user || res;
 
         if (res.access_token) {
-          sessionStorage.setItem('access_token', res.access_token);
+          this.authStorage.setItem('access_token', res.access_token);
         }
 
         // Session Storage
-        sessionStorage.setItem('user_id', String(registeredUser.user_id || registeredUser.id));
-        sessionStorage.setItem('student_id', registeredUser.student_id);
-        sessionStorage.setItem('user_type', registeredUser.user_type || data.user_type);
-        sessionStorage.setItem('school_name', registeredUser.first_name);
+        this.authStorage.setItem('user_id', String(registeredUser.user_id || registeredUser.id));
+        this.authStorage.setItem('student_id', registeredUser.student_id);
+        this.authStorage.setItem('user_type', registeredUser.user_type || data.user_type);
+        this.authStorage.setItem('school_name', registeredUser.first_name);
         this.setPackageStatusFromResponse(res);
 
         // Payment Summary
@@ -1655,19 +1741,19 @@ export class HeaderComponent implements OnInit {
   }
 
   get isLoggedIn(): boolean {
-    return !!sessionStorage.getItem('access_token');
+    return this.authStorage.isLoggedIn();
   }
 
   get userName(): string {
-    return sessionStorage.getItem('school_name') || 'User';
+    return this.authStorage.getItem('school_name') || 'User';
   }
 
   get userType(): string {
-    return sessionStorage.getItem('user_type') === 'SCH' ? 'School' : 'Student';
+    return this.authStorage.getItem('user_type') === 'SCH' ? 'School' : 'Student';
   }
 
   get userStudentId(): string {
-    return sessionStorage.getItem('student_id') || '-';
+    return this.authStorage.getItem('student_id') || '-';
   }
 
   getUserInitials(): string {
@@ -1698,15 +1784,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(): void {
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('user_id');
-    sessionStorage.removeItem('student_id');
-    sessionStorage.removeItem('school_name');
-    sessionStorage.removeItem('user_type');
-    sessionStorage.removeItem('has_active_package');
-    sessionStorage.removeItem('active_package_key');
-    sessionStorage.removeItem('package_expires_at');
-    sessionStorage.removeItem('active_course');
+    this.authStorage.clearAuth();
     this.clearAiIframeLoginCookie();
     this.userMenuOpen = false;
     window.location.reload();
@@ -1725,7 +1803,7 @@ export class HeaderComponent implements OnInit {
       return;
     }
 
-    const token = sessionStorage.getItem('access_token');
+    const token = this.authStorage.getToken();
 
     if (!token) {
       this.openModal('signup');
