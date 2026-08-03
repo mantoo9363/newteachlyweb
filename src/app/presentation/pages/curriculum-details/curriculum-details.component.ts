@@ -7,6 +7,8 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { IframeEmbedComponent } from '../../components/iframe-embed/iframe-embed.component';
 import { ApiService } from '../../../core/services/api-service';
+import { PlanAccessService } from '../../../core/services/plan-access.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { environment } from '../../../../environments/environment';
 
 
@@ -24,7 +26,9 @@ export class CurriculumDetailsComponent implements OnInit {
   constructor(
   private route: ActivatedRoute,
   private router: Router,
-  private apiService: ApiService
+  private apiService: ApiService,
+  private planAccess: PlanAccessService,
+  private toastService: ToastService
 ) {}
 
 
@@ -219,6 +223,7 @@ openMessage(message: string) {
 
       this.id = nextId;
       this.title = params['title'];
+      this.isSubscribed = this.planAccess.hasPlanGroupAccess('tech');
 
       if (this.id && this.allModules[this.id]) {
         this.moduleData = this.allModules[this.id];
@@ -301,9 +306,10 @@ openMessage(message: string) {
   }*/
 
 
-   launchSimulation(): void {
+  launchSimulation(): void {
 
-  const token = sessionStorage.getItem('access_token');
+  const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+  const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
 
  // console.log(token);
 
@@ -314,6 +320,38 @@ openMessage(message: string) {
     return;
   }
 
+  if (userId) {
+    this.apiService.getSchoolPaymentHistory(userId).subscribe({
+      next: (payments) => {
+        if (!this.hasActiveTechPayment(payments)) {
+          this.blockSimulationAccess();
+          return;
+        }
+
+        this.openSimulationAfterAccessCheck(token);
+      },
+      error: (err) => {
+        console.error(err);
+        if (!this.canOpenSimulation()) {
+          this.blockSimulationAccess();
+          return;
+        }
+
+        this.openSimulationAfterAccessCheck(token);
+      }
+    });
+    return;
+  }
+
+  if (!this.canOpenSimulation()) {
+    this.blockSimulationAccess();
+    return;
+  }
+
+  this.openSimulationAfterAccessCheck(token);
+}
+
+  private openSimulationAfterAccessCheck(token: string): void {
   if (this.id === '13' && this.hasAiIframeLoginCookie()) {
     this.iframeUrl = this.moduleData.playUrl;
     this.showIframe = true;
@@ -342,7 +380,7 @@ this.apiService.generateTempToken().subscribe({
     if (token && !sessionStorage.getItem('access_token')) {
       sessionStorage.setItem('access_token', token);
     }
-    this.openMessage('Simulation could not start. Please try again.');
+    this.toastService.show('Simulation could not start. Please try again.', 'error');
   }
 });
 
@@ -350,7 +388,7 @@ this.apiService.generateTempToken().subscribe({
 
 
 
-  // console.log(token);
+    // console.log(token);
 
  //window.location.href =
    // `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
@@ -358,6 +396,45 @@ this.apiService.generateTempToken().subscribe({
     //console.log(window.location.href);
 
 }
+
+  private blockSimulationAccess(): void {
+    this.showIframe = false;
+    this.iframeUrl = '';
+    this.toastService.show('Please upgrade to the Tech Education Plan to access Simulation and Download.', 'error');
+  }
+
+  private canOpenSimulation(): boolean {
+    this.isSubscribed = this.planAccess.hasPlanGroupAccess('tech');
+    return this.isSubscribed;
+  }
+
+  private hasActiveTechPayment(payments: any): boolean {
+    const activePayments = Array.isArray(payments)
+      ? payments.filter((payment: any) => payment?.is_active && !this.isPackageExpired(payment?.expires_at))
+      : [];
+
+    return activePayments.some((payment: any) => {
+      const planKey = this.normalizePlanKey(payment?.active_package_key || payment?.plan_name || payment?.course);
+      return planKey === 'tech' || planKey === 'combo';
+    });
+  }
+
+  private normalizePlanKey(plan: string | null | undefined): string | null {
+    const normalized = plan?.trim().toLowerCase();
+    if (!normalized) return null;
+
+    if (['tech', 'tech plan', 'tech education plan'].includes(normalized)) return 'tech';
+    if (['combo', 'tech & smart', 'tech and smart', 'tech & smart education plan'].includes(normalized)) return 'combo';
+    if (['smart', 'smart plan', 'smart education plan'].includes(normalized)) return 'smart';
+
+    return null;
+  }
+
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
 
   private hasAiIframeLoginCookie(): boolean {
     return document.cookie
