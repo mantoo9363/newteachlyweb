@@ -233,15 +233,23 @@
           (click)="scrollToSection('.info-card:nth-of-type(1)')"
         >
           <div class="card-bg-overlay"></div>
-          <div class="card-image-placeholder left-image"></div>
+          <div class="card-image-placeholder left-image">
+            @if (moduleData.leftCard?.image) {
+              <img
+                [src]="moduleData.leftCard.image"
+                [alt]="moduleData.leftCard.title"
+                class="card-image"
+              />
+            }
+          </div>
           <div class="card-content">
-            <span class="card-tag">Core Theory</span>
-            <h3 class="card-title">Concept & Mechanics</h3>
+            <span class="card-tag">{{ moduleData.leftCard?.tag }}</span>
+            <h3 class="card-title">{{ moduleData.leftCard?.title }}</h3>
             <p class="card-desc">
-              Understand AI fundamentals, from core concepts to AI engineering.
+              {{ moduleData.leftCard?.desc }}
             </p>
             <div class="card-action">
-              <span class="author">By Teachly Lab</span>
+              <span class="author">By {{ moduleData.leftCard?.author }}</span>
               <div class="card-buttons">
                 <!-- <button class="read-more-button">Read More</button> -->
               </div>
@@ -356,23 +364,33 @@
           (click)="scrollToSection('.info-card.highlight')"
         >
           <div class="card-bg-overlay"></div>
-          <div class="card-image-placeholder right-image"></div>
+          <div class="card-image-placeholder right-image">
+            @if (moduleData.rightCard?.image) {
+              <img
+                [src]="moduleData.rightCard.image"
+                [alt]="moduleData.rightCard.title"
+                class="card-image"
+              />
+            }
+          </div>
           <div class="card-content">
-            <span class="card-tag">Lab Outcome</span>
-            <h3 class="card-title">Verified Badge</h3>
+            <span class="card-tag">{{ moduleData.rightCard?.tag }}</span>
+            <h3 class="card-title">{{ moduleData.rightCard?.title }}</h3>
             <p class="card-desc">
-              Showcase your skills by earning the certification credentials.
+              {{ moduleData.rightCard?.desc }}
             </p>
             <div class="card-action">
-              <span class="author">By Teachly Academy</span>
-              <div class="card-buttons">
+              <span class="author">By {{ moduleData.rightCard?.author }}</span>
+              @if(id!="13"){
+                <div class="card-buttons">
                 <button
                   class="read-more-button"
-                  (click)="goToTutorial(); $event.stopPropagation()"
+                  (click)="openReadMoreTutorial(); $event.stopPropagation()"
                 >
                   Read More
                 </button>
               </div>
+              }
             </div>
           </div>
         </div>

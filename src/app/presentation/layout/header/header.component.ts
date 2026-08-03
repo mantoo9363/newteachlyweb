@@ -279,7 +279,7 @@ export class HeaderComponent implements OnInit {
     if (!this.isLoggedIn) return true;
     if (item.requiresPlan && !this.hasPlanGroupAccess(item.requiresPlan)) return true;
     const userBoard = this.getUserBoard();
-    if (!userBoard) return false; // Board not set yet — give benefit of doubt
+    if (!userBoard) return true; // Board unknown — fail closed, don't unlock every board
     const aliases = this.boardKeyAliases[item.boardKey] || [item.boardKey];
     return !aliases.some((alias) => userBoard.includes(alias));
   }

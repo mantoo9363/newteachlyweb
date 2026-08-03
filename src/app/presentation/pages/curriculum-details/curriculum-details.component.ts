@@ -91,9 +91,23 @@ openMessage(message: string) {
       playUrl: this.simulatorUrls.circuit,
       lessons: '450+  ',
       rating: '10',
-      students: '20K'
+      students: '20K',
+      leftCard: {
+        tag: 'Core Theory',
+        title: 'Concept & Mechanics',
+        desc: 'Understand circuit basics and 3D modeling fundamentals.',
+        author: 'Teachly Lab',
+        image: '/image/simulator/cad.jpg'
+      },
+      rightCard: {
+        tag: 'Lab Outcome',
+        title: 'Verified Badge',
+        desc: 'Showcase your skills by earning the certification credentials.',
+        author: 'Teachly Academy',
+        image: '/image/simulator/cadw.jpg'
+      }
     },
-   
+
     '12': {
       headline: 'DRONE SIMULATION MODULE',
       subHeadline: 'Design, Build, and Fly Drones — Virtually',
@@ -124,7 +138,21 @@ openMessage(message: string) {
       playUrl: this.simulatorUrls.droneDownload,
       lessons: '30+',
       rating: '10',
-      students: '20k'
+      students: '20k',
+      leftCard: {
+        tag: 'Core Theory',
+        title: 'Concept & Mechanics',
+        desc: 'Understand flight dynamics, control systems, and aerodynamics.',
+        author: 'Teachly Lab',
+        image: '/image/simulator/drone.jpg'
+      },
+      rightCard: {
+        tag: 'Lab Outcome',
+        title: 'Verified Badge',
+        desc: 'Showcase your skills by earning the certification credentials.',
+        author: 'Teachly Academy',
+        image: '/image/simulator/dronew.jpg'
+      }
     },
    '13': {
   headline: 'AI LEARNING MODULE',
@@ -219,7 +247,21 @@ openMessage(message: string) {
   lessons: '30+',
   rating: '10',
   students: '20k',
-  hidePreviewControls: true
+  hidePreviewControls: true,
+  leftCard: {
+    tag: 'Core Theory',
+    title: 'Concept & Mechanics',
+    desc: 'Understand AI fundamentals, from core concepts to AI engineering.',
+    author: 'Teachly Lab',
+    image: '/image/simulator/ai.jpg'
+  },
+  rightCard: {
+    tag: 'Lab Outcome',
+    title: 'Verified Badge',
+    desc: 'Showcase your skills by earning the certification credentials.',
+    author: 'Teachly Academy',
+    image: '/image/simulator/aiw.jpg'
+  }
 },
   };
 
@@ -494,6 +536,13 @@ this.apiService.generateTempToken().subscribe({
     // The tutorial page itself resolves the category to an actual lesson id
     // (and handles the login/plan gating) - this button just has to navigate.
     this.router.navigate(['/tutorial/category', this.moduleCategory()]);
+  }
+
+  openReadMoreTutorial(): void {
+    // Drone & CAD modules only - Smart/AI module uses goToTutorial() instead.
+    this.iframeUrl = 'https://circuit.theteachly.com/tutorials';
+    this.showIframe = true;
+    window.scrollTo(0, 0);
   }
 
   switchModule(moduleId: string): void {
