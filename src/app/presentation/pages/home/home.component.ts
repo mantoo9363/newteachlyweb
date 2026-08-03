@@ -42,7 +42,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     });
 
     this.updateCanonical('https://theteachly.com/');
-    this.loadTawkChat();
+    this.hideTawkChat();
   }
 
   openSignup(isSchool: boolean) {
@@ -60,29 +60,29 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   private loadTawkChat(): void {
-    const win = window as any;
+    // const win = window as any;
 
-    if (win.Tawk_API) {
-      if (typeof win.Tawk_API.showWidget === 'function') {
-        win.Tawk_API.showWidget();
-      }
-      return;
-    }
+    // if (win.Tawk_API) {
+    //   if (typeof win.Tawk_API.showWidget === 'function') {
+    //     win.Tawk_API.showWidget();
+    //   }
+    //   return;
+    // }
 
-    win.Tawk_API = win.Tawk_API || {};
-    win.Tawk_LoadStart = new Date();
+    // win.Tawk_API = win.Tawk_API || {};
+    // win.Tawk_LoadStart = new Date();
 
-    const s1 = document.createElement("script");
-    const s0 = document.getElementsByTagName("script")[0];
+    // const s1 = document.createElement("script");
+    // const s0 = document.getElementsByTagName("script")[0];
 
-    s1.async = true;
-    s1.src = "https://embed.tawk.to/69eb0f9623ab1b1c3283ecaf/1jmv39pln";
-    s1.charset = "UTF-8";
-    s1.setAttribute("crossorigin", "*");
+    // s1.async = true;
+    // s1.src = "https://embed.tawk.to/69eb0f9623ab1b1c3283ecaf/1jmv39pln";
+    // s1.charset = "UTF-8";
+    // s1.setAttribute("crossorigin", "*");
 
-    if (s0 && s0.parentNode) {
-      s0.parentNode.insertBefore(s1, s0);
-    }
+    // if (s0 && s0.parentNode) {
+    //   s0.parentNode.insertBefore(s1, s0);
+    // }
   }
 
   private hideTawkChat(): void {
