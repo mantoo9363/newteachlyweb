@@ -18,7 +18,7 @@ export class TutorialArticleComponent {
   @Input() isSubscribed = false; // logged in AND has the Tech Education Plan
   @Input() errorMessage: string | undefined;
 
-  @Output() selectUpNext = new EventEmitter<string>();
+  @Output() selectUpNext = new EventEmitter<Tutorial>();
   @Output() login = new EventEmitter<void>();
   @Output() upgrade = new EventEmitter<void>();
 
