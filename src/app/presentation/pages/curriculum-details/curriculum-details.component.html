@@ -159,9 +159,7 @@
                   <i class="fas fa-book-open"></i>
                 </div>
                 <div class="stat-text">
-                  <span class="stat-value">{{
-                    id === "13" ? "50+" : "12"
-                  }}</span>
+                  <span class="stat-value">{{ moduleData.lessons }}</span>
                   <span class="stat-label">Lessons</span>
                 </div>
               </div>
@@ -170,9 +168,7 @@
                   <i class="fas fa-star"></i>
                 </div>
                 <div class="stat-text">
-                  <span class="stat-value">{{
-                    id === "13" ? "4.9" : "4.8"
-                  }}</span>
+                  <span class="stat-value">{{ moduleData.rating }}</span>
                   <span class="stat-label">Rating</span>
                 </div>
               </div>
@@ -181,9 +177,7 @@
                   <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-text">
-                  <span class="stat-value">{{
-                    id === "13" ? "2.4k" : "860"
-                  }}</span>
+                  <span class="stat-value">{{ studentsCount }}</span>
                   <span class="stat-label">Students</span>
                 </div>
               </div>
@@ -244,7 +238,7 @@
             <span class="card-tag">Core Theory</span>
             <h3 class="card-title">Concept & Mechanics</h3>
             <p class="card-desc">
-              Understand flight dynamics, control systems, and aerodynamics.
+              Understand AI fundamentals, from core concepts to AI engineering.
             </p>
             <div class="card-action">
               <span class="author">By Teachly Lab</span>
@@ -325,7 +319,7 @@
                   }
                   <video
                     #moduleVideo
-                    [controls]="isSubscribed || !selectedLecture"
+                    [controls]="(isSubscribed || !selectedLecture) && !moduleData.hidePreviewControls"
                     playsinline
                     class="module-video"
                     [poster]="moduleData.image"

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, map, shareReplay, switchMap } from 'rxjs';
+import { Observable, forkJoin, map, shareReplay, switchMap } from 'rxjs';
 
 import { ApiService } from './api-service';
 
@@ -13,6 +13,7 @@ export interface Tutorial {
   isPremium: boolean;
   thumbnail: string;
   heroImage: string;
+  videoUrl: string;
   bodyHtml: string;
   status: 'published' | 'draft';
   publishedAt: string; // ISO date, rendered as relative time in the UI
@@ -31,6 +32,7 @@ interface RawTutorial {
       title: string;
       description: string;
       thumbnailUrl: string | null;
+      videoUrl: string | null;
     };
   };
 }
@@ -68,6 +70,7 @@ export class TutorialService {
   // (see curriculum-details.component.ts launchSimulation()) - it doesn't accept the platform's
   // plain sessionStorage access_token, it needs the short-lived circuit temp token instead.
   private tempToken$: Observable<string> | undefined;
+  private encryptedEmailId$: Observable<string> | undefined;
 
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
@@ -81,8 +84,45 @@ export class TutorialService {
     return this.tempToken$;
   }
 
-  private authHeaders(token: string): HttpHeaders {
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  private getEncryptedEmailId(): Observable<string> {
+    if (!this.encryptedEmailId$) {
+      this.encryptedEmailId$ = this.apiService.getProfile().pipe(
+        map(profile => this.encryptEmailId(profile?.email || '')),
+        shareReplay(1)
+      );
+    }
+    return this.encryptedEmailId$;
+  }
+
+  private getCadRequestContext(): Observable<{ token: string; encryptedEmailId: string }> {
+    return forkJoin({
+      token: this.getCadToken(),
+      encryptedEmailId: this.getEncryptedEmailId()
+    });
+  }
+
+  private authHeaders(token: string, encryptedEmailId: string): HttpHeaders {
+    let headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    if (encryptedEmailId) {
+      headers = headers.set('X-Encrypted-Email-Id', encryptedEmailId);
+    }
+
+    return headers;
+  }
+
+  private withEncryptedEmailParam(params: HttpParams, encryptedEmailId: string): HttpParams {
+    return encryptedEmailId ? params.set('encrypted_email_id', encryptedEmailId) : params;
+  }
+
+  private encryptEmailId(email: string): string {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) return '';
+
+    return btoa(unescape(encodeURIComponent(normalizedEmail)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/g, '');
   }
 
   private mapTutorial(raw: RawTutorial): Tutorial {
@@ -99,20 +139,24 @@ export class TutorialService {
       isPremium: raw.pricing === 'premium',
       thumbnail: content?.thumbnailUrl || FALLBACK_THUMBNAIL,
       heroImage: content?.thumbnailUrl || FALLBACK_THUMBNAIL,
+      videoUrl: content?.videoUrl || '',
       bodyHtml: isPlaceholder ? '' : description,
       status: raw.status === 'published' ? 'published' : 'draft',
       publishedAt: raw.createdAt
     };
   }
 
-  // cadapi ignores the subjectName/status/classLevel query params server-side, so pull a
-  // generously large page and filter client-side instead of relying on them.
   getTutorials(page: number, limit: number, status: string, category?: string, classLevel?: string): Observable<Tutorial[]> {
-    const params = new HttpParams().set('page', 1).set('limit', 500).set('status', status);
+    let params = new HttpParams().set('page', 1).set('limit', 500).set('status', status);
+    if (category) params = params.set('subjectName', category);
+    if (classLevel) params = params.set('classLevel', classLevel);
 
-    return this.getCadToken().pipe(
-      switchMap(token =>
-        this.http.get<TutorialListResponse>(`${this.baseUrl}/tutorial`, { params, headers: this.authHeaders(token) })
+    return this.getCadRequestContext().pipe(
+      switchMap(({ token, encryptedEmailId }) =>
+        this.http.get<TutorialListResponse>(`${this.baseUrl}/tutorial`, {
+          params: this.withEncryptedEmailParam(params, encryptedEmailId),
+          headers: this.authHeaders(token, encryptedEmailId)
+        })
       ),
       map(res => {
         let mapped = res.tutorials.map(t => this.mapTutorial(t)).filter(t => t.status === status);
@@ -120,7 +164,6 @@ export class TutorialService {
           const target = normalizeCategory(category);
           mapped = mapped.filter(t => normalizeCategory(t.category) === target);
         }
-        if (classLevel) mapped = mapped.filter(t => t.classLevel === classLevel);
         const start = (page - 1) * limit;
         return mapped.slice(start, start + limit);
       })
@@ -128,9 +171,12 @@ export class TutorialService {
   }
 
   getTutorialById(id: string): Observable<Tutorial> {
-    return this.getCadToken().pipe(
-      switchMap(token =>
-        this.http.get<TutorialDetailResponse>(`${this.baseUrl}/tutorial/${id}`, { headers: this.authHeaders(token) })
+    return this.getCadRequestContext().pipe(
+      switchMap(({ token, encryptedEmailId }) =>
+        this.http.get<TutorialDetailResponse>(`${this.baseUrl}/tutorial/${id}`, {
+          params: this.withEncryptedEmailParam(new HttpParams(), encryptedEmailId),
+          headers: this.authHeaders(token, encryptedEmailId)
+        })
       ),
       map(raw2 => this.mapTutorial(raw2))
     );

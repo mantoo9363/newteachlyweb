@@ -7,3 +7,11 @@ body {
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
 }
+
+/* Hide Tawk.to Chat Widget */
+[id*="tawk" i],
+[class*="tawk" i],
+iframe[src*="tawk.to" i] {
+  display: none !important;
+  visibility: hidden !important;
+}

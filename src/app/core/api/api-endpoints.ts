@@ -3,6 +3,9 @@ export const API_ENDPOINTS = {
     register: '/chanelstu/chanesturegister',
     login: '/chanelstu/chanestulogin',
     profile: '/chanelstu/profile',
+    forgotPassword: '/chanelstu/forgot-password',
+    resetPassword: '/chanelstu/reset-password',
+    changePassword: '/chanelstu/change-password',
   },
   schoolPayment: {
     createOrder: '/school-payment/create-order',

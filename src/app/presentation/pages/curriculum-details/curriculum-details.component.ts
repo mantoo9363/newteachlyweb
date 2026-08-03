@@ -7,6 +7,8 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { IframeEmbedComponent } from '../../components/iframe-embed/iframe-embed.component';
 import { ApiService } from '../../../core/services/api-service';
+import { PlanAccessService } from '../../../core/services/plan-access.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { environment } from '../../../../environments/environment';
 
 
@@ -24,7 +26,9 @@ export class CurriculumDetailsComponent implements OnInit {
   constructor(
   private route: ActivatedRoute,
   private router: Router,
-  private apiService: ApiService
+  private apiService: ApiService,
+  private planAccess: PlanAccessService,
+  private toastService: ToastService
 ) {}
 
 
@@ -49,29 +53,34 @@ openMessage(message: string) {
   showIframe = false; // Control iframe visibility
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
+  studentsCount = '';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
   private readonly simulatorUrls = environment.simulatorUrls;
 
   private allModules: { [key: string]: any } = {
     '10': {
       headline: 'Robotics & 3D CAD LAB',
-      subHeadline: 'Design Real-World Products — From Scratch',
-      description: 'Learn how engineers think by creating and modifying 3D models in a simple, browser-based CAD environment.',
+      subHeadline: 'From Circuits to 3D Models — Build Real-World Products',
+      description: 'Learn how engineers think by building electronic circuits, then creating and modifying 3D models in a simple, browser-based environment.',
       whatYouDo: [
+        'Build and test simple electronic circuits',
+        'Connect components like resistors, LEDs, and switches',
         'Create 3D objects like cubes, spheres, and structures',
         'Resize, scale, and modify designs in real-time',
         'Build components that can be used in real systems'
       ],
-      howItWorks: 'Start with basic shapes → modify them → combine them → create usable designs. No prior experience needed.',
+      howItWorks: 'Start with circuit basics → build and test connections → move into 3D modeling → combine shapes → create usable designs. No prior experience needed.',
       whyThisMatters: {
-        intro: 'Most students only see designs. Here, you actually build them.',
+        intro: 'Most students only see designs. Here, you actually build them — starting with the electronics that make them work.',
         points: [
+          'Understand core electronics and circuit logic',
           'Understand product design fundamentals',
           'Visualize ideas in 3D',
           'Develop problem-solving through design thinking'
         ]
       },
       whatYouLearn: [
+        'Circuit building and electronics basics',
         '3D modeling basics',
         'Spatial understanding',
         'Design logic used in real industries'
@@ -79,7 +88,10 @@ openMessage(message: string) {
       outcome: 'By the end, you won’t just understand design—you’ll be able to create it yourself.',
       video: '/image/CAD DEMO.mp4',
       image: '/image/CAD_IMAGE.png',
-      playUrl: this.simulatorUrls.circuit
+      playUrl: this.simulatorUrls.circuit,
+      lessons: '450+  ',
+      rating: '10',
+      students: '20K'
     },
    
     '12': {
@@ -109,7 +121,10 @@ openMessage(message: string) {
       outcome: 'You gain real understanding of how drones are built and controlled—without ever needing physical hardware.',
       video: '/image/Drone Demo.mp4',
       image: '/image/DRONE_IMAGE.png',
-      playUrl: this.simulatorUrls.droneDownload
+      playUrl: this.simulatorUrls.droneDownload,
+      lessons: '30+',
+      rating: '10',
+      students: '20k'
     },
    '13': {
   headline: 'AI LEARNING MODULE',
@@ -171,10 +186,10 @@ openMessage(message: string) {
     intro:
       'Artificial Intelligence is transforming every industry. Learning AI today prepares students for tomorrow’s careers.',
     points: [
-      'Master future-ready AI skills',
+      'Build future-ready AI skills',
       'Learn through hands-on projects',
-      'Become industry ready',
-      'Build an impressive AI portfolio'
+      'Prepare for AI careers',
+      'Become industry ready'
     ]
   },
 
@@ -193,13 +208,18 @@ openMessage(message: string) {
   ],
 
   outcome:
-    'Complete your journey from AI Explorer to AI Engineer by building production-ready AI applications and becoming industry ready.',
+    'Understand core AI concepts and principles, Build and apply AI solutions through hands-on projects, Develop industry-ready AI engineering skills',
 
   video: '/video/AI COURSE-20260511T100451Z-3-001/AI COURSE/1.Intro To AI Pro Series.mp4',
 
   image: '/image/AI Learning.jpeg',
 
-  playUrl: this.simulatorUrls.ai
+  playUrl: this.simulatorUrls.ai,
+
+  lessons: '30+',
+  rating: '10',
+  students: '20k',
+  hidePreviewControls: true
 },
   };
 
@@ -219,11 +239,16 @@ openMessage(message: string) {
 
       this.id = nextId;
       this.title = params['title'];
+      this.isSubscribed = this.planAccess.hasPlanGroupAccess('tech');
 
       if (this.id && this.allModules[this.id]) {
         this.moduleData = this.allModules[this.id];
         // Don't auto-select first lecture so module intro video plays first
         this.selectedLecture = null;
+        this.studentsCount = this.generateRandomStudentsCount();
+        if (isModuleChange) {
+          this.reloadModulePreviewVideo();
+        }
       }
 
       // Populate simulation modules
@@ -232,6 +257,19 @@ openMessage(message: string) {
       console.log('Curriculum Details - ID:', this.id);
       console.log('Curriculum Details - Title:', this.title);
       console.log('Module Data:', this.moduleData);
+    });
+  }
+
+  private generateRandomStudentsCount(): string {
+    const count = Math.floor(Math.random() * (20 - 2 + 1)) + 2;
+    return `${count}k`;
+  }
+
+  private reloadModulePreviewVideo(): void {
+    // Defer until Angular has updated the <source> src for the new module
+    setTimeout(() => {
+      const videoElement = document.querySelector('.module-video') as HTMLVideoElement | null;
+      videoElement?.load();
     });
   }
 
@@ -301,9 +339,10 @@ openMessage(message: string) {
   }*/
 
 
-   launchSimulation(): void {
+  launchSimulation(): void {
 
-  const token = sessionStorage.getItem('access_token');
+  const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+  const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
 
  // console.log(token);
 
@@ -314,6 +353,38 @@ openMessage(message: string) {
     return;
   }
 
+  if (userId) {
+    this.apiService.getSchoolPaymentHistory(userId).subscribe({
+      next: (payments) => {
+        if (!this.hasActiveTechPayment(payments)) {
+          this.blockSimulationAccess();
+          return;
+        }
+
+        this.openSimulationAfterAccessCheck(token);
+      },
+      error: (err) => {
+        console.error(err);
+        if (!this.canOpenSimulation()) {
+          this.blockSimulationAccess();
+          return;
+        }
+
+        this.openSimulationAfterAccessCheck(token);
+      }
+    });
+    return;
+  }
+
+  if (!this.canOpenSimulation()) {
+    this.blockSimulationAccess();
+    return;
+  }
+
+  this.openSimulationAfterAccessCheck(token);
+}
+
+  private openSimulationAfterAccessCheck(token: string): void {
   if (this.id === '13' && this.hasAiIframeLoginCookie()) {
     this.iframeUrl = this.moduleData.playUrl;
     this.showIframe = true;
@@ -342,7 +413,7 @@ this.apiService.generateTempToken().subscribe({
     if (token && !sessionStorage.getItem('access_token')) {
       sessionStorage.setItem('access_token', token);
     }
-    this.openMessage('Simulation could not start. Please try again.');
+    this.toastService.show('Simulation could not start. Please try again.', 'error');
   }
 });
 
@@ -350,7 +421,7 @@ this.apiService.generateTempToken().subscribe({
 
 
 
-  // console.log(token);
+    // console.log(token);
 
  //window.location.href =
    // `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
@@ -358,6 +429,45 @@ this.apiService.generateTempToken().subscribe({
     //console.log(window.location.href);
 
 }
+
+  private blockSimulationAccess(): void {
+    this.showIframe = false;
+    this.iframeUrl = '';
+    this.toastService.show('Please upgrade to the Tech Education Plan to access Simulation and Download.', 'error');
+  }
+
+  private canOpenSimulation(): boolean {
+    this.isSubscribed = this.planAccess.hasPlanGroupAccess('tech');
+    return this.isSubscribed;
+  }
+
+  private hasActiveTechPayment(payments: any): boolean {
+    const activePayments = Array.isArray(payments)
+      ? payments.filter((payment: any) => payment?.is_active && !this.isPackageExpired(payment?.expires_at))
+      : [];
+
+    return activePayments.some((payment: any) => {
+      const planKey = this.normalizePlanKey(payment?.active_package_key || payment?.plan_name || payment?.course);
+      return planKey === 'tech' || planKey === 'combo';
+    });
+  }
+
+  private normalizePlanKey(plan: string | null | undefined): string | null {
+    const normalized = plan?.trim().toLowerCase();
+    if (!normalized) return null;
+
+    if (['tech', 'tech plan', 'tech education plan'].includes(normalized)) return 'tech';
+    if (['combo', 'tech & smart', 'tech and smart', 'tech & smart education plan'].includes(normalized)) return 'combo';
+    if (['smart', 'smart plan', 'smart education plan'].includes(normalized)) return 'smart';
+
+    return null;
+  }
+
+  private isPackageExpired(expiresAt: string | null): boolean {
+    if (!expiresAt) return false;
+    const expiryTime = Date.parse(expiresAt);
+    return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
 
   private hasAiIframeLoginCookie(): boolean {
     return document.cookie
@@ -391,6 +501,9 @@ this.apiService.generateTempToken().subscribe({
       this.id = moduleId;
       this.moduleData = this.allModules[moduleId];
       this.iframeUrl = this.moduleData.playUrl;
+      this.studentsCount = this.generateRandomStudentsCount();
+      this.selectedLecture = null;
+      this.reloadModulePreviewVideo();
     }
   }
 }

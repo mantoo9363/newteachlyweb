@@ -64,7 +64,7 @@ export class FeedbackComponent implements OnInit, OnDestroy {
     if (typeof window === 'undefined') return 100;
     if (window.innerWidth > 1024) return 33.333;
     if (window.innerWidth > 640) return 50;
-    return 100;
+    return 88;
   }
 
   getTransform(): string {

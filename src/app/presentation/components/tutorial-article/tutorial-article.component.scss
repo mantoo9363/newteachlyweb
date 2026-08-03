@@ -171,6 +171,20 @@
   }
 }
 
+.tutorial-video-card {
+  background: #0F172A;
+  border: 1px solid #1E293B;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.tutorial-video-card video {
+  aspect-ratio: 16 / 9;
+  display: block;
+  width: 100%;
+}
+
 .button-uiverse {
   border: none;
   border-radius: 8px;
@@ -234,6 +248,11 @@
   transition: background 0.15s ease;
 
   &:hover { background: #F8FAFC; }
+
+  &.active {
+    background: #EFF6FF;
+    box-shadow: inset 3px 0 0 #2563EB;
+  }
 }
 
 .up-next-thumb {

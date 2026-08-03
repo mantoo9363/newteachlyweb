@@ -46,12 +46,21 @@
       </button>
       }
     </div>
-    } @else if (tutorial.bodyHtml) {
+    } @else {
+    @if (tutorial.videoUrl) {
+    <div class="tutorial-video-card">
+      <video controls controlsList="nodownload" [poster]="tutorial.heroImage">
+        <source [src]="tutorial.videoUrl" type="video/mp4">
+      </video>
+    </div>
+    }
+    @if (tutorial.bodyHtml) {
     <div class="tutorial-body-card" [innerHTML]="tutorial.bodyHtml"></div>
     } @else {
     <div class="tutorial-body-card empty">
       <p>coming soon</p>
     </div>
+    }
     }
   </div>
 
@@ -59,11 +68,11 @@
   <aside class="tutorial-sidebar">
     <div class="sidebar-header">
       <i class="fas fa-list-ul"></i>
-      <span>Up next</span>
+      <span>Lessons</span>
     </div>
     <div class="up-next-list">
       @for (item of upNext; track item.id) {
-      <button class="up-next-card" (click)="selectUpNext.emit(item.id)">
+      <button class="up-next-card" [class.active]="item.id === tutorial.id" (click)="selectUpNext.emit(item)">
         <div class="up-next-thumb" [style.backgroundImage]="backgroundUrl(item.thumbnail)">
           @if (item.isPremium) {
           <span class="thumb-lock"><i class="fas fa-lock"></i> PREMIUM</span>

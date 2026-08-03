@@ -319,13 +319,17 @@
     </div>
     <!-- CARD 5 -->
     <div class="pricing-card modern-card highlight last-card" [class.purchased-plan]="isPurchasedPlan('combo')">
-      <div class="crown-badge" *ngIf="isPurchasedPlan('combo')">
-        <i class="fas fa-crown"></i>
-        <span>Your Package</span>
-      </div>
-      <div class="best-badge">
-        <i class="fas fa-star"></i> Best Choice
-      </div>
+
+      @if(!isPurchasedPlan('combo')) {
+        <div class="best-badge">
+          <i class="fas fa-star"></i> Best Choice
+        </div>
+      } 
+      @else{
+        <div class="best-badge">
+          <i class="fas fa-crown"></i> Your Package
+        </div>
+      }
 
       <b>
         <h1><span class="plan-title">INDIVIDUAL</span></h1>

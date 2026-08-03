@@ -9,6 +9,7 @@ import {
   Output,
   EventEmitter,
   Renderer2,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   AbstractControl,
@@ -101,6 +102,9 @@ export class HeaderComponent implements OnInit {
   isLoginLoading = false;
   forgotPasswordForm!: FormGroup;
   forgotPasswordSubmitted = false;
+  forgotPasswordLoading = false;
+  changePasswordLoading = false;
+  changePasswordError = '';
   showMessageModal = false;
   userMenuOpen = false;
   showLoginPassword = false;
@@ -127,10 +131,12 @@ export class HeaderComponent implements OnInit {
 
   selectedBoardId: number | any = null;
   loginForm!: FormGroup;
+  loginError: string = '';
   signupForm!: FormGroup; // Search state
   isSearchModalOpen = signal(false);
   searchQuery = signal('');
   public service = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
   private readonly signupDraftStorageKey = 'teachly_signup_draft';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
   private readonly studentPanelSsoUrl = environment.studentPanel.ssoUrl;
@@ -211,7 +217,7 @@ export class HeaderComponent implements OnInit {
 
   // Routes that no longer require authGuard (see app.routes.ts) - the pages themselves
   // handle login/plan gating, so nav links to them should stay navigable for guests.
-  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details'];
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password'];
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
@@ -238,6 +244,51 @@ export class HeaderComponent implements OnInit {
   // stay clickable/navigable while still signalling that a plan is required.
   isMenuItemLocked(item: any): boolean {
     return !!item?.requiresPlan && (!this.isLoggedIn || !this.hasPlanGroupAccess(item.requiresPlan));
+  }
+
+  /**
+   * Returns the user's board (normalized to lowercase) from sessionStorage.
+   * e.g. 'cbse', 'icse', 'isc', 'up board'
+   */
+  getUserBoard(): string {
+    return (sessionStorage.getItem('user_board') || '').toLowerCase().trim();
+  }
+
+  /**
+   * Maps a boardKey (from the nav item) to the board names that could come from the API.
+   */
+  private readonly boardKeyAliases: Record<string, string[]> = {
+    cbse: ['cbse'],
+    icse: ['icse'],
+    isc: ['isc'],
+    upboard: ['up board', 'upboard', 'up_board'],
+  };
+
+  /**
+   * For Board Curriculum sub-items that carry a `boardKey`:
+   * - If not logged in → locked
+   * - If logged in but plan not active → still locked (plan required)
+   * - If logged in and plan active but board doesn't match → locked
+   * - If logged in, plan active, and board matches → UNLOCKED
+   */
+  isBoardSubItemLocked(item: any): boolean {
+    if (!item?.boardKey) {
+      // Not a board-specific item — fall back to normal lock logic
+      return this.isMenuItemLocked(item);
+    }
+    if (!this.isLoggedIn) return true;
+    if (item.requiresPlan && !this.hasPlanGroupAccess(item.requiresPlan)) return true;
+    const userBoard = this.getUserBoard();
+    if (!userBoard) return false; // Board not set yet — give benefit of doubt
+    const aliases = this.boardKeyAliases[item.boardKey] || [item.boardKey];
+    return !aliases.some((alias) => userBoard.includes(alias));
+  }
+
+  /**
+   * Checks if the board sub-item is accessible (navigable) for the current user.
+   */
+  isBoardSubItemAccessible(item: any): boolean {
+    return !this.isBoardSubItemLocked(item);
   }
 
   private isPackageExpired(expiresAt: string | null): boolean {
@@ -461,6 +512,10 @@ export class HeaderComponent implements OnInit {
           this.authStorage.setItem('user_type', profile.user_type);
         }
 
+        if (profile?.board) {
+          sessionStorage.setItem('user_board', profile.board);
+        }
+
         this.setPackageStatusFromResponse(profile);
       },
       error: (err) => {
@@ -544,11 +599,10 @@ export class HeaderComponent implements OnInit {
           type: 'nested-dropdown',
           requiresPlan: 'smart',
           items: [
-            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart' },
-            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart' },
-            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart' },
-
-            { title: 'UP Board', url: 'https://student.theteachly.com/auth/login', requiresPlan: 'smart' }
+            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart', boardKey: 'cbse' },
+            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart', boardKey: 'icse' },
+            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart', boardKey: 'isc' },
+            { title: 'UP Board', url: 'http://localhost:60518/auth/login', requiresPlan: 'smart', boardKey: 'upboard' }
           ]
         },
         { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },
@@ -1249,6 +1303,7 @@ export class HeaderComponent implements OnInit {
     this.loginErrorMessage = '';
     this.isSchoolSignup = isSchool;
     this.isSignupOpen = true;
+    this.loginError = '';
     this.resetSignupFormWithDraft(tab);
     if (this.isSchoolSignup) {
       this.signupForm.get('board')?.clearValidators();
@@ -1360,6 +1415,7 @@ export class HeaderComponent implements OnInit {
     this.showCurrentPassword = false;
     this.showNewPassword = false;
     this.showConfirmNewPassword = false;
+    this.changePasswordError = '';
     this.isChangePasswordOpen = true;
   }
 
@@ -1373,8 +1429,27 @@ export class HeaderComponent implements OnInit {
       return;
     }
 
-    this.closeChangePasswordModal();
-    this.openMessage('Password changed successfully.');
+    this.changePasswordError = '';
+    this.changePasswordLoading = true;
+
+    const { currentPassword, newPassword } = this.changePasswordForm.value;
+    const payload = {
+      current_password: currentPassword,
+      new_password: newPassword,
+    };
+
+    this.service.changePassword(payload).subscribe({
+      next: () => {
+        this.changePasswordLoading = false;
+        this.closeChangePasswordModal();
+        this.openMessage('Password changed successfully.');
+      },
+      error: (err: any) => {
+        this.changePasswordLoading = false;
+        const errorDetail = err?.error?.detail || err?.error?.message || err?.message;
+        this.changePasswordError = typeof errorDetail === 'string' ? errorDetail : 'Failed to change password. Please check your current password and try again.';
+      },
+    });
   }
 
   toggleCurrentPasswordVisibility(): void {
@@ -1404,14 +1479,33 @@ export class HeaderComponent implements OnInit {
     this.activeTab = 'login';
   }
 
-  // Dummy flow for now — no backend endpoint wired up yet.
   submitForgotPassword(): void {
     if (this.forgotPasswordForm.invalid) {
       this.forgotPasswordForm.markAllAsTouched();
       return;
     }
 
-    this.forgotPasswordSubmitted = true;
+    this.forgotPasswordLoading = true;
+    const email = this.forgotPasswordForm.value.email;
+    
+    this.service.forgotPassword(email).subscribe({
+      next: (res) => {
+        console.log('Forgot password next:', res);
+        this.forgotPasswordLoading = false;
+        this.forgotPasswordSubmitted = true;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Forgot password error:', err);
+        this.forgotPasswordLoading = false;
+        
+        // Show the actual error message or a generic error to help debug backend issues
+        const errorDetail = err?.error?.detail || err?.error?.message || err?.message || 'Failed to send reset link.';
+        this.toastService.show(typeof errorDetail === 'string' ? errorDetail : 'Failed to send reset link.', 'error');
+        
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // 🔐 LOGIN FUNCTION
@@ -1419,6 +1513,8 @@ export class HeaderComponent implements OnInit {
     if (this.isLoginLoading) return;
 
     this.loginErrorMessage = '';
+
+    this.loginError = '';
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -1458,11 +1554,14 @@ export class HeaderComponent implements OnInit {
   }
 
   // Login Success
-  this.authStorage.setItem("access_token", res.access_token);
-  this.authStorage.setItem('user_id', res.user.user_id.toString());
-  this.authStorage.setItem('student_id', res.user.student_id);
-  this.authStorage.setItem('school_name', res.user.first_name);
-  this.authStorage.setItem('user_type', res.user.user_type || '');
+  sessionStorage.setItem("access_token", res.access_token);
+  sessionStorage.setItem('user_id', res.user.user_id.toString());
+  sessionStorage.setItem('student_id', res.user.student_id);
+  sessionStorage.setItem('school_name', res.user.first_name);
+  sessionStorage.setItem('user_type', res.user.user_type || '');
+  if (res.user.board) {
+    sessionStorage.setItem('user_board', res.user.board);
+  }
   this.setPackageStatusFromResponse(res);
   
   this.closeSignupModal();
@@ -1833,6 +1932,25 @@ export class HeaderComponent implements OnInit {
       this.closeMobileMenu();
       this.openModal('signup');
       return;
+    }
+
+    if (item?.boardKey) {
+      // Board-specific item: check board match in addition to plan
+      if (this.isBoardSubItemLocked(item)) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeMobileMenu();
+        const userBoard = this.getUserBoard();
+        if (!this.hasPlanGroupAccess(item.requiresPlan)) {
+          this.openMessage(`Upgrade to the ${this.planGroupLabel(item.requiresPlan)} to access this content.`);
+        } else if (userBoard) {
+          this.openMessage(`This board content is only available for your registered board (${(sessionStorage.getItem('user_board') || 'your board').toUpperCase()}).`);
+        } else {
+          this.openMessage(`Upgrade to the ${this.planGroupLabel(item.requiresPlan)} to access this content.`);
+        }
+        return;
+      }
+      return; // Board matches — allow navigation
     }
 
     if (item?.requiresPlan && !this.hasPlanGroupAccess(item.requiresPlan)) {

@@ -70,24 +70,34 @@ export class TutorialDetailComponent implements OnInit {
   }
 
   private resolveCategoryTutorial(category: string): void {
-    this.tutorialService.getTutorials(1, 1, 'published', category, this.userClassLevel || undefined).subscribe({
+    this.findFirstAvailableTutorial([
+      { category, classLevel: this.userClassLevel || undefined },
+      { category }
+    ]);
+  }
+
+  private findFirstAvailableTutorial(
+    attempts: Array<{ category?: string; classLevel?: string }>,
+    index = 0
+  ): void {
+    const attempt = attempts[index];
+
+    if (!attempt) {
+      this.loading.set(false);
+      this.errorMessage.set('No lessons are available yet.');
+      return;
+    }
+
+    this.tutorialService.getTutorials(1, 500, 'published', attempt.category, attempt.classLevel).subscribe({
       next: list => {
         if (list.length) {
-          this.router.navigate(['/tutorial', list[0].id], { replaceUrl: true });
+          this.tutorial.set(list[0]);
+          this.upNext.set(list);
+          this.loading.set(false);
           return;
         }
-        // No lessons published for this lab's category (and class) yet - fall back to the general list
-        this.tutorialService.getTutorials(1, 1, 'published', undefined, this.userClassLevel || undefined).subscribe({
-          next: fallback => {
-            if (fallback.length) {
-              this.router.navigate(['/tutorial', fallback[0].id], { replaceUrl: true });
-            } else {
-              this.loading.set(false);
-              this.errorMessage.set('No lessons are available yet.');
-            }
-          },
-          error: err => this.handleLoadError(err)
-        });
+
+        this.findFirstAvailableTutorial(attempts, index + 1);
       },
       error: err => this.handleLoadError(err)
     });
@@ -100,8 +110,8 @@ export class TutorialDetailComponent implements OnInit {
         this.loading.set(false);
 
         this.tutorialService
-          .getTutorials(1, 8, 'published', tutorial?.category, this.userClassLevel || undefined)
-          .subscribe(list => this.upNext.set(list.filter(t => t.id !== id)));
+          .getTutorials(1, 500, 'published', tutorial?.category, this.userClassLevel || undefined)
+          .subscribe(list => this.upNext.set(list));
       },
       error: err => this.handleLoadError(err)
     });
@@ -115,8 +125,9 @@ export class TutorialDetailComponent implements OnInit {
     this.errorMessage.set('Failed to load this lesson. Please try again.');
   }
 
-  goToTutorial(id: string): void {
-    this.router.navigate(['/tutorial', id]);
+  selectLesson(tutorial: Tutorial): void {
+    this.tutorial.set(tutorial);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onLogin(): void {
