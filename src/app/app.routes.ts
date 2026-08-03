@@ -12,6 +12,7 @@ import { PrivacyPolicyComponent } from './presentation/pages/privacy-policy/priv
 import { TermsOfServiceComponent } from './presentation/pages/terms-of-service/terms-of-service.component';
 import { CtAiComponent } from './presentation/pages/ct-ai/ct-ai.component';
 import { authGuard } from './core/guards/auth.guard';
+import { PdfViewerComponent } from './presentation/pages/pdf-viewer/pdf-viewer.component';
 
 export const routes: Routes = [
   {
@@ -86,6 +87,10 @@ export const routes: Routes = [
     path: 'terms-of-service',
     component: TermsOfServiceComponent,
     title: 'Teachly | Terms of Service'
+  },
+  {
+    path: 'pdf-viewer',
+    component: PdfViewerComponent
   },
   {
     path: '**',
