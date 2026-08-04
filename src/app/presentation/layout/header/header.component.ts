@@ -1434,7 +1434,7 @@ export class HeaderComponent implements OnInit {
 
     const { currentPassword, newPassword, confirmNewPassword } = this.changePasswordForm.value;
     const payload = {
-      current_password: currentPassword,
+      old_password: currentPassword,
       new_password: newPassword,
       confirm_password: confirmNewPassword,
     };
