@@ -10,8 +10,8 @@ import { AuthStorageService } from './auth-storage.service';
 })
 export class ApiService {
 
-  private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
-   // private readonly baseUrl = 'http://127.0.0.1:8000';
+  //private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
+   private readonly baseUrl = 'http://127.0.0.1:8000';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
   constructor(
@@ -43,7 +43,12 @@ export class ApiService {
   }
 
   private isInvalidTokenError(error: HttpErrorResponse): boolean {
-    return error.status === 401 || error.error?.detail === 'Invalid or expired token';
+    const detail = error.error?.detail;
+    return (
+      error.status === 401 ||
+      detail === 'Invalid or expired token' ||
+      detail === 'Session expired or logged in elsewhere'
+    );
   }
 
   private logoutForExpiredToken(): void {
