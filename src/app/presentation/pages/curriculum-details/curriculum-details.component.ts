@@ -538,13 +538,6 @@ this.apiService.generateTempToken().subscribe({
     this.router.navigate(['/tutorial/category', this.moduleCategory()]);
   }
 
-  openReadMoreTutorial(): void {
-    // Drone & CAD modules only - Smart/AI module uses goToTutorial() instead.
-    this.iframeUrl = 'https://circuit.theteachly.com/tutorials';
-    this.showIframe = true;
-    window.scrollTo(0, 0);
-  }
-
   switchModule(moduleId: string): void {
     if (this.allModules[moduleId] && this.allModules[moduleId].playUrl) {
       this.id = moduleId;
