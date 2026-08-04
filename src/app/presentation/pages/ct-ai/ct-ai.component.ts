@@ -8,13 +8,10 @@ import { FooterComponent } from '../../layout/footer/footer.component';
 @Component({
   selector: 'app-ct-ai',
   standalone: true,
-  imports: [
-    CommonModule,
-    HeaderComponent,
-    FooterComponent
-  ],
+  
+  imports: [CommonModule],
   templateUrl: './ct-ai.component.html',
-  styleUrls: ['./ct-ai.component.scss']
+  styleUrl: './ct-ai.component.scss'
 })
 export class CtAiComponent {
 
@@ -47,12 +44,13 @@ export class CtAiComponent {
     return value.toString().padStart(2, '0');
   }
   openPDF(chapter: any) {
-    this.router.navigate(['/iframe-view'], {
-      queryParams: {
-        url: chapter.pdf
-      }
-    });
-  }
+   
+  this.router.navigate(['/pdf-viewer'], {
+    queryParams: {
+      file: chapter.pdf
+    }
+  });
+}
 }
 
 

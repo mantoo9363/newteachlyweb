@@ -602,36 +602,18 @@
       position: relative;
       overflow: hidden;
 
+      .card-image {
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
       &.left-image {
-        background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
         border: 1px solid #DBEAFE;
-        
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-image: radial-gradient(rgba(37, 99, 235, 0.15) 1.5px, transparent 1.5px);
-          background-size: 16px 16px;
-        }
       }
 
       &.right-image {
-        background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
         border: 1px solid #FFEDD5;
-
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-image: radial-gradient(rgba(249, 115, 22, 0.15) 1.5px, transparent 1.5px);
-          background-size: 16px 16px;
-        }
       }
     }
 

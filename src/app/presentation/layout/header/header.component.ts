@@ -279,7 +279,7 @@ export class HeaderComponent implements OnInit {
     if (!this.isLoggedIn) return true;
     if (item.requiresPlan && !this.hasPlanGroupAccess(item.requiresPlan)) return true;
     const userBoard = this.getUserBoard();
-    if (!userBoard) return false; // Board not set yet — give benefit of doubt
+    if (!userBoard) return true; // Board unknown — fail closed, don't unlock every board
     const aliases = this.boardKeyAliases[item.boardKey] || [item.boardKey];
     return !aliases.some((alias) => userBoard.includes(alias));
   }
@@ -602,7 +602,7 @@ export class HeaderComponent implements OnInit {
             { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart', boardKey: 'cbse' },
             { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart', boardKey: 'icse' },
             { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart', boardKey: 'isc' },
-            { title: 'UP Board', url: 'http://localhost:60518/auth/login', requiresPlan: 'smart', boardKey: 'upboard' }
+            { title: 'UP Board', url: '/iframe-view?url=https://student.theteachly.com/auth/login', requiresPlan: 'smart', boardKey: 'upboard' }
           ]
         },
         { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },
@@ -1563,7 +1563,11 @@ export class HeaderComponent implements OnInit {
     sessionStorage.setItem('user_board', res.user.board);
   }
   this.setPackageStatusFromResponse(res);
-  
+
+  // The login response doesn't reliably include the board, so refresh the
+  // full profile now instead of waiting for the next page reload/ngOnInit.
+  this.loadLoggedInProfile();
+
   this.closeSignupModal();
 
   // Dashboard
@@ -1642,6 +1646,10 @@ export class HeaderComponent implements OnInit {
         this.authStorage.setItem('user_type', registeredUser.user_type || data.user_type);
         this.authStorage.setItem('school_name', registeredUser.first_name);
         this.setPackageStatusFromResponse(res);
+
+        // Registration response doesn't reliably include the board, so refresh
+        // the full profile now instead of waiting for the next page reload/ngOnInit.
+        this.loadLoggedInProfile();
 
         // Payment Summary
         this.paymentSummary = {
