@@ -1432,10 +1432,11 @@ export class HeaderComponent implements OnInit {
     this.changePasswordError = '';
     this.changePasswordLoading = true;
 
-    const { currentPassword, newPassword } = this.changePasswordForm.value;
+    const { currentPassword, newPassword, confirmNewPassword } = this.changePasswordForm.value;
     const payload = {
       current_password: currentPassword,
       new_password: newPassword,
+      confirm_password: confirmNewPassword,
     };
 
     this.service.changePassword(payload).subscribe({

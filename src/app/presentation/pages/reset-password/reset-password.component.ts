@@ -91,11 +91,13 @@ export class ResetPasswordComponent implements OnInit {
     this.errorMessage = '';
 
     const newPassword = this.resetForm.value.password;
+    const confirmPassword = this.resetForm.value.confirmPassword;
     const payload = {
       token: this.token,
       email: this.email || '',
       password: newPassword,
-      new_password: newPassword
+      new_password: newPassword,
+      confirm_password: confirmPassword
     };
 
     this.apiService.resetPassword(payload).subscribe({
