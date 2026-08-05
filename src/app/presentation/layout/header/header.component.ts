@@ -61,6 +61,14 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
     : null;
 }
 
+function signupPasswordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmpassword')?.value;
+  return password && confirmPassword && password !== confirmPassword
+    ? { passwordMismatch: true }
+    : null;
+}
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -100,6 +108,7 @@ export class HeaderComponent implements OnInit {
   activeTab: 'login' | 'signup' | 'forgot' = 'signup';
   loginErrorMessage = '';
   isLoginLoading = false;
+  isSignupLoading = false;
   forgotPasswordForm!: FormGroup;
   forgotPasswordSubmitted = false;
   forgotPasswordLoading = false;
@@ -115,7 +124,6 @@ export class HeaderComponent implements OnInit {
   isChangePasswordOpen = false;
   isProfileLoading = false;
   profileData: any = null;
-  profileForm!: FormGroup;
   changePasswordForm!: FormGroup;
   showCurrentPassword = false;
   showNewPassword = false;
@@ -221,6 +229,7 @@ export class HeaderComponent implements OnInit {
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
+    if (this.authStorage.hasAllAccessPlan()) return true;
     const activePlanKeys = this.authStorage.getActivePackageKeys();
     return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }
@@ -1079,7 +1088,7 @@ export class HeaderComponent implements OnInit {
   ========================= */
   setClasses(boardId: number) {
 
-    this.signupForm.patchValue({ class: '' });
+    const previousClassId = this.signupForm.get('class')?.value;
 
     switch (Number(boardId)) {
 
@@ -1129,6 +1138,13 @@ export class HeaderComponent implements OnInit {
           { id: 12, name: '12th' }
         ];
     }
+
+    // Only clear the class selection if it's no longer valid for the newly
+    // selected board's class list — don't wipe a still-valid selection.
+    const stillValid = this.classList.some((item) => String(item.id) === String(previousClassId));
+    if (!stillValid) {
+      this.signupForm.patchValue({ class: null });
+    }
   }
 
   /* =========================
@@ -1163,29 +1179,28 @@ export class HeaderComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
     });
 
-    this.signupForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+    this.signupForm = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
 
-      mobile: [
-        '',
-        [Validators.required, Validators.pattern(/^[6-9][0-9]{9}$/)],
-      ],
+        mobile: [
+          '',
+          [Validators.required, Validators.pattern(/^[6-9][0-9]{9}$/)],
+        ],
 
-      Email: ['', [Validators.required, Validators.email]],
+        Email: ['', [Validators.required, Validators.email]],
 
-      password: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
 
-      confirmpassword: ['', Validators.required],
+        confirmpassword: ['', Validators.required],
 
-      board: ['', Validators.required],
+        board: [null, Validators.required],
 
-      class: ['', Validators.required],
+        class: [null, Validators.required],
 
-    });
-
-    this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-    });
+      },
+      { validators: signupPasswordsMatchValidator }
+    );
 
     this.changePasswordForm = this.fb.group(
       {
@@ -1229,15 +1244,15 @@ export class HeaderComponent implements OnInit {
         name: draft.name || '',
         mobile: draft.mobile || '',
         Email: draft.Email || '',
-        board: draft.board || '',
-        class: draft.class || '',
+        board: draft.board || null,
+        class: draft.class || null,
         password: '',
         confirmpassword: '',
       }, { emitEvent: false });
 
       if (draft.board) {
         this.setClasses(Number(draft.board));
-        this.signupForm.patchValue({ class: draft.class || '' }, { emitEvent: false });
+        this.signupForm.patchValue({ class: draft.class || null }, { emitEvent: false });
       }
     } catch {
       localStorage.removeItem(this.signupDraftStorageKey);
@@ -1247,13 +1262,13 @@ export class HeaderComponent implements OnInit {
   }
 
   private resetSignupFormWithDraft(tab: 'login' | 'signup'): void {
+    if (tab !== 'signup') return;
+
     this.isRestoringSignupDraft = true;
     this.signupForm.reset();
     this.isRestoringSignupDraft = false;
 
-    if (tab === 'signup') {
-      this.restoreSignupDraft();
-    }
+    this.restoreSignupDraft();
   }
   flattenTickerItems(): void {
     const items: string[] = [];
@@ -1292,9 +1307,9 @@ export class HeaderComponent implements OnInit {
         return;
       }
 
-        this.paymentSummary.userid= Number(this.authStorage.getItem('user_id')),
-      this.paymentSummary.schoolId= this.authStorage.getItem('student_id'),
-      this.paymentSummary.schoolName= this.authStorage.getItem('school_name'),
+      this.paymentSummary.userid = Number(this.authStorage.getItem('user_id'));
+      this.paymentSummary.schoolId = this.authStorage.getItem('student_id');
+      this.paymentSummary.schoolName = this.authStorage.getItem('school_name');
       this.showPaymentPopup = true;
       return;
     }
@@ -1374,7 +1389,6 @@ export class HeaderComponent implements OnInit {
 
   openProfileModal(): void {
     this.closeUserMenu();
-    this.profileForm.reset({ name: this.userName });
     this.profileData = null;
     this.isProfileOpen = true;
     this.isProfileLoading = true;
@@ -1382,9 +1396,6 @@ export class HeaderComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res: any) => {
         this.profileData = res;
-        this.profileForm.patchValue({
-          name: res?.name || res?.first_name || this.userName,
-        });
         this.isProfileLoading = false;
       },
       error: (err) => {
@@ -1396,17 +1407,6 @@ export class HeaderComponent implements OnInit {
 
   closeProfileModal(): void {
     this.isProfileOpen = false;
-  }
-
-  submitProfile(): void {
-    if (this.profileForm.invalid) {
-      this.profileForm.markAllAsTouched();
-      return;
-    }
-
-    this.authStorage.setItem('school_name', this.profileForm.value.name);
-    this.closeProfileModal();
-    this.openMessage('Profile updated successfully.');
   }
 
   openChangePasswordModal(): void {
@@ -1591,22 +1591,14 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  //  SIGNUP FUNCTION
-  onSignup() {
-    if (this.signupForm.valid) {
-      // console.log('Signup Data:', this.signupForm.value);
-
-      //  yaha API call kar sakte ho
-    } else {
-      this.signupForm.markAllAsTouched();
-    }
-  }
   submitForm() {
     if (this.signupForm.invalid) {
       this.signupForm.markAllAsTouched();
       this.toastService.show('Please fill all required fields correctly.', 'error');
       return;
     }
+
+    this.isSignupLoading = true;
 
     const form = this.signupForm.value;
     const selectedBoard = this.boardList.find((board) => String(board.id) === String(form.board));
@@ -1624,7 +1616,7 @@ export class HeaderComponent implements OnInit {
 
       institution_name: form.name,
 
-      class_code: this.isSchoolSignup ? null : form.class,
+      class_code: this.isSchoolSignup ? null : String(form.class),
 
       email: form.Email,
       password: form.password,
@@ -1634,6 +1626,7 @@ export class HeaderComponent implements OnInit {
 
     this.service.chaneStuRegister(data).subscribe({
       next: (res: any) => {
+        this.isSignupLoading = false;
         // console.log(res);
         const registeredUser = res.user || res;
 
@@ -1671,14 +1664,15 @@ export class HeaderComponent implements OnInit {
         this.isSchoolSignup = false;
 
         this.signupForm.patchValue({
-          board: '',
-          class: '',
+          board: null,
+          class: null,
         });
 
         // Signup popup close
         this.closeSignupModal();
       },
       error: (err) => {
+        this.isSignupLoading = false;
         console.log(err);
         const message = this.getApiErrorMessage(err);
         this.toastService.show(message, 'error');

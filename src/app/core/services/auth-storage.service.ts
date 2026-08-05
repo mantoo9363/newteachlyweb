@@ -34,6 +34,10 @@ export class AuthStorageService {
   }
 
   setItem(key: string, value: string): void {
+    if (value == null) {
+      this.removeItem(key);
+      return;
+    }
     sessionStorage.setItem(key, value);
     localStorage.setItem(key, value);
   }
@@ -81,6 +85,12 @@ export class AuthStorageService {
 
   hasActivePackage(): boolean {
     return this.getActivePackageKeys().length > 0;
+  }
+
+  // 'school' is an all-access plan: any user holding it should see every
+  // plan-gated link/card unlocked, regardless of the specific group (tech/smart) required.
+  hasAllAccessPlan(): boolean {
+    return this.getActivePackageKeys().includes('school');
   }
 
   private parseStringArray(value: string | null): string[] {

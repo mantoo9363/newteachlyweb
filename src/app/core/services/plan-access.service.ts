@@ -40,6 +40,7 @@ export class PlanAccessService {
 
   hasPlanGroupAccess(group: PlanGroup): boolean {
     if (!this.isLoggedIn() || !this.hasPurchasedPackage()) return false;
+    if (this.authStorage.hasAllAccessPlan()) return true;
     const activePlanKeys = this.authStorage.getActivePackageKeys();
     return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }

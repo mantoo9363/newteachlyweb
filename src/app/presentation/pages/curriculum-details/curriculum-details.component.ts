@@ -43,7 +43,45 @@ openMessage(message: string) {
     this.showMessageModal = false;
   }
 
-   
+  showSystemRequirements = false;
+
+  readonly systemRequirements = {
+    minimum: [
+      { component: 'OS', requirement: 'Windows 10 64-bit' },
+      { component: 'Processor', requirement: 'Intel Core i5-8400 / AMD Ryzen 5 2600' },
+      { component: 'RAM', requirement: '8 GB (16 GB recommended)' },
+      { component: 'Graphics', requirement: 'NVIDIA GTX 1060 6GB / AMD RX 580 8GB' },
+      { component: 'DirectX', requirement: 'Version 11' },
+      { component: 'Storage', requirement: '10 GB SSD free space' },
+      { component: 'Python', requirement: "Bundled with the game (user doesn't install separately)" },
+      { component: 'Internet', requirement: 'Required only for checking/downloading live content updates' },
+    ],
+    recommended: [
+      { component: 'OS', requirement: 'Windows 11 64-bit' },
+      { component: 'Processor', requirement: 'Intel Core i7-12700 / AMD Ryzen 7 5800X' },
+      { component: 'RAM', requirement: '16 GB' },
+      { component: 'Graphics', requirement: 'RTX 3060 12GB / RX 6700 XT' },
+      { component: 'DirectX', requirement: 'Version 12' },
+      { component: 'Storage', requirement: '30 GB NVMe SSD' },
+      { component: 'Internet', requirement: 'Broadband connection for automatic content updates' },
+    ],
+    highUltra: [
+      { component: 'CPU', requirement: 'Ryzen 7 7700X / Intel i7-13700K' },
+      { component: 'RAM', requirement: '32 GB' },
+      { component: 'GPU', requirement: 'RTX 4070 / RX 7800 XT' },
+      { component: 'Storage', requirement: 'NVMe SSD' },
+    ],
+  };
+
+  openSystemRequirements(): void {
+    this.showSystemRequirements = true;
+  }
+
+  closeSystemRequirements(): void {
+    this.showSystemRequirements = false;
+  }
+
+
   id: string | null = null;
   title: string | null = null;
   moduleData: any = null;
@@ -350,13 +388,6 @@ openMessage(message: string) {
     window.open('https://aitraining.theteachly.com/', '_blank');
   }
 
-  scrollToSection(selector: string): void {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }
-
   getHowItWorksSteps(text: string): { steps: string[], note: string } {
     if (!text) return { steps: [], note: '' };
     const parts = text.split('→').map(s => s.trim());
@@ -533,8 +564,19 @@ this.apiService.generateTempToken().subscribe({
   }
 
   goToTutorial(): void {
+    const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+    if (!token) {
+      this.headerComponent?.openModal('login');
+      return;
+    }
+
+    if (this.id === '10') {
+      window.open('https://circuit.theteachly.com/tutorials', '_blank');
+      return;
+    }
+
     // The tutorial page itself resolves the category to an actual lesson id
-    // (and handles the login/plan gating) - this button just has to navigate.
+    // (and handles the plan gating) - this button just has to navigate.
     this.router.navigate(['/tutorial/category', this.moduleCategory()]);
   }
 

@@ -457,7 +457,7 @@
         </div>
 
         <div class="input-group">
-          <input type="text" placeholder="Email" formControlName="Email" />
+          <input type="email" placeholder="Email" formControlName="Email" />
         </div>
 
         <div class="error" *ngIf="signupForm.get('Email')?.touched &&
@@ -501,7 +501,7 @@
                 <option [ngValue]="null">Select Class</option>
 
                 @for (item of classList; track item.id) {
-                <option [value]="item.id">
+                <option [ngValue]="item.id">
                   {{ item.name }}
                 </option>
                 }
@@ -576,7 +576,7 @@
 
 
 
-        <button type="submit" class="submit-btn">Register</button>
+        <button type="submit" class="submit-btn" [disabled]="isSignupLoading">Register</button>
       </form>
       }
     </div>
@@ -595,60 +595,48 @@
 
       <div class="signup-header">
         <h3>My Profile</h3>
-        <p>Manage your account details</p>
+        <p>View your account details</p>
       </div>
 
-      <form [formGroup]="profileForm" (ngSubmit)="submitProfile()" class="signup-form">
-        <div class="input-group">
-          <input type="text" placeholder="Name" formControlName="name"
-            (input)="onNameInput($event, profileForm)" />
+      <div class="profile-readonly-grid">
+        <div class="profile-readonly-item">
+          <span class="label">Name</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : userName }}</span>
         </div>
-
-        <div class="error" *ngIf="profileForm.get('name')?.touched &&
-            profileForm.get('name')?.errors?.['required']">
-
-          Name is required.
-
+        <div class="profile-readonly-item">
+          <span class="label">Email</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.email
+            || '-') }}</span>
         </div>
-
-        <div class="profile-readonly-grid">
-          <div class="profile-readonly-item">
-            <span class="label">Email</span>
-            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.email
-              || '-') }}</span>
-          </div>
-          <div class="profile-readonly-item">
-            <span class="label">Student ID</span>
-            <span class="value">{{ userStudentId }}</span>
-          </div>
-          <div class="profile-readonly-item">
-            <span class="label">Account Type</span>
-            <span class="value">{{ userType }}</span>
-          </div>
-          <div class="profile-readonly-item">
-            <span class="label">Board</span>
-            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.board
-              || '-') }}</span>
-          </div>
-          <div class="profile-readonly-item">
-            <span class="label">Class</span>
-            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.class_name
-              || '-') }}</span>
-          </div>
-          <div class="profile-readonly-item">
-            <span class="label">Course</span>
-            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.course
-              || '-') }}</span>
-          </div>
-          <div class="profile-readonly-item">
-            <span class="label">Duration</span>
-            <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.duration
-              || '-') }}</span>
-          </div>
+        <div class="profile-readonly-item">
+          <span class="label">Student ID</span>
+          <span class="value">{{ userStudentId }}</span>
         </div>
-
-        <button type="submit" class="submit-btn" [disabled]="isProfileLoading">Save Changes</button>
-      </form>
+        <div class="profile-readonly-item">
+          <span class="label">Account Type</span>
+          <span class="value">{{ userType }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Board</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.board
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Class</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.class_name
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Course</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.course
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Duration</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.duration
+            || '-') }}</span>
+        </div>
+      </div>
     </div>
   </div>
   }
