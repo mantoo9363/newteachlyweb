@@ -16,6 +16,9 @@ export class AuthStorageService {
     'active_plan_expiries',
     'package_expires_at',
     'active_course',
+    'student_panel_sso_at',
+    'last_temp_token',
+    'last_temp_token_created_at',
   ];
 
   getItem(key: string): string | null {
@@ -87,10 +90,39 @@ export class AuthStorageService {
     return this.getActivePackageKeys().length > 0;
   }
 
-  // 'school' is an all-access plan: any user holding it should see every
-  // plan-gated link/card unlocked, regardless of the specific group (tech/smart) required.
+  // 'school' is an all-access plan. 'schooltech' unlocks all tech content.
   hasAllAccessPlan(): boolean {
     return this.getActivePackageKeys().includes('school');
+  }
+
+  hasTechAccessPlan(): boolean {
+    const activePackageKeys = this.getActivePackageKeys();
+    return activePackageKeys.includes('school') || activePackageKeys.includes('schooltech');
+  }
+
+  markStudentPanelSso(): void {
+    this.setItem('student_panel_sso_at', String(Date.now()));
+  }
+
+  wasStudentPanelSsoRecent(maxAgeMs = 5 * 60 * 1000): boolean {
+    const ssoAt = Number(this.getItem('student_panel_sso_at'));
+    return Number.isFinite(ssoAt) && Date.now() - ssoAt <= maxAgeMs;
+  }
+
+  setTempToken(token: string): void {
+    this.setItem('last_temp_token', token);
+    this.setItem('last_temp_token_created_at', String(Date.now()));
+  }
+
+  getRecentTempToken(maxAgeMs = 10 * 60 * 1000): string | null {
+    const token = this.getItem('last_temp_token');
+    const createdAt = Number(this.getItem('last_temp_token_created_at'));
+
+    if (!token || !Number.isFinite(createdAt) || Date.now() - createdAt > maxAgeMs) {
+      return null;
+    }
+
+    return token;
   }
 
   private parseStringArray(value: string | null): string[] {

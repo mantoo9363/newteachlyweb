@@ -9,6 +9,7 @@ import { IframeEmbedComponent } from '../../components/iframe-embed/iframe-embed
 import { ApiService } from '../../../core/services/api-service';
 import { PlanAccessService } from '../../../core/services/plan-access.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthStorageService } from '../../../core/services/auth-storage.service';
 import { environment } from '../../../../environments/environment';
 
 
@@ -28,7 +29,8 @@ export class CurriculumDetailsComponent implements OnInit {
   private router: Router,
   private apiService: ApiService,
   private planAccess: PlanAccessService,
-  private toastService: ToastService
+  private toastService: ToastService,
+  private authStorage: AuthStorageService
 ) {}
 
 
@@ -385,7 +387,7 @@ openMessage(message: string) {
   }
 
   unlockContent(): void {
-    window.open('https://aitraining.theteachly.com/', '_blank');
+    window.open(`${environment.urls.aiTraining}/`, '_blank');
   }
 
   getHowItWorksSteps(text: string): { steps: string[], note: string } {
@@ -426,9 +428,10 @@ openMessage(message: string) {
     return;
   }
 
-  if (userId) {
-    this.apiService.getSchoolPaymentHistory(userId).subscribe({
+  if (userId && !this.authStorage.wasStudentPanelSsoRecent()) {
+    this.apiService.getSchoolPaymentHistory(userId, false).subscribe({
       next: (payments) => {
+        console.log('Payment history:', payments);
         if (!this.hasActiveTechPayment(payments)) {
           this.blockSimulationAccess();
           return;
@@ -470,7 +473,16 @@ openMessage(message: string) {
     return;
   }
 
-this.apiService.generateTempToken().subscribe({
+const cachedTempToken = this.authStorage.getRecentTempToken();
+if (cachedTempToken) {
+  this.iframeUrl =
+    `${this.moduleData.playUrl}?token=${encodeURIComponent(cachedTempToken)}`;
+  this.showIframe = true;
+  window.scrollTo(0, 0);
+  return;
+}
+
+this.apiService.generateTempToken(false).subscribe({
   
   next: (res) => {
     const token = res.temp_token;
@@ -506,7 +518,7 @@ this.apiService.generateTempToken().subscribe({
   private blockSimulationAccess(): void {
     this.showIframe = false;
     this.iframeUrl = '';
-    this.toastService.show('Please upgrade to the Tech Education Plan to access Simulation and Download.', 'error');
+    this.toastService.show('Please upgrade to an eligible package to access Simulation and Download.', 'error');
   }
 
   private canOpenSimulation(): boolean {
@@ -521,7 +533,7 @@ this.apiService.generateTempToken().subscribe({
 
     return activePayments.some((payment: any) => {
       const planKey = this.normalizePlanKey(payment?.active_package_key || payment?.plan_name || payment?.course);
-      return planKey === 'tech' || planKey === 'combo';
+      return ['tech', 'combo', 'school', 'schooltech'].includes(planKey || '');
     });
   }
 
@@ -532,6 +544,8 @@ this.apiService.generateTempToken().subscribe({
     if (['tech', 'tech plan', 'tech education plan'].includes(normalized)) return 'tech';
     if (['combo', 'tech & smart', 'tech and smart', 'tech & smart education plan'].includes(normalized)) return 'combo';
     if (['smart', 'smart plan', 'smart education plan'].includes(normalized)) return 'smart';
+    if (['school', 'school plan'].includes(normalized)) return 'school';
+    if (['schooltech', 'school tech', 'school tech plan'].includes(normalized)) return 'schooltech';
 
     return null;
   }
@@ -571,7 +585,7 @@ this.apiService.generateTempToken().subscribe({
     }
 
     if (this.id === '10') {
-      window.open('https://circuit.theteachly.com/tutorials', '_blank');
+      window.open(`${environment.urls.circuit}/tutorials`, '_blank');
       return;
     }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../api/api-endpoints';
 import { AuthStorageService } from './auth-storage.service';
@@ -10,8 +10,7 @@ import { AuthStorageService } from './auth-storage.service';
 })
 export class ApiService {
 
-  //private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
-    private readonly baseUrl = 'http://127.0.0.1:8000';
+  private readonly baseUrl = environment.urls.api;
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
   constructor(
@@ -33,7 +32,7 @@ export class ApiService {
   private request<T>(source: Observable<T>, logoutOnAuthError = true): Observable<T> {
     return source.pipe(
       catchError((error: HttpErrorResponse) => {
-        if (logoutOnAuthError && this.isInvalidTokenError(error)) {
+        if (logoutOnAuthError && this.shouldLogoutForAuthError(error)) {
           this.logoutForExpiredToken();
         }
 
@@ -42,13 +41,9 @@ export class ApiService {
     );
   }
 
-  private isInvalidTokenError(error: HttpErrorResponse): boolean {
+  private shouldLogoutForAuthError(error: HttpErrorResponse): boolean {
     const detail = error.error?.detail;
-    return (
-      error.status === 401 ||
-      detail === 'Invalid or expired token' ||
-      detail === 'Session expired or logged in elsewhere'
-    );
+    return detail === 'Session expired or logged in elsewhere';
   }
 
   private logoutForExpiredToken(): void {
@@ -77,11 +72,12 @@ export class ApiService {
     return this.request(this.http.post(this.url(API_ENDPOINTS.chanelStudent.login), data), false);
   }
 
-  getProfile(): Observable<any> {
+  getProfile(logoutOnAuthError = true): Observable<any> {
     return this.request(
       this.http.get<any>(this.url(API_ENDPOINTS.chanelStudent.profile), {
         headers: this.getAuthHeaders(),
-      })
+      }),
+      logoutOnAuthError
     );
   }
 
@@ -101,11 +97,12 @@ export class ApiService {
     );
   }
 
-  getSchoolPaymentHistory(userId: number): Observable<any> {
+  getSchoolPaymentHistory(userId: number, logoutOnAuthError = true): Observable<any> {
     return this.request(
       this.http.get(this.url(API_ENDPOINTS.schoolPayment.history(userId)), {
         headers: this.getAuthHeaders(),
-      })
+      }),
+      logoutOnAuthError
     );
   }
 
@@ -113,13 +110,20 @@ export class ApiService {
     return this.request(this.http.post(this.url(API_ENDPOINTS.schoolPayment.applyCoupon), data));
   }
 
-  generateTempToken(): Observable<any> {
+  generateTempToken(logoutOnAuthError = true): Observable<any> {
     return this.request(
       this.http.post<any>(
         this.url(API_ENDPOINTS.token.generateTempToken),
         { user_id: '' },
         { headers: this.getAuthHeaders() }
-      )
+      ).pipe(
+        tap((res: any) => {
+          if (res?.temp_token) {
+            this.authStorage.setTempToken(res.temp_token);
+          }
+        })
+      ),
+      logoutOnAuthError
     );
   }
 

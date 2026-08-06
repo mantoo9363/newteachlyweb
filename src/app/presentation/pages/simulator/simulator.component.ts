@@ -6,6 +6,7 @@ import { SimulatorService, Simulator } from '../../../core/services/simulator.se
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RouterModule , Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -72,7 +73,7 @@ export class SimulatorComponent implements OnInit {
   console.log(data.find(x => x.id === 'quantum-measurement'));
 });
     this.meta.updateTag({ name: 'description', content: 'Browse our collection of interactive STEM Virtual Lab. Filter by subject (Physics, Math, Chemistry, Biology) and grade level to find the perfect simulation for your needs.' });
-    this.updateCanonical('https://apifuturexcamp.theteachly.com/uploads/videos/simulator');
+    this.updateCanonical(`${environment.urls.uploads}/videos/simulator`);
     this.simulatorService.getSimulators().subscribe(data => {
 
     this.simulators.set(data);

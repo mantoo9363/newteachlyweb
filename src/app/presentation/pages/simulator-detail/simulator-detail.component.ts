@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-simulator-detail',
@@ -38,7 +39,7 @@ export class SimulatorDetailComponent implements OnInit {
         this.updateSimulatorUrl();
         this.titleService.setTitle(`Teachly | ${sim.name} - Interactive Simulation`);
         this.metaService.updateTag({ name: 'description', content: `Explore the ${sim.name} simulation. Learn STEM concepts through interactive experimentation and visual feedback.` });
-        this.updateCanonical(`https://theteachly.com/view-simulator/${sim.id}`);
+        this.updateCanonical(`${environment.urls.site}/view-simulator/${sim.id}`);
       }
     });
   }

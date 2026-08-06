@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Meta, Title, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cognitive-skill-profile',
@@ -34,7 +35,7 @@ export class CognitiveSkillProfileComponent implements OnInit {
 
     this.meta.updateTag({ property: 'og:title', content: 'Cognitive Skill Profile | Advanced Student Assessment' });
     this.meta.updateTag({ property: 'og:description', content: 'Transforming learning behavior into measurable cognitive data for real-world success.' });
-    this.meta.updateTag({ property: 'og:image', content: 'https://theteachly.com/image/WhatsApp%20Image%202026-04-30%20at%205.19.46%20PM.jpeg' });
+    this.meta.updateTag({ property: 'og:image', content: `${environment.urls.site}/image/WhatsApp%20Image%202026-04-30%20at%205.19.46%20PM.jpeg` });
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ name: 'robots', content: 'index, follow' });
 
@@ -52,7 +53,7 @@ export class CognitiveSkillProfileComponent implements OnInit {
         "name": "Teachly",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://theteachly.com/image/TEACHLY%20LOGO%20Circle.png"
+          "url": `${environment.urls.site}/image/TEACHLY%20LOGO%20Circle.png`
         }
       },
       "mainEntity": {

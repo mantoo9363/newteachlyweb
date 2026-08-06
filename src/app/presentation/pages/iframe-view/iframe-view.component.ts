@@ -4,7 +4,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
-import { ApiService } from '../../../core/services/api-service';
 import { AuthStorageService } from '../../../core/services/auth-storage.service';
 import { environment } from '../../../../environments/environment';
 
@@ -25,7 +24,6 @@ export class IframeViewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private sanitizer: DomSanitizer,
-    private apiService: ApiService,
     private authStorage: AuthStorageService
   ) {}
 
@@ -57,27 +55,15 @@ export class IframeViewComponent implements OnInit {
       return;
     }
 
-    if (!this.authStorage.getToken()) {
+    const accessToken = this.authStorage.getToken();
+    if (!accessToken) {
       this.setExternalUrl(environment.studentPanel.loginUrl);
       return;
     }
 
-    this.apiService.generateTempToken().subscribe({
-      next: (res: any) => {
-        const token = res?.temp_token;
-        if (!token) {
-          this.showError('Unable to start student session. Please try again.');
-          return;
-        }
-
-        const ssoUrl = `${environment.studentPanel.ssoUrl}?token=${encodeURIComponent(token)}`;
-        this.setExternalUrl(ssoUrl);
-      },
-      error: (error) => {
-        console.error('Failed to create iframe SSO token:', error);
-        this.showError('Unable to start student session. Please try again.');
-      },
-    });
+    const ssoUrl = this.buildStudentPanelSsoUrl(accessToken);
+    this.authStorage.markStudentPanelSso();
+    this.setExternalUrl(ssoUrl);
   }
 
   private safeDecodeUrl(url: string): string {
@@ -89,7 +75,29 @@ export class IframeViewComponent implements OnInit {
   }
 
   private isStudentPanelUrl(url: string): boolean {
-    return url === environment.studentPanel.loginUrl || url.startsWith(`${environment.studentPanel.ssoUrl}?`);
+    const studentPanelUrls = [
+      environment.studentPanel.loginUrl,
+      environment.studentPanel.ssoUrl,
+      `${environment.urls.studentPanel}/auth/login`,
+      `${environment.urls.studentPanel}/auth/sso`,
+      `${environment.urls.productionStudentPanel}/auth/login`,
+      `${environment.urls.productionStudentPanel}/auth/sso`,
+    ];
+
+    return studentPanelUrls.some((studentPanelUrl) => {
+      const baseUrl = studentPanelUrl.split('?')[0];
+      return url === baseUrl || url.startsWith(`${baseUrl}?`);
+    });
+  }
+
+  private buildStudentPanelSsoUrl(token: string): string {
+    const dashboardUrl = environment.studentPanel.loginUrl.replace(/\/auth\/login$/, '/dashboard');
+    const params = new URLSearchParams({
+      token,
+      redirect: dashboardUrl,
+    });
+
+    return `${environment.studentPanel.ssoUrl}?${params.toString()}`;
   }
 
   private setExternalUrl(url: string): void {

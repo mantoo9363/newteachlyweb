@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Simulator {
   id: string;
@@ -1518,19 +1519,42 @@ export class SimulatorService {
 // 
   ];
 
+  private configuredMediaUrl(url: string | undefined): string | undefined {
+    return url?.replace('https://apifuturexcamp.theteachly.com/uploads', environment.urls.uploads);
+  }
+
+  private withConfiguredMediaUrls(simulator: Simulator): Simulator {
+    const videoUrls = simulator.videoUrls
+      ? Object.fromEntries(
+          Object.entries(simulator.videoUrls).map(([key, url]) => [key, this.configuredMediaUrl(url)])
+        ) as Simulator['videoUrls']
+      : undefined;
+
+    return {
+      ...simulator,
+      thumbnail: this.configuredMediaUrl(simulator.thumbnail) || simulator.thumbnail,
+      videoUrl: this.configuredMediaUrl(simulator.videoUrl),
+      ...(videoUrls ? { videoUrls } : {}),
+    };
+  }
+
   getSimulators(): Observable<Simulator[]> {
-    return of(this.simulators);
+    return of(this.simulators.map((simulator) => this.withConfiguredMediaUrls(simulator)));
   }
 
   getSimulatorById(id: string): Observable<Simulator | undefined> {
-    return of(this.simulators.find(s => s.id === id));
+    const simulator = this.simulators.find(s => s.id === id);
+    return of(simulator ? this.withConfiguredMediaUrls(simulator) : undefined);
   }
 
   /**
    * Returns all simulators available for a given class (e.g. '1'...'12', 'University').
    */
   getSimulatorsByClass(className: string): Observable<Simulator[]> {
-    return of(this.simulators.filter(s => s.classes.includes(className)));
+    return of(this.simulators
+      .filter(s => s.classes.includes(className))
+      .map((simulator) => this.withConfiguredMediaUrls(simulator))
+    );
   }
 
   /**

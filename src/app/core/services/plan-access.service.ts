@@ -41,6 +41,7 @@ export class PlanAccessService {
   hasPlanGroupAccess(group: PlanGroup): boolean {
     if (!this.isLoggedIn() || !this.hasPurchasedPackage()) return false;
     if (this.authStorage.hasAllAccessPlan()) return true;
+    if (group === 'tech' && this.authStorage.hasTechAccessPlan()) return true;
     const activePlanKeys = this.authStorage.getActivePackageKeys();
     return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }
@@ -52,7 +53,7 @@ export class PlanAccessService {
   // Reads the student's class/grade off their profile (confirmed field: class_name, e.g. "Class 5").
   getUserClassLevel(): Observable<string | null> {
     if (!this.classLevel$) {
-      this.classLevel$ = this.apiService.getProfile().pipe(
+      this.classLevel$ = this.apiService.getProfile(false).pipe(
         map(res => this.normalizeClassLevel(res?.class_name ?? null)),
         catchError(() => of(null)),
         shareReplay(1)

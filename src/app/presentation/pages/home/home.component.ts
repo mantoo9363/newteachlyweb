@@ -8,6 +8,7 @@ import { HeroComponent } from '../../sections/hero/hero.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { CoursesComponent } from "../../sections/courses/courses.component";
 import { PricingComponent } from '../../sections/pricing/pricing.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -41,7 +42,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       content: 'Teachly is a comprehensive STEM learning platform providing interactive simulations for students from elementary to university levels. Explore Physics, Chemistry, and more.'
     });
 
-    this.updateCanonical('https://theteachly.com/');
+    this.updateCanonical(`${environment.urls.site}/`);
     this.hideTawkChat();
   }
 

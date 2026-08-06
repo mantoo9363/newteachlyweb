@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, forkJoin, map, shareReplay, switchMap } from 'rxjs';
 
 import { ApiService } from './api-service';
+import { environment } from '../../../environments/environment';
 
 export interface Tutorial {
   id: string;
@@ -64,7 +65,7 @@ function normalizeCategory(value: string): string {
 })
 export class TutorialService {
 
-  private readonly baseUrl = 'https://cadapi.theteachly.com';
+  private readonly baseUrl = environment.urls.cadApi;
   //private readonly baseUrl = 'http://localhost:4010'; // for local dev only
 
   // cadapi.theteachly.com belongs to the same "circuit" service family as circuit.theteachly.com
@@ -77,7 +78,7 @@ export class TutorialService {
 
   private getCadToken(): Observable<string> {
     if (!this.tempToken$) {
-      this.tempToken$ = this.apiService.generateTempToken().pipe(
+      this.tempToken$ = this.apiService.generateTempToken(false).pipe(
         map(res => res.temp_token as string),
         shareReplay(1)
       );
@@ -87,7 +88,7 @@ export class TutorialService {
 
   private getEncryptedEmailId(): Observable<string> {
     if (!this.encryptedEmailId$) {
-      this.encryptedEmailId$ = this.apiService.getProfile().pipe(
+      this.encryptedEmailId$ = this.apiService.getProfile(false).pipe(
         map(profile => this.encryptEmailId(profile?.email || '')),
         shareReplay(1)
       );

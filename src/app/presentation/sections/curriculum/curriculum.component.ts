@@ -244,7 +244,7 @@ export class CurriculumComponent implements OnInit {
       this.router.navigate(['/iframe-view'], {
         queryParams: {
           url: encodeURIComponent(
-            'https://zenai.theteachly.com/school-courses/orientation-courses',
+            `${environment.urls.zenAi}/school-courses/orientation-courses`,
           ),
         },
       });
@@ -252,14 +252,14 @@ export class CurriculumComponent implements OnInit {
     }
 
     if (topic.id === 7) {
-      window.open('https://student.theteachly.com/auth/login', '_blank');
+      window.open(environment.studentPanel.loginUrl, '_blank');
       return;
     }
 
     if ([4, 6, 8, 9].includes(topic.id)) {
       this.router.navigate(['/iframe-view'], {
         queryParams: {
-          url: encodeURIComponent('https://zenai.theteachly.com/'),
+          url: encodeURIComponent(`${environment.urls.zenAi}/`),
         },
       });
       return;

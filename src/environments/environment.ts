@@ -1,13 +1,27 @@
+const urls = {
+  site: 'https://theteachly.com',
+  api: 'https://apifuturexcamp.theteachly.com',
+  uploads: 'https://apifuturexcamp.theteachly.com/uploads',
+  zenAi: 'https://zenai.theteachly.com',
+  cadApi: 'https://cadapi.theteachly.com',
+  aiTraining: 'https://aitraining.theteachly.com',
+  circuit: 'https://circuit.theteachly.com',
+  aiLab: 'https://aiab.theteachly.com',
+  studentPanel: 'https://student.theteachly.com',
+  productionStudentPanel: 'https://student.theteachly.com',
+};
+
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:8000',
+  apiUrl: urls.api,
+  urls,
   simulatorUrls: {
-    circuit: 'https://circuit.theteachly.com/',
-    ai: 'https://aiab.theteachly.com/',
-    droneDownload: 'https://apifuturexcamp.theteachly.com/uploads/Teachly%20Drone%20Simulator.zip',
+    circuit: `${urls.circuit}/`,
+    ai: `${urls.aiLab}/`,
+    droneDownload: `${urls.uploads}/Teachly%20Drone%20Simulator.zip`,
   },
   studentPanel: {
-    loginUrl: 'https://student.theteachly.com/auth/login',
-    ssoUrl: 'https://student.theteachly.com/auth/sso',
+    loginUrl: `${urls.studentPanel}/auth/login`,
+    ssoUrl: `${urls.studentPanel}/auth/sso`,
   },
 };

@@ -61,14 +61,6 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
     : null;
 }
 
-function signupPasswordsMatchValidator(group: AbstractControl): ValidationErrors | null {
-  const password = group.get('password')?.value;
-  const confirmPassword = group.get('confirmpassword')?.value;
-  return password && confirmPassword && password !== confirmPassword
-    ? { passwordMismatch: true }
-    : null;
-}
-
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -124,6 +116,7 @@ export class HeaderComponent implements OnInit {
   isChangePasswordOpen = false;
   isProfileLoading = false;
   profileData: any = null;
+  profileForm!: FormGroup;
   changePasswordForm!: FormGroup;
   showCurrentPassword = false;
   showNewPassword = false;
@@ -230,6 +223,7 @@ export class HeaderComponent implements OnInit {
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
     if (!this.hasPurchasedPackage()) return false;
     if (this.authStorage.hasAllAccessPlan()) return true;
+    if (group === 'tech' && this.authStorage.hasTechAccessPlan()) return true;
     const activePlanKeys = this.authStorage.getActivePackageKeys();
     return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
   }
@@ -253,6 +247,46 @@ export class HeaderComponent implements OnInit {
   // stay clickable/navigable while still signalling that a plan is required.
   isMenuItemLocked(item: any): boolean {
     return !!item?.requiresPlan && (!this.isLoggedIn || !this.hasPlanGroupAccess(item.requiresPlan));
+  }
+
+  private zenAiUrl(path = ''): string {
+    return `${environment.urls.zenAi}${path}`;
+  }
+
+  private iframeUrl(url: string): string {
+    return `/iframe-view?url=${url}`;
+  }
+
+  private iframeZenAiUrl(path = ''): string {
+    return this.iframeUrl(this.zenAiUrl(path));
+  }
+
+  private studentPanelUrl(path = ''): string {
+    return `${environment.urls.studentPanel}${path}`;
+  }
+
+  private configuredUrl(url: string): string {
+    return url
+      .replace('https://zenai.theteachly.com', environment.urls.zenAi)
+      .replace('https://student.theteachly.com', environment.urls.studentPanel)
+      .replace('https://student.theteachly.com', environment.urls.studentPanel);
+  }
+
+  private withConfiguredUrls<T>(value: T): T {
+    if (Array.isArray(value)) {
+      return value.map((item) => this.withConfiguredUrls(item)) as T;
+    }
+
+    if (value && typeof value === 'object') {
+      return Object.entries(value).reduce((result, [key, entry]) => ({
+        ...result,
+        [key]: key === 'url' && typeof entry === 'string'
+          ? this.configuredUrl(entry)
+          : this.withConfiguredUrls(entry),
+      }), {} as T);
+    }
+
+    return value;
   }
 
   /**
@@ -279,6 +313,7 @@ export class HeaderComponent implements OnInit {
    * - If logged in but plan not active → still locked (plan required)
    * - If logged in and plan active but board doesn't match → locked
    * - If logged in, plan active, and board matches → UNLOCKED
+   * Board curriculum stays board-specific even for broad school packages.
    */
   isBoardSubItemLocked(item: any): boolean {
     if (!item?.boardKey) {
@@ -421,11 +456,11 @@ export class HeaderComponent implements OnInit {
     this.notifyPackageStatusChanged(res);
   }
 
-  private syncPackageStatus(): void {
+  private syncPackageStatus(logoutOnAuthError = true): void {
     const userId = Number(this.authStorage.getItem('user_id'));
     if (!this.authStorage.getToken() || !userId) return;
 
-    this.service.getSchoolPaymentHistory(userId).subscribe({
+    this.service.getSchoolPaymentHistory(userId, logoutOnAuthError).subscribe({
       next: (payments: any) => {
         const activePayments = Array.isArray(payments)
           ? payments.filter((payment: any) => payment?.is_active && !this.isPackageExpired(payment?.expires_at))
@@ -485,13 +520,8 @@ export class HeaderComponent implements OnInit {
 
         this.notifyPackageStatusChanged(activePayment);
       },
-      error: () => {
-        this.authStorage.removeItem('has_active_package');
-        this.authStorage.removeItem('active_package_key');
-        this.authStorage.removeItem('active_package_keys');
-        this.authStorage.removeItem('active_plan_expiries');
-        this.authStorage.removeItem('package_expires_at');
-        this.authStorage.removeItem('active_course');
+      error: (err) => {
+        console.error('Failed to sync package status', err);
         this.notifyPackageStatusChanged();
       }
     });
@@ -499,9 +529,13 @@ export class HeaderComponent implements OnInit {
 
   private loadLoggedInProfile(): void {
     if (!this.authStorage.getToken()) return;
+    if (this.authStorage.wasStudentPanelSsoRecent()) {
+      this.notifyPackageStatusChanged();
+      return;
+    }
 
     console.log('Calling profile API on home load');
-    this.service.getProfile().subscribe({
+    this.service.getProfile(false).subscribe({
       next: (profile: any) => {
         this.profileData = profile;
 
@@ -529,7 +563,7 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load profile', err);
-        this.syncPackageStatus();
+        this.syncPackageStatus(false);
       }
     });
   }
@@ -591,7 +625,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  navigationMenu: any[] = [
+  navigationMenu: any[] = this.withConfiguredUrls([
     {
       title: 'Home',
       url: '/',
@@ -608,17 +642,17 @@ export class HeaderComponent implements OnInit {
           type: 'nested-dropdown',
           requiresPlan: 'smart',
           items: [
-            { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart', boardKey: 'cbse' },
-            { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart', boardKey: 'icse' },
-            { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart', boardKey: 'isc' },
-            { title: 'UP Board', url: '/iframe-view?url=https://http://localhost:59165/auth/login', requiresPlan: 'smart', boardKey: 'upboard' }
+            { title: 'CBSE', url: this.iframeZenAiUrl('/board/cbse'), requiresPlan: 'smart', boardKey: 'cbse' },
+            { title: 'ICSE', url: this.iframeZenAiUrl('/board/icse'), requiresPlan: 'smart', boardKey: 'icse' },
+            { title: 'ISC', url: this.iframeZenAiUrl('/board/isc'), requiresPlan: 'smart', boardKey: 'isc' },
+            { title: 'UP Board', url: this.iframeUrl(this.studentPanelUrl('/auth/login')), requiresPlan: 'smart', boardKey: 'upboard' }
           ]
         },
         { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },
 
-        // { title: 'Computer Course', url: 'https://zenai.theteachly.com/school-courses/computer-course-school' },
-        { title: 'Essential Studies', url: '/iframe-view?url=https://zenai.theteachly.com/school-courses/aptitude60', requiresPlan: 'smart' },
-        { title: 'Project Work', url: '/iframe-view?url=https://zenai.theteachly.com/project-work/school-level', requiresPlan: 'smart' },
+        // { title: 'Computer Course', url: this.zenAiUrl('/school-courses/computer-course-school') },
+        { title: 'Essential Studies', url: this.iframeZenAiUrl('/school-courses/aptitude60'), requiresPlan: 'smart' },
+        { title: 'Project Work', url: this.iframeZenAiUrl('/project-work/school-level'), requiresPlan: 'smart' },
         { title: 'Stem Simulators', url: '/simulator', requiresPlan: 'smart' }
       ]
     },
@@ -637,11 +671,11 @@ export class HeaderComponent implements OnInit {
       title: 'Languages',
       type: 'dropdown',
       items: [
-        { title: 'ARABIC', url: '/iframe-view?url=https://zenai.theteachly.com/course/arabic-language', requiresPlan: 'smart' },
-        { title: 'GERMAN', url: '/iframe-view?url=https://zenai.theteachly.com/course/german-language', requiresPlan: 'smart' },
-        { title: 'SPANISH', url: '/iframe-view?url=https://zenai.theteachly.com/course/spanish-language', requiresPlan: 'smart' },
-        { title: 'FRENCH', url: '/iframe-view?url=https://zenai.theteachly.com/course/french-language', requiresPlan: 'smart' },
-        { title: 'SANSKRIT', url: '/iframe-view?url=https://zenai.theteachly.com/course/sanskrit', requiresPlan: 'smart' }
+        { title: 'ARABIC', url: this.iframeZenAiUrl('/course/arabic-language'), requiresPlan: 'smart' },
+        { title: 'GERMAN', url: this.iframeZenAiUrl('/course/german-language'), requiresPlan: 'smart' },
+        { title: 'SPANISH', url: this.iframeZenAiUrl('/course/spanish-language'), requiresPlan: 'smart' },
+        { title: 'FRENCH', url: this.iframeZenAiUrl('/course/french-language'), requiresPlan: 'smart' },
+        { title: 'SANSKRIT', url: this.iframeZenAiUrl('/course/sanskrit'), requiresPlan: 'smart' }
       ]
     },
     {
@@ -660,17 +694,17 @@ export class HeaderComponent implements OnInit {
       title: 'Competitive Exams',
       type: 'dropdown',
       items: [
-        { title: 'IELTS', url: '/iframe-view?url=https://zenai.theteachly.com/course/international-english-language-testing-system-ielts', requiresPlan: 'smart' },
+        { title: 'IELTS', url: this.iframeZenAiUrl('/course/international-english-language-testing-system-ielts'), requiresPlan: 'smart' },
 
-        { title: 'Engineering', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/engineering', requiresPlan: 'smart' },
-        { title: 'Medical', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/medical', requiresPlan: 'smart' },
-        { title: 'Bank Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/competitive-bank-exams', requiresPlan: 'smart' },
-        { title: 'Foundation', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/foundation', requiresPlan: 'smart' },
-        { title: 'SSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/staff-selection-commission-ssc', requiresPlan: 'smart' },
-        { title: 'Defence', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/defence', requiresPlan: 'smart' },
-        { title: 'UPSSSC', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/upsssc', requiresPlan: 'smart' },
-        { title: 'Railways', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/railways', requiresPlan: 'smart' },
-        { title: 'State Level Exams', url: '/iframe-view?url=https://zenai.theteachly.com/competitive-curriculum/state-level-exams', requiresPlan: 'smart' }
+        { title: 'Engineering', url: this.iframeZenAiUrl('/competitive-curriculum/engineering'), requiresPlan: 'smart' },
+        { title: 'Medical', url: this.iframeZenAiUrl('/competitive-curriculum/medical'), requiresPlan: 'smart' },
+        { title: 'Bank Exams', url: this.iframeZenAiUrl('/competitive-curriculum/competitive-bank-exams'), requiresPlan: 'smart' },
+        { title: 'Foundation', url: this.iframeZenAiUrl('/competitive-curriculum/foundation'), requiresPlan: 'smart' },
+        { title: 'SSC', url: this.iframeZenAiUrl('/competitive-curriculum/staff-selection-commission-ssc'), requiresPlan: 'smart' },
+        { title: 'Defence', url: this.iframeZenAiUrl('/competitive-curriculum/defence'), requiresPlan: 'smart' },
+        { title: 'UPSSSC', url: this.iframeZenAiUrl('/competitive-curriculum/upsssc'), requiresPlan: 'smart' },
+        { title: 'Railways', url: this.iframeZenAiUrl('/competitive-curriculum/railways'), requiresPlan: 'smart' },
+        { title: 'State Level Exams', url: this.iframeZenAiUrl('/competitive-curriculum/state-level-exams'), requiresPlan: 'smart' }
       ]
     },
 
@@ -681,7 +715,7 @@ export class HeaderComponent implements OnInit {
     //   url: '/about-us',
     //   type: 'link'
     // },
-  ];
+  ]);
 
   openMessage(message: string) {
     this.message = message;
@@ -692,7 +726,7 @@ export class HeaderComponent implements OnInit {
     this.showMessageModal = false;
   }
 
-  courseSections: any[] = [
+  courseSections: any[] = this.withConfiguredUrls([
     {
       sectionTitle: 'Board Curriculum',
       sectionKey: 'Class',
@@ -948,7 +982,7 @@ export class HeaderComponent implements OnInit {
         { name: 'Biology Simulator', url: '/simulator' },
       ],
     },
-  ];
+  ]);
 
   tickerItems: string[] = [];
 
@@ -993,21 +1027,41 @@ export class HeaderComponent implements OnInit {
 
   getMenuHref(url: string): string | null {
     if (this.isStudentPanelLoginUrl(url)) {
-      return this.buildStudentPanelSsoUrl();
+      return this.studentPanelLoginUrl;
     }
 
     return url;
   }
 
   private isStudentPanelLoginUrl(url: string): boolean {
-    return url === this.studentPanelLoginUrl;
+    const studentPanelLoginUrls = [
+      this.studentPanelLoginUrl,
+      `${environment.urls.studentPanel}/auth/login`,
+      `${environment.urls.productionStudentPanel}/auth/login`,
+    ];
+
+    return studentPanelLoginUrls.includes(url);
   }
 
-  private buildStudentPanelSsoUrl(): string {
-    const token = this.authStorage.getToken();
-    if (!token) return this.studentPanelLoginUrl;
+  private buildStudentPanelSsoUrl(accessToken: string): string {
+    const dashboardUrl = this.studentPanelLoginUrl.replace(/\/auth\/login$/, '/dashboard');
+    const params = new URLSearchParams({
+      token: accessToken,
+      redirect: dashboardUrl,
+    });
 
-    return `${this.studentPanelSsoUrl}?token=${encodeURIComponent(token)}`;
+    return `${this.studentPanelSsoUrl}?${params.toString()}`;
+  }
+
+  private openStudentPanelWithAccessToken(): void {
+    const accessToken = this.authStorage.getToken();
+    if (!accessToken) {
+      this.openModal('login');
+      return;
+    }
+
+    this.authStorage.markStudentPanelSso();
+    window.open(this.buildStudentPanelSsoUrl(accessToken), '_blank');
   }
 
   constructor(
@@ -1088,7 +1142,7 @@ export class HeaderComponent implements OnInit {
   ========================= */
   setClasses(boardId: number) {
 
-    const previousClassId = this.signupForm.get('class')?.value;
+    this.signupForm.patchValue({ class: '' });
 
     switch (Number(boardId)) {
 
@@ -1138,13 +1192,6 @@ export class HeaderComponent implements OnInit {
           { id: 12, name: '12th' }
         ];
     }
-
-    // Only clear the class selection if it's no longer valid for the newly
-    // selected board's class list — don't wipe a still-valid selection.
-    const stillValid = this.classList.some((item) => String(item.id) === String(previousClassId));
-    if (!stillValid) {
-      this.signupForm.patchValue({ class: null });
-    }
   }
 
   /* =========================
@@ -1179,28 +1226,29 @@ export class HeaderComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
     });
 
-    this.signupForm = this.fb.group(
-      {
-        name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+    this.signupForm = this.fb.group({
+      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
 
-        mobile: [
-          '',
-          [Validators.required, Validators.pattern(/^[6-9][0-9]{9}$/)],
-        ],
+      mobile: [
+        '',
+        [Validators.required, Validators.pattern(/^[6-9][0-9]{9}$/)],
+      ],
 
-        Email: ['', [Validators.required, Validators.email]],
+      Email: ['', [Validators.required, Validators.email]],
 
-        password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
 
-        confirmpassword: ['', Validators.required],
+      confirmpassword: ['', Validators.required],
 
-        board: [null, Validators.required],
+      board: ['', Validators.required],
 
-        class: [null, Validators.required],
+      class: ['', Validators.required],
 
-      },
-      { validators: signupPasswordsMatchValidator }
-    );
+    });
+
+    this.profileForm = this.fb.group({
+      name: ['', Validators.required],
+    });
 
     this.changePasswordForm = this.fb.group(
       {
@@ -1244,15 +1292,15 @@ export class HeaderComponent implements OnInit {
         name: draft.name || '',
         mobile: draft.mobile || '',
         Email: draft.Email || '',
-        board: draft.board || null,
-        class: draft.class || null,
+        board: draft.board || '',
+        class: draft.class || '',
         password: '',
         confirmpassword: '',
       }, { emitEvent: false });
 
       if (draft.board) {
         this.setClasses(Number(draft.board));
-        this.signupForm.patchValue({ class: draft.class || null }, { emitEvent: false });
+        this.signupForm.patchValue({ class: draft.class || '' }, { emitEvent: false });
       }
     } catch {
       localStorage.removeItem(this.signupDraftStorageKey);
@@ -1262,13 +1310,13 @@ export class HeaderComponent implements OnInit {
   }
 
   private resetSignupFormWithDraft(tab: 'login' | 'signup'): void {
-    if (tab !== 'signup') return;
-
     this.isRestoringSignupDraft = true;
     this.signupForm.reset();
     this.isRestoringSignupDraft = false;
 
-    this.restoreSignupDraft();
+    if (tab === 'signup') {
+      this.restoreSignupDraft();
+    }
   }
   flattenTickerItems(): void {
     const items: string[] = [];
@@ -1307,9 +1355,9 @@ export class HeaderComponent implements OnInit {
         return;
       }
 
-      this.paymentSummary.userid = Number(this.authStorage.getItem('user_id'));
-      this.paymentSummary.schoolId = this.authStorage.getItem('student_id');
-      this.paymentSummary.schoolName = this.authStorage.getItem('school_name');
+        this.paymentSummary.userid= Number(this.authStorage.getItem('user_id')),
+      this.paymentSummary.schoolId= this.authStorage.getItem('student_id'),
+      this.paymentSummary.schoolName= this.authStorage.getItem('school_name'),
       this.showPaymentPopup = true;
       return;
     }
@@ -1389,6 +1437,7 @@ export class HeaderComponent implements OnInit {
 
   openProfileModal(): void {
     this.closeUserMenu();
+    this.profileForm.reset({ name: this.userName });
     this.profileData = null;
     this.isProfileOpen = true;
     this.isProfileLoading = true;
@@ -1396,6 +1445,9 @@ export class HeaderComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res: any) => {
         this.profileData = res;
+        this.profileForm.patchValue({
+          name: res?.name || res?.first_name || this.userName,
+        });
         this.isProfileLoading = false;
       },
       error: (err) => {
@@ -1407,6 +1459,17 @@ export class HeaderComponent implements OnInit {
 
   closeProfileModal(): void {
     this.isProfileOpen = false;
+  }
+
+  submitProfile(): void {
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    this.authStorage.setItem('school_name', this.profileForm.value.name);
+    this.closeProfileModal();
+    this.openMessage('Profile updated successfully.');
   }
 
   openChangePasswordModal(): void {
@@ -1591,14 +1654,24 @@ export class HeaderComponent implements OnInit {
 
   }
 
+  //  SIGNUP FUNCTION
+  onSignup() {
+    if (this.signupForm.valid) {
+      // console.log('Signup Data:', this.signupForm.value);
+
+      //  yaha API call kar sakte ho
+    } else {
+      this.signupForm.markAllAsTouched();
+    }
+  }
   submitForm() {
+    if (this.isSignupLoading) return;
+
     if (this.signupForm.invalid) {
       this.signupForm.markAllAsTouched();
       this.toastService.show('Please fill all required fields correctly.', 'error');
       return;
     }
-
-    this.isSignupLoading = true;
 
     const form = this.signupForm.value;
     const selectedBoard = this.boardList.find((board) => String(board.id) === String(form.board));
@@ -1616,7 +1689,7 @@ export class HeaderComponent implements OnInit {
 
       institution_name: form.name,
 
-      class_code: this.isSchoolSignup ? null : String(form.class),
+      class_code: this.isSchoolSignup ? null : form.class,
 
       email: form.Email,
       password: form.password,
@@ -1624,6 +1697,7 @@ export class HeaderComponent implements OnInit {
       user_type: this.isSchoolSignup ? 'SCH' : 'STUDENT',
     };
 
+    this.isSignupLoading = true;
     this.service.chaneStuRegister(data).subscribe({
       next: (res: any) => {
         this.isSignupLoading = false;
@@ -1664,8 +1738,8 @@ export class HeaderComponent implements OnInit {
         this.isSchoolSignup = false;
 
         this.signupForm.patchValue({
-          board: null,
-          class: null,
+          board: '',
+          class: '',
         });
 
         // Signup popup close
@@ -1968,7 +2042,7 @@ export class HeaderComponent implements OnInit {
       event.preventDefault();
       event.stopPropagation();
       this.closeMobileMenu();
-      window.open(this.buildStudentPanelSsoUrl(), '_blank');
+      this.openStudentPanelWithAccessToken();
     }
   }
 }
