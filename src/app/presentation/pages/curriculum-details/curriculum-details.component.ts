@@ -579,19 +579,54 @@ this.apiService.generateTempToken(false).subscribe({
 
   goToTutorial(): void {
     const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+    const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
+
     if (!token) {
       this.headerComponent?.openModal('login');
       return;
     }
 
+    if (userId && !this.authStorage.wasStudentPanelSsoRecent()) {
+      this.apiService.getSchoolPaymentHistory(userId, false).subscribe({
+        next: (payments) => {
+          if (!this.hasActiveTechPayment(payments)) {
+            this.blockTutorialAccess();
+            return;
+          }
+          this.openTutorialAfterAccessCheck();
+        },
+        error: (err) => {
+          console.error(err);
+          if (!this.canOpenSimulation()) {
+            this.blockTutorialAccess();
+            return;
+          }
+          this.openTutorialAfterAccessCheck();
+        }
+      });
+      return;
+    }
+
+    if (!this.canOpenSimulation()) {
+      this.blockTutorialAccess();
+      return;
+    }
+
+    this.openTutorialAfterAccessCheck();
+  }
+
+  private openTutorialAfterAccessCheck(): void {
     if (this.id === '10') {
       window.open(`${environment.urls.circuit}/tutorials`, '_blank');
       return;
     }
 
-    // The tutorial page itself resolves the category to an actual lesson id
-    // (and handles the plan gating) - this button just has to navigate.
+    // The tutorial page itself resolves the category to an actual lesson id.
     this.router.navigate(['/tutorial/category', this.moduleCategory()]);
+  }
+
+  private blockTutorialAccess(): void {
+    this.toastService.show('Please upgrade to the Tech Education Plan to access Tutorials.', 'error');
   }
 
   switchModule(moduleId: string): void {
