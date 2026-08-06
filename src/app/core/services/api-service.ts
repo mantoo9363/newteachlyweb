@@ -10,8 +10,8 @@ import { AuthStorageService } from './auth-storage.service';
 })
 export class ApiService {
 
-  private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
-  //  private readonly baseUrl = 'http://127.0.0.1:8000';
+  //private readonly baseUrl = 'https://apifuturexcamp.theteachly.com';
+    private readonly baseUrl = 'http://127.0.0.1:8000';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
 
   constructor(
