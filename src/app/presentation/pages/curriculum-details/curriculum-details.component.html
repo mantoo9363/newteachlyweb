@@ -107,6 +107,7 @@
               <span>About This Module</span>
             </div>
             <p class="mythos-description">{{ moduleData.description }}</p>
+
           </div>
 
           <!-- Stats Row -->
@@ -150,6 +151,21 @@
             <span class="windows-only-badge">
               <i class="fab fa-windows"></i> Windows Only
             </span>
+            <button (click)="goToTutorial()" class="tutorials-btn">
+              <span class="tutorials-btn-icon"><i class="fas fa-graduation-cap"></i></span>
+              <span>Tutorials</span>
+              <i class="fas fa-arrow-right tutorials-btn-arrow"></i>
+            </button>
+          </div>
+          }
+
+          @if (id === "10") {
+          <div class="sysreq-row">
+            <button (click)="goToTutorial()" class="tutorials-btn full-width">
+              <span class="tutorials-btn-icon"><i class="fas fa-graduation-cap"></i></span>
+              <span>Tutorials</span>
+              <i class="fas fa-arrow-right tutorials-btn-arrow"></i>
+            </button>
           </div>
           }
         </div>
@@ -289,7 +305,7 @@
           </p>
           <div class="card-action">
             <span class="author">By {{ moduleData.rightCard?.author }}</span>
-            @if(id!="13"){
+            @if(id!="13" && id!=="12" && id!=="10"){
             <div class="card-buttons">
               <button class="read-more-button" (click)="goToTutorial(); $event.stopPropagation()">
                 Read More
