@@ -611,7 +611,7 @@ export class HeaderComponent implements OnInit {
             { title: 'CBSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/cbse', requiresPlan: 'smart', boardKey: 'cbse' },
             { title: 'ICSE', url: '/iframe-view?url=https://zenai.theteachly.com/board/icse', requiresPlan: 'smart', boardKey: 'icse' },
             { title: 'ISC', url: '/iframe-view?url=https://zenai.theteachly.com/board/isc', requiresPlan: 'smart', boardKey: 'isc' },
-            { title: 'UP Board', url: '/iframe-view?url=https://student.theteachly.com/auth/login', requiresPlan: 'smart', boardKey: 'upboard' }
+            { title: 'UP Board', url: '/iframe-view?url=https://http://localhost:59165/auth/login', requiresPlan: 'smart', boardKey: 'upboard' }
           ]
         },
         { title: 'CT/AI', url: '/ctai', requiresPlan: 'smart' },

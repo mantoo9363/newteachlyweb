@@ -65,6 +65,7 @@ function normalizeCategory(value: string): string {
 export class TutorialService {
 
   private readonly baseUrl = 'https://cadapi.theteachly.com';
+  //private readonly baseUrl = 'http://localhost:4010'; // for local dev only
 
   // cadapi.theteachly.com belongs to the same "circuit" service family as circuit.theteachly.com
   // (see curriculum-details.component.ts launchSimulation()) - it doesn't accept the platform's
