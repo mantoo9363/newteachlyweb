@@ -140,6 +140,7 @@ export class HeaderComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private readonly signupDraftStorageKey = 'teachly_signup_draft';
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
+  private readonly aiIframeTokenCookie = 'teachly_ai_token';
   private readonly studentPanelSsoUrl = environment.studentPanel.ssoUrl;
   private readonly studentPanelLoginUrl = environment.studentPanel.loginUrl;
   private isRestoringSignupDraft = false;
@@ -1969,6 +1970,8 @@ export class HeaderComponent implements OnInit {
   private clearAiIframeLoginCookie(): void {
     document.cookie = `${this.aiIframeLoginCookie}=; path=/; max-age=0; SameSite=Lax`;
     document.cookie = `${this.aiIframeLoginCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${this.aiIframeTokenCookie}=; path=/; max-age=0; SameSite=Lax`;
+    document.cookie = `${this.aiIframeTokenCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 
   navigateWithLogin(url: string): void {

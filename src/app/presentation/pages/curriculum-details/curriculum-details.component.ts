@@ -520,10 +520,7 @@ openMessage(message: string) {
 
 const cachedTempToken = this.authStorage.getRecentTempToken();
 if (cachedTempToken) {
-  this.iframeUrl =
-    `${this.moduleData.playUrl}?token=${encodeURIComponent(cachedTempToken)}`;
-  this.showIframe = true;
-  window.scrollTo(0, 0);
+  this.openSimulationWithTempToken(cachedTempToken);
   return;
 }
 
@@ -533,10 +530,7 @@ this.apiService.generateTempToken(false).subscribe({
     const token = res.temp_token;
    // console.log(token);
 
-    this.iframeUrl =
-      `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
-    this.showIframe = true;
-    window.scrollTo(0, 0);
+    this.openSimulationWithTempToken(token);
   },
   error: (err) => {
     console.error(err);
@@ -559,6 +553,14 @@ this.apiService.generateTempToken(false).subscribe({
     //console.log(window.location.href);
 
 }
+
+  private openSimulationWithTempToken(token: string): void {
+    this.iframeUrl =
+      `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
+
+    this.showIframe = true;
+    window.scrollTo(0, 0);
+  }
 
   private blockSimulationAccess(): void {
     this.showIframe = false;
