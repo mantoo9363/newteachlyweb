@@ -12,6 +12,7 @@ export class ApiService {
 
   private readonly baseUrl = environment.urls.api;
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
+  private readonly aiIframeTokenCookie = 'teachly_ai_token';
 
   constructor(
     private http: HttpClient,
@@ -43,7 +44,7 @@ export class ApiService {
 
   private shouldLogoutForAuthError(error: HttpErrorResponse): boolean {
     const detail = error.error?.detail;
-    return detail === 'Session expired or logged in elsewhere';
+    return error.status === 401 || detail === 'Session expired or logged in elsewhere';
   }
 
   private logoutForExpiredToken(): void {
@@ -62,6 +63,8 @@ export class ApiService {
   private clearAiIframeLoginCookie(): void {
     document.cookie = `${this.aiIframeLoginCookie}=; path=/; max-age=0; SameSite=Lax`;
     document.cookie = `${this.aiIframeLoginCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${this.aiIframeTokenCookie}=; path=/; max-age=0; SameSite=Lax`;
+    document.cookie = `${this.aiIframeTokenCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 
   chaneStuRegister(data: any): Observable<any> {
