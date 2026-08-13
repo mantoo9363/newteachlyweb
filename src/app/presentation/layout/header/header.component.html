@@ -322,46 +322,102 @@
         <p>Welcome back!</p>
       </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="signup-form">
-        <div class="input-group">
-          <input type="email" formControlName="email" placeholder="Email">
-        </div>
-        <div class="error" *ngIf="loginForm.get('email')?.touched &&
-            loginForm.get('email')?.errors?.['required']">
-          Email is required.
-        </div>
-        <div class="error" *ngIf="loginForm.get('email')?.touched &&
-            loginForm.get('email')?.errors?.['email']">
-          Please enter a valid email.
-        </div>
+     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="signup-form">
 
-        <div class="input-group password-group">
-          <input [type]="showLoginPassword ? 'text' : 'password'" placeholder="Password"
-            formControlName="password" />
-          <button type="button" class="toggle-password" (click)="toggleLoginPasswordVisibility()"
-            [attr.aria-label]="showLoginPassword ? 'Hide password' : 'Show password'">
-            <i class="fas" [class.fa-eye]="!showLoginPassword" [class.fa-eye-slash]="showLoginPassword"></i>
-          </button>
-        </div>
-        <div class="error" *ngIf="loginForm.get('password')?.touched &&
-            loginForm.get('password')?.errors?.['required']">
-          Password is required.
-        </div>
-        <div class="error" *ngIf="loginErrorMessage">
-          {{ loginErrorMessage }}
-        </div>
+  <div class="input-group">
+    <input
+      type="tel"
+      formControlName="mobile_no"
+      placeholder="Mobile Number"
+      maxlength="10"
+      inputmode="numeric"
+    >
+  </div>
 
-        <div class="error" *ngIf="loginError">{{ loginError }}</div>
+  <div
+    class="error"
+    *ngIf="
+      loginForm.get('mobile_no')?.touched &&
+      loginForm.get('mobile_no')?.errors?.['required']
+    "
+  >
+    Mobile number is required.
+  </div>
 
-        <div class="forgot-password-row">
-          <a class="forgot-password-link" (click)="openForgotPassword()">Forgot password?</a>
-        </div>
+  <div
+    class="error"
+    *ngIf="
+      loginForm.get('mobile_no')?.touched &&
+      loginForm.get('mobile_no')?.errors?.['pattern']
+    "
+  >
+    Please enter a valid 10 digit mobile number.
+  </div>
 
-        <button type="submit" class="submit-btn" [disabled]="isLoginLoading">
-          <span class="btn-spinner" *ngIf="isLoginLoading"></span>
-          {{ isLoginLoading ? 'Logging in...' : 'Login' }}
-        </button>
-      </form>
+  <div class="input-group password-group">
+    <input
+      [type]="showLoginPassword ? 'text' : 'password'"
+      placeholder="Password"
+      formControlName="password"
+    />
+
+    <button
+      type="button"
+      class="toggle-password"
+      (click)="toggleLoginPasswordVisibility()"
+      [attr.aria-label]="
+        showLoginPassword ? 'Hide password' : 'Show password'
+      "
+    >
+      <i
+        class="fas"
+        [class.fa-eye]="!showLoginPassword"
+        [class.fa-eye-slash]="showLoginPassword"
+      ></i>
+    </button>
+  </div>
+
+  <div
+    class="error"
+    *ngIf="
+      loginForm.get('password')?.touched &&
+      loginForm.get('password')?.errors?.['required']
+    "
+  >
+    Password is required.
+  </div>
+
+  <div class="error" *ngIf="loginErrorMessage">
+    {{ loginErrorMessage }}
+  </div>
+
+  <div class="error" *ngIf="loginError">
+    {{ loginError }}
+  </div>
+
+  <div class="forgot-password-row">
+    <a
+      class="forgot-password-link"
+      (click)="openForgotPassword()"
+    >
+      Forgot password?
+    </a>
+  </div>
+
+  <button
+    type="submit"
+    class="submit-btn"
+    [disabled]="isLoginLoading"
+  >
+    <span
+      class="btn-spinner"
+      *ngIf="isLoginLoading"
+    ></span>
+
+    {{ isLoginLoading ? 'Logging in...' : 'Login' }}
+  </button>
+
+</form>
       }
 
       <!-- FORGOT PASSWORD FORM -->

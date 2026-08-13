@@ -1210,10 +1210,13 @@ export class HeaderComponent implements OnInit {
   }
   createForms() {
 
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
+   this.loginForm = this.fb.group({
+  mobile_no: ['', [
+    Validators.required,
+    Validators.pattern(/^[0-9]{10}$/)
+  ]],
+  password: ['', Validators.required]
+});
     this.loginForm.valueChanges.subscribe(() => {
       this.loginErrorMessage = '';
       const passwordControl = this.loginForm.get('password');
@@ -1587,7 +1590,7 @@ export class HeaderComponent implements OnInit {
     }
 
     const data = {
-      email: this.loginForm.value.email,
+      mobile_no: this.loginForm.value.mobile_no,
       password: this.loginForm.value.password
     };
 
@@ -1643,7 +1646,7 @@ export class HeaderComponent implements OnInit {
       error: (err: any) => {
         this.isLoginLoading = false;
         console.log(err);
-        const message = this.getApiErrorMessage(err) || "Invalid email or password.";
+        const message = this.getApiErrorMessage(err) || "Invalid mobile number or password.";
         this.loginErrorMessage = message;
         this.loginForm.get('password')?.setErrors({ invalidCredentials: true });
         this.loginForm.get('password')?.markAsTouched();
@@ -1678,19 +1681,26 @@ export class HeaderComponent implements OnInit {
     const selectedBoard = this.boardList.find((board) => String(board.id) === String(form.board));
     const selectedClass = this.classList.find((classItem) => String(classItem.id) === String(form.class));
     const classNumber = selectedClass?.id ?? form.class;
+    if (!this.isSchoolSignup && !selectedClass) {
+  this.toastService.show('Please select a valid class.', 'error');
+  return;
+}
 
     const data = {
       first_name: form.name,
       last_name: '',
 
       class_name: this.isSchoolSignup ? null : `Class ${classNumber}`,
+     // class_name: this.isSchoolSignup ? null : selectedClass?.name,
       board: this.isSchoolSignup ? null : selectedBoard?.name,
 
       mobile_no: form.mobile,
 
       institution_name: form.name,
 
-      class_code: this.isSchoolSignup ? null : form.class,
+     // class_code: this.isSchoolSignup ? null : form.class,
+
+     class_code: this.isSchoolSignup ? null : String(form.class),
 
       email: form.Email,
       password: form.password,
@@ -1704,6 +1714,7 @@ export class HeaderComponent implements OnInit {
         this.isSignupLoading = false;
         // console.log(res);
         const registeredUser = res.user || res;
+        console.log(res);
 
         if (res.access_token) {
           this.authStorage.setItem('access_token', res.access_token);
