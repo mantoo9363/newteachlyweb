@@ -669,6 +669,11 @@
           <span class="value">{{ userStudentId }}</span>
         </div>
         <div class="profile-readonly-item">
+          <span class="label">Phone Number</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.mobile_no
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
           <span class="label">Account Type</span>
           <span class="value">{{ userType }}</span>
         </div>
