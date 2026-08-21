@@ -94,7 +94,6 @@ openMessage(message: string) {
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
   studentsCount = '';
-  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
   private readonly simulatorUrls = environment.simulatorUrls;
 
   private allModules: { [key: string]: any } = {
@@ -461,13 +460,6 @@ openMessage(message: string) {
 }
 
   private openSimulationAfterAccessCheck(token: string): void {
-  if (this.id === '13' && this.hasAiIframeLoginCookie()) {
-    this.iframeUrl = this.moduleData.playUrl;
-    this.showIframe = true;
-    window.scrollTo(0, 0);
-    return;
-  }
-
   if (this.id === '12') {
     window.location.href = this.simulatorUrls.droneDownload;
     return;
@@ -556,12 +548,6 @@ this.apiService.generateTempToken(false).subscribe({
     if (!expiresAt) return false;
     const expiryTime = Date.parse(expiresAt);
     return Number.isFinite(expiryTime) && expiryTime <= Date.now();
-  }
-
-  private hasAiIframeLoginCookie(): boolean {
-    return document.cookie
-      .split(';')
-      .some((cookie) => cookie.trim() === `${this.aiIframeLoginCookie}=true`);
   }
 
   closeIframe(): void {
