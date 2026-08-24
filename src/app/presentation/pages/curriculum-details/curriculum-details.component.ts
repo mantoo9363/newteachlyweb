@@ -46,6 +46,7 @@ openMessage(message: string) {
   }
 
   showSystemRequirements = false;
+  openedFromDownload = false;
 
   readonly systemRequirements = {
     minimum: [
@@ -75,12 +76,14 @@ openMessage(message: string) {
     ],
   };
 
-  openSystemRequirements(): void {
+  openSystemRequirements(fromDownload: boolean = false): void {
+    this.openedFromDownload = fromDownload;
     this.showSystemRequirements = true;
   }
 
   closeSystemRequirements(): void {
     this.showSystemRequirements = false;
+    this.openedFromDownload = false;
   }
 
 
@@ -95,6 +98,47 @@ openMessage(message: string) {
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
   studentsCount = '';
   private readonly simulatorUrls = environment.simulatorUrls;
+
+  activeCadVideoIndex = 0;
+
+  readonly cadVideos = [
+    {
+      title: 'CAD Simulation',
+      src: '/image/CAD DEMO.mp4',
+      poster: '/image/CAD_IMAGE.png'
+    },
+    {
+      title: 'Circuit Simulation',
+      src: '/image/Drone Demo.mp4',
+      poster: '/image/simulator/cad.jpg'
+    }
+  ];
+
+  nextCadVideo(): void {
+    this.activeCadVideoIndex = (this.activeCadVideoIndex + 1) % this.cadVideos.length;
+    this.reloadCadVideo();
+  }
+
+  prevCadVideo(): void {
+    this.activeCadVideoIndex = (this.activeCadVideoIndex - 1 + this.cadVideos.length) % this.cadVideos.length;
+    this.reloadCadVideo();
+  }
+
+  selectCadVideo(index: number): void {
+    if (this.activeCadVideoIndex !== index) {
+      this.activeCadVideoIndex = index;
+      this.reloadCadVideo();
+    }
+  }
+
+  private reloadCadVideo(): void {
+    setTimeout(() => {
+      const videoElement = document.querySelector('.carousel-container .module-video') as HTMLVideoElement | null;
+      if (videoElement) {
+        videoElement.load();
+      }
+    });
+  }
 
   private allModules: { [key: string]: any } = {
     '10': {
@@ -316,6 +360,7 @@ openMessage(message: string) {
       if (isModuleChange) {
         this.showIframe = false;
         this.iframeUrl = '';
+        this.activeCadVideoIndex = 0;
       }
 
       this.id = nextId;

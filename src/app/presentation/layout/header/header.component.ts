@@ -560,6 +560,10 @@ export class HeaderComponent implements OnInit {
           sessionStorage.setItem('user_board', profile.board);
         }
 
+         if (profile?.mobile_no) {
+          sessionStorage.setItem('user_board', profile.mobile_no);
+        }
+
         this.setPackageStatusFromResponse(profile);
       },
       error: (err) => {
@@ -1210,10 +1214,13 @@ export class HeaderComponent implements OnInit {
   }
   createForms() {
 
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
+   this.loginForm = this.fb.group({
+  mobile_no: ['', [
+    Validators.required,
+    Validators.pattern(/^[0-9]{10}$/)
+  ]],
+  password: ['', Validators.required]
+});
     this.loginForm.valueChanges.subscribe(() => {
       this.loginErrorMessage = '';
       const passwordControl = this.loginForm.get('password');
@@ -1587,7 +1594,7 @@ export class HeaderComponent implements OnInit {
     }
 
     const data = {
-      email: this.loginForm.value.email,
+      mobile_no: this.loginForm.value.mobile_no,
       password: this.loginForm.value.password
     };
 
@@ -1643,7 +1650,7 @@ export class HeaderComponent implements OnInit {
       error: (err: any) => {
         this.isLoginLoading = false;
         console.log(err);
-        const message = this.getApiErrorMessage(err) || "Invalid email or password.";
+        const message = this.getApiErrorMessage(err) || "Invalid mobile number or password.";
         this.loginErrorMessage = message;
         this.loginForm.get('password')?.setErrors({ invalidCredentials: true });
         this.loginForm.get('password')?.markAsTouched();
@@ -1658,9 +1665,9 @@ export class HeaderComponent implements OnInit {
   //  SIGNUP FUNCTION
   onSignup() {
     if (this.signupForm.valid) {
-      // console.log('Signup Data:', this.signupForm.value);
+     
 
-      //  yaha API call kar sakte ho
+      
     } else {
       this.signupForm.markAllAsTouched();
     }
@@ -1678,19 +1685,26 @@ export class HeaderComponent implements OnInit {
     const selectedBoard = this.boardList.find((board) => String(board.id) === String(form.board));
     const selectedClass = this.classList.find((classItem) => String(classItem.id) === String(form.class));
     const classNumber = selectedClass?.id ?? form.class;
+    if (!this.isSchoolSignup && !selectedClass) {
+  this.toastService.show('Please select a valid class.', 'error');
+  return;
+}
 
     const data = {
       first_name: form.name,
       last_name: '',
 
       class_name: this.isSchoolSignup ? null : `Class ${classNumber}`,
+     // class_name: this.isSchoolSignup ? null : selectedClass?.name,
       board: this.isSchoolSignup ? null : selectedBoard?.name,
 
       mobile_no: form.mobile,
 
       institution_name: form.name,
 
-      class_code: this.isSchoolSignup ? null : form.class,
+     // class_code: this.isSchoolSignup ? null : form.class,
+
+     class_code: this.isSchoolSignup ? null : String(form.class),
 
       email: form.Email,
       password: form.password,
@@ -1700,10 +1714,79 @@ export class HeaderComponent implements OnInit {
 
     this.isSignupLoading = true;
     this.service.chaneStuRegister(data).subscribe({
-      next: (res: any) => {
+
+      //new operation next
+next: (res: any) => {
+  this.isSignupLoading = false;
+
+  console.log('Registration Response:', res);
+
+  const registeredUser = res.user || res;
+
+  if (res.access_token) {
+    this.authStorage.setItem(
+      'access_token',
+      res.access_token
+    );
+  }
+
+  this.authStorage.setItem(
+    'user_id',
+    String(registeredUser.user_id || registeredUser.id || '')
+  );
+
+  this.authStorage.setItem(
+    'student_id',
+    String(registeredUser.student_id || '')
+  );
+
+  this.authStorage.setItem(
+    'user_type',
+    registeredUser.user_type || data.user_type
+  );
+
+  this.authStorage.setItem(
+    'school_name',
+    registeredUser.first_name || ''
+  );
+
+  this.setPackageStatusFromResponse(res);
+
+  this.loadLoggedInProfile();
+
+  // Registration successful message box
+  const message = 'Registration Successfully Completed.';
+
+  this.headermsg = 'Payment Summary';
+
+  this.toastService.show(message, 'success');
+
+  // Message box open
+  this.openMessage(message);
+
+  localStorage.removeItem(this.signupDraftStorageKey);
+
+  this.signupForm.reset();
+
+  this.isSchoolSignup = false;
+
+  this.signupForm.patchValue({
+    board: '',
+    class: ''
+  });
+
+  this.closeSignupModal();
+},
+
+
+
+      //end new code next
+
+     /* next: (res: any) => {
         this.isSignupLoading = false;
         // console.log(res);
         const registeredUser = res.user || res;
+        console.log(res);
 
         if (res.access_token) {
           this.authStorage.setItem('access_token', res.access_token);
@@ -1721,18 +1804,18 @@ export class HeaderComponent implements OnInit {
         this.loadLoggedInProfile();
 
         // Payment Summary
-        this.paymentSummary = {
-          ...this.paymentSummary,
-          schoolId: registeredUser.student_id,
-          schoolName: registeredUser.first_name,
-        };
+       // this.paymentSummary = {
+         // ...this.paymentSummary,
+         // schoolId: registeredUser.student_id,
+         // schoolName: registeredUser.first_name,
+        //};
 
         // console.log('Payment Summary Before Popup', this.paymentSummary);
-        // Open Payment Popup
-        this.showPaymentPopup = true;
-        this.headermsg = "Register Successfully";
-        this.toastService.show('Register Successfully', 'success');
-        localStorage.removeItem(this.signupDraftStorageKey);
+       // // Open Payment Popup
+        //this.showPaymentPopup = true;
+       // this.headermsg = "Register Successfully";
+       // this.toastService.show('Register Successfully', 'success');
+       // localStorage.removeItem(this.signupDraftStorageKey);
 
         this.signupForm.reset();
 
@@ -1745,7 +1828,7 @@ export class HeaderComponent implements OnInit {
 
         // Signup popup close
         this.closeSignupModal();
-      },
+      },*/
       error: (err) => {
         this.isSignupLoading = false;
         console.log(err);

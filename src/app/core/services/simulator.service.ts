@@ -99,7 +99,7 @@ export class SimulatorService {
   classes: ['3', '4', '5'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/build a fraction.mp4'
 },
 {
   id: 'build-a-molecule',
@@ -147,7 +147,7 @@ export class SimulatorService {
   classes: ['7', '8', '9'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Equality explorer 6-10.mp4'
 },
 {
   id: 'expression-exchange',
@@ -171,7 +171,7 @@ export class SimulatorService {
   classes: ['9', '10', '11'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/function builder 6-10.mp4'
 },
 {
   id: 'graphing-lines',
@@ -207,7 +207,7 @@ export class SimulatorService {
   classes: ['11', '12'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Molecules & light.mp4'
 },
 {
   id: 'molecule-shapes',
@@ -219,7 +219,7 @@ export class SimulatorService {
   classes: ['11', '12'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/molecu;e shapes.mp4'
 },
 {
   id: 'molecule-shapes-basics',
@@ -268,7 +268,7 @@ export class SimulatorService {
   classes: ['7', '8'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/number line - operations 6-10.mp4'
 },
 {
   id: 'ohms-law',
@@ -307,7 +307,7 @@ export class SimulatorService {
   classes: ['10', '11', '12'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/ph scale 6-10.mp4'
 },
 {
   id: 'ph-scale-basics',
@@ -367,7 +367,7 @@ export class SimulatorService {
   classes: ['7', '8', '9'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/states of matter 6-10.mp4'
 },
 {
   id: 'states-of-matter-basics',
@@ -391,7 +391,7 @@ export class SimulatorService {
   classes: ['10', '11', '12'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/trig tour 6 to 10.mp4'
 },
 {
   id: 'wave-interference',
@@ -415,7 +415,7 @@ export class SimulatorService {
   classes: ['3', '4', '5'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA MODEL MULTIPLICATION.mp4'
 },
 {
   id: 'mean-share-and-balance',
@@ -451,7 +451,7 @@ export class SimulatorService {
   classes: ['9', '11'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/my solar system.mp4'
 },
 {
   id: 'quantum-coin-toss',
@@ -499,7 +499,7 @@ export class SimulatorService {
   classes: ['6', '7', '8', '9', '10'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Circuit construction kit;DC 6 to 12.mp4'
 },
 {
   id: 'circuit-construction-kit-dc-virtual-lab',
@@ -523,7 +523,7 @@ export class SimulatorService {
   classes: ['10', '11', '12'],
   isNew: true,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/COLOR VISION 2.mp4'
 },
 {
   id: 'density',
@@ -535,7 +535,7 @@ export class SimulatorService {
   classes: [],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Density 6 to 10.mp4'
 },
 {
   id: 'energy-skate-park',
@@ -598,7 +598,7 @@ export class SimulatorService {
   classes: ['11', '12'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/gas properties 2.mp4'
 },
 {
   id: 'gravity-and-orbits',
@@ -622,7 +622,7 @@ export class SimulatorService {
   classes: ['9', '11'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/gravity force lab 6-10.mp4'
 },
 {
   id: 'hookes-law',
@@ -646,7 +646,7 @@ export class SimulatorService {
   classes: ['8', '9', '10'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/john travoltage 1-5.mp4'
 },
 {
   id: 'magnets-and-electromagnets',
@@ -661,79 +661,79 @@ export class SimulatorService {
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
 },
 
-// // {!---
-// {
-//   id: 'make-a-ten',
-//   name: 'Make a Ten',
-//   thumbnail: '/video/Simulators_Thumbnail/make-a-ten-420.png',
-//   url: '/virtual_lab/make-a-ten_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['1', '2', '3'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/MAKE A TEN.mp4'
-// },
-// {
-//   id: 'number-play',
-//   name: 'Number Play',
-//   thumbnail: '/video/Simulators_Thumbnail/number-play-420.png',
-//   url: '/virtual_lab/number-play_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['1', '2', '3'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NUMBER PLAY.mp4'
-// },
-// {
-//   id: 'arithmetic',
-//   name: 'Arithmetic',
-//   thumbnail: '/video/Simulators_Thumbnail/arithmetic-420.png',
-//   url: '/virtual_lab/arithmetic_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['1', '2', '3'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/ARITHMETIC.mp4'
-// },
-// {
-//   id: 'fractions-intro',
-//   name: 'Fractions: Intro',
-//   thumbnail: '/video/Simulators_Thumbnail/fractions-intro-420.png',
-//   url: '/virtual_lab/fractions-intro_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['3', '4', '5'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTIONS INTRO.mp4'
-// },
-// {
-//   id: 'fractions-equality',
-//   name: 'Fractions: Equality',
-//   thumbnail: '/video/Simulators_Thumbnail/fractions-equality-420.png',
-//   url: '/virtual_lab/fractions-equality_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['4', '5', '6'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTIONS EQUALITY.mp4'
-// },
-// {
-//   id: 'fraction-matcher',
-//   name: 'Fraction Matcher',
-//   thumbnail: '/video/Simulators_Thumbnail/fraction-matcher-420.png',
-//   url: '/virtual_lab/fraction-matcher_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['4', '5', '6'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTION MATCHER.mp4'
-// },
+
+ {
+   id: 'make-a-ten',
+   name: 'Make a Ten',
+   thumbnail: '/video/Simulators_Thumbnail/make-a-ten-420.png',
+   url: '/virtual_lab/make-a-ten_en.html',
+   category: 'Math & Statistics',
+   subject: 'Mathematics',
+   classes: ['1', '2', '3'],
+   isNew: false,
+   availableLanguages: ['en', 'ur'],
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/MAKE A TEN.mp4'
+ },
+ {
+   id: 'number-play',
+   name: 'Number Play',
+   thumbnail: '/video/Simulators_Thumbnail/number-play-420.png',
+   url: '/virtual_lab/number-play_en.html',
+   category: 'Math & Statistics',
+   subject: 'Mathematics',
+   classes: ['1', '2', '3'],
+   isNew: false,
+   availableLanguages: ['en', 'ur'],
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NUMBER PLAY.mp4'
+ },
+ {
+   id: 'arithmetic',
+   name: 'Arithmetic',
+   thumbnail: '/video/Simulators_Thumbnail/arithmetic-420.png',
+   url: '/virtual_lab/arithmetic_en.html',
+   category: 'Math & Statistics',
+   subject: 'Mathematics',
+   classes: ['1', '2', '3'],
+   isNew: false,
+   availableLanguages: ['en', 'ur'],
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/ARITHMETIC.mp4'
+ },
+ {
+   id: 'fractions-intro',
+   name: 'Fractions: Intro',
+   thumbnail: '/video/Simulators_Thumbnail/fractions-intro-420.png',
+   url: '/virtual_lab/fractions-intro_en.html',
+   category: 'Math & Statistics',
+   subject: 'Mathematics',
+   classes: ['3', '4', '5'],
+   isNew: false,
+   availableLanguages: ['en', 'ur'],
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTIONS INTRO.mp4'
+ },
+ {
+   id: 'fractions-equality',
+   name: 'Fractions: Equality',
+   thumbnail: '/video/Simulators_Thumbnail/fractions-equality-420.png',
+   url: '/virtual_lab/fractions-equality_en.html',
+   category: 'Math & Statistics',
+   subject: 'Mathematics',
+   classes: ['4', '5', '6'],
+   isNew: false,
+   availableLanguages: ['en', 'ur'],
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTIONS EQUALITY.mp4'
+ },
+ {
+   id: 'fraction-matcher',
+   name: 'Fraction Matcher',
+   thumbnail: '/video/Simulators_Thumbnail/fraction-matcher-420.png',
+   url: '/virtual_lab/fraction-matcher_en.html',
+   category: 'Math & Statistics',
+   subject: 'Mathematics',
+   classes: ['4', '5', '6'],
+   isNew: false,
+   availableLanguages: ['en', 'ur'],
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTION MATCHER.mp4'
+ },
 // {
 //   id: 'energy-forms-and-changes',
 //   name: 'Energy Forms and Changes',
