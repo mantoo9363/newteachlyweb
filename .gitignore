@@ -30,8 +30,11 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+<<<<<<< HEAD
 .angular/
 node_modules/
+=======
+>>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
 .sass-cache/
 /connect.lock
 /coverage

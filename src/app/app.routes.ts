@@ -14,9 +14,12 @@ import { CtAiComponent } from './presentation/pages/ct-ai/ct-ai.component';
 import { ResetPasswordComponent } from './presentation/pages/reset-password/reset-password.component';
 import { authGuard } from './core/guards/auth.guard';
 import { PdfViewerComponent } from './presentation/pages/pdf-viewer/pdf-viewer.component';
+<<<<<<< HEAD
 import { PlanCardPageComponent } from './presentation/pages/plan-card-page/plan-card-page.component';
 import { PlanDetailPageComponent } from './presentation/pages/plan-detail-page/plan-detail-page';
 
+=======
+>>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
 
 export const routes: Routes = [
   {
@@ -25,6 +28,7 @@ export const routes: Routes = [
     title: 'Teachly | Interactive STEM Simulations & Learning Platform'
   },
   {
+<<<<<<< HEAD
     path: 'plan-card',
     component: PlanCardPageComponent
   },
@@ -34,6 +38,8 @@ export const routes: Routes = [
     component: PlanDetailPageComponent
   },
   {
+=======
+>>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
     path: 'reset-password',
     component: ResetPasswordComponent,
     title: 'Teachly | Reset Password'
