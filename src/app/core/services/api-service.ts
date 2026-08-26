@@ -42,7 +42,6 @@ export class ApiService {
     );
   }
 
-<<<<<<< HEAD
   startPlanDemo(planId: number) {
   const token = this.authStorage.getToken();
 
@@ -73,8 +72,6 @@ export class ApiService {
   );
 }
 
-=======
->>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
   private shouldLogoutForAuthError(error: HttpErrorResponse): boolean {
     const detail = error.error?.detail;
     return error.status === 401 || detail === 'Session expired or logged in elsewhere';

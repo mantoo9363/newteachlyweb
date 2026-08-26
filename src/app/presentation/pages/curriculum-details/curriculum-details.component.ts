@@ -97,10 +97,7 @@ openMessage(message: string) {
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
   studentsCount = '';
-<<<<<<< HEAD
   private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
-=======
->>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
   private readonly simulatorUrls = environment.simulatorUrls;
 
   activeCadVideoIndex = 0;
@@ -509,7 +506,6 @@ openMessage(message: string) {
 }
 
   private openSimulationAfterAccessCheck(token: string): void {
-<<<<<<< HEAD
   if (this.id === '13' && this.hasAiIframeLoginCookie()) {
     this.iframeUrl = this.moduleData.playUrl;
     this.showIframe = true;
@@ -517,8 +513,6 @@ openMessage(message: string) {
     return;
   }
 
-=======
->>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
   if (this.id === '12') {
     window.location.href = this.simulatorUrls.droneDownload;
     return;
@@ -609,15 +603,12 @@ this.apiService.generateTempToken(false).subscribe({
     return Number.isFinite(expiryTime) && expiryTime <= Date.now();
   }
 
-<<<<<<< HEAD
   private hasAiIframeLoginCookie(): boolean {
     return document.cookie
       .split(';')
       .some((cookie) => cookie.trim() === `${this.aiIframeLoginCookie}=true`);
   }
 
-=======
->>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
   closeIframe(): void {
     this.showIframe = false;
     this.iframeUrl = '';

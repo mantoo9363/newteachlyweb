@@ -17,7 +17,6 @@ export class PopupService {
   private signupSource = new BehaviorSubject<boolean>(false);
   signup$ = this.signupSource.asObservable();
 
-<<<<<<< HEAD
   // openSignup() {
   //   this.signupSource.next(true);
   // }
@@ -25,11 +24,6 @@ export class PopupService {
   console.log('🔥 POPUP SERVICE openSignup()');
   this.signupSource.next(true);
 }
-=======
-  openSignup() {
-    this.signupSource.next(true);
-  }
->>>>>>> f269645fb14553ae1781b92b4727cb20155bd511
 
   closeSignup() {
     this.signupSource.next(false);
