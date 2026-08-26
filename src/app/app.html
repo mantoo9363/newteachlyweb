@@ -1,0 +1,55 @@
+<div class="background-icons">
+  <!-- existing icons -->
+  <div class="bg-icon icon-pencil">
+    <i class="fas fa-pen-fancy"></i>
+  </div>
+  <div class="bg-icon icon-book">
+    <i class="fas fa-book"></i>
+  </div>
+  <div class="bg-icon icon-graduation">
+    <i class="fas fa-graduation-cap"></i>
+  </div>
+  <div class="bg-icon icon-lightbulb">
+    <i class="fas fa-lightbulb"></i>
+  </div>
+  <div class="bg-icon icon-brain">
+    <i class="fas fa-brain"></i>
+  </div>
+  <div class="bg-icon icon-notebook">
+    <i class="fas fa-notebook"></i>
+  </div>
+  <div class="bg-icon icon-scroll">
+    <i class="fas fa-scroll"></i>
+  </div>
+  <div class="bg-icon icon-microscope">
+    <i class="fas fa-microscope"></i>
+  </div>
+</div>
+
+
+<router-outlet></router-outlet>
+<app-toast></app-toast>
+
+<!-- Chat Bubble / Tawk.to style -->
+<!-- <div class="chat-bubble-container" [class.hidden]="isContactModalOpen()">
+  <button class="chat-bubble" (click)="toggleContactModal()" aria-label="Contact Us">
+    <div class="bubble-icon">
+      <i class="fas fa-comments"></i>
+    </div>
+    <span class="bubble-text">Talk to us</span>
+  </button>
+</div> -->
+
+<!-- Contact Modal -->
+@if (isContactModalOpen()) {
+  <div class="modal-overlay" (click)="toggleContactModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="toggleContactModal()" aria-label="Close Modal">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="modal-content">
+        <app-contact></app-contact>
+      </div>
+    </div>
+  </div>
+}

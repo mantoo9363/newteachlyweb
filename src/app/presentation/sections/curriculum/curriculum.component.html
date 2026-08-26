@@ -1,0 +1,184 @@
+<section class="curriculum-section">
+  <!-- AI Animations -->
+  <div class="ai-grid-background"></div>
+  <div class="neural-network-layer">
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+    <div class="neural-node"></div>
+  </div>
+
+  <div class="book-icons">
+    <i class="fas fa-book book-icon book-1"></i>
+    <i class="fas fa-microscope book-icon book-2"></i>
+    <i class="fas fa-flask book-icon book-3"></i>
+    <i class="fas fa-calculator book-icon book-4"></i>
+    <i class="fas fa-laptop-code book-icon book-5"></i>
+    <i class="fas fa-chart-line book-icon book-6"></i>
+    <i class="fas fa-globe book-icon book-7"></i>
+    <i class="fas fa-pen-fancy book-icon book-8"></i>
+  </div>
+
+  <div class="curriculum-container">
+    <!-- Comprehensive Learning Modules Section -->
+    <div class="comprehensive-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          Interactive STEM Virtual Lab & AI Learning
+        </h2>
+        <p class="section-subtitle">
+          Empowering the vision of Atal Tinkering Labs, our platform brings
+          innovation to life through hands-on learning. From designing
+          real-world systems with our CAD Virtual Lab, to experimenting with
+          circuits in a safe virtual environment, and exploring the future of
+          aviation through our drone Virtual Lab — we equip young innovators with
+          the tools to imagine, build, and lead.
+        </p>
+      </div>
+
+      <div class="simulation-carousel">
+        <swiper-container
+          slides-per-view="1"
+          space-between="32"
+          [breakpoints]="{
+            '768': { slidesPerView: 2 },
+            '1024': { slidesPerView: 3 }
+          }"
+          loop="true"
+          autoplay-delay="2000"
+          autoplay-disable-on-interaction="false"
+        >
+          @for (topic of comprehensiveModules; track topic.id) {
+            <swiper-slide>
+              <div
+                class="topic-card h-100"
+                [class.has-image]="topic.image"
+                [class.clickable]="topic.hasReadMore !== false"
+                [class.locked]="!isTopicAccessible(topic)"
+                role="article"
+                [style.--topic-color]="topic.color"
+                (click)="topic.hasReadMore !== false ? onReadMore(topic) : null"
+              >
+                @if (!isTopicAccessible(topic)) {
+                  <div class="lock-badge">
+                    <i class="fas fa-lock"></i>
+                  </div>
+                }
+
+                @if (topic.image) {
+                  <div class="card-image-wrapper">
+                    <img
+                      [src]="topic.image"
+                      [alt]="topic.title"
+                      class="card-hero-image"
+                    />
+                  </div>
+                }
+
+                <div class="card-icon-wrapper">
+                  <div
+                    class="icon-box"
+                    [style.background-color]="topic.color + '15'"
+                  >
+                    <i
+                      [class]="'fas fa-' + topic.icon + ' topic-icon'"
+                      [style.color]="topic.color"
+                    ></i>
+                  </div>
+                </div>
+
+                <div class="card-content">
+                  <h3 class="card-title">{{ topic.title }}</h3>
+                  <p class="card-description">{{ topic.description }}</p>
+                </div>
+
+                <div class="card-footer">
+                  <a href="javascript:void(0)" class="explore-link">
+                    <span>Read More</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+
+                  @if (topic.playUrl && isDesktop) {
+                    <button class="play-now-btn" (click)="onPlay(topic, $event)">
+                      <i class="fas fa-play"></i>
+                      <span> {{ topic.btn }} </span>
+                    </button>
+                  }
+                </div>
+              </div>
+            </swiper-slide>
+          }
+        </swiper-container>
+      </div>
+    </div>
+
+    <!-- Other Topics Section -->
+    <div class="other-topics-section">
+      <div class="section-header small-header">
+        <h2 class="section-title">Comprehensive Learning Modules</h2>
+        <p class="section-subtitle">
+          Explore our specialized modules designed to provide a holistic
+          educational experience.
+        </p>
+      </div>
+
+      <div class="topics-grid main-grid">
+        @for (topic of mainTopics; track topic.id) {
+          <div
+            class="topic-card clickable"
+            [class.has-image]="topic.image"
+            [class.locked]="!isTopicAccessible(topic)"
+            role="article"
+            [style.--topic-color]="topic.color"
+            (click)="onReadMore(topic)"
+          >
+            @if (!isTopicAccessible(topic)) {
+              <div class="lock-badge">
+                <i class="fas fa-lock"></i>
+              </div>
+            }
+
+            @if (topic.image) {
+              <div class="card-image-wrapper">
+                <img
+                  [src]="topic.image"
+                  [alt]="topic.title"
+                  class="card-hero-image"
+                />
+              </div>
+            }
+            <div class="card-icon-wrapper">
+              <div
+                class="icon-box"
+                [style.background-color]="topic.color + '15'"
+              >
+                <i
+                  [class]="'fas fa-' + topic.icon + ' topic-icon'"
+                  [style.color]="topic.color"
+                ></i>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <h3 class="card-title">{{ topic.title }}</h3>
+              <p class="card-description">{{ topic.description }}</p>
+            </div>
+
+            <div class="card-footer">
+              <a href="javascript:void(0)" class="explore-link">
+                <span>Read More</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

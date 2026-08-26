@@ -1,0 +1,945 @@
+<header class="header">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <div class="logo">
+        <a routerLink="/" (click)="closeMobileMenu()">
+          <img src="image/TEACHLY LOGO Circle.png" alt="Teachly logo" title="Teachly Logo" class="logo-img"
+            fetchpriority="high" />
+        </a>
+      </div>
+
+      <div class="desktop-nav">
+        <ul class="nav-links">
+          @for (menu of navigationMenu; track menu.title) {
+          <li class="nav-item" (mouseenter)="setActiveDropdown(menu.title)" (mouseleave)="setActiveDropdown(null)">
+            @if (menu.type === "link") {
+            @if (menu.url && menu.url.startsWith("http")) {
+            <a [attr.href]="isNavLinkAccessible(menu) ? menu.url : null" [attr.target]="isNavLinkAccessible(menu) ? '_blank' : null" class="nav-link" [class.disabled-link]="isMenuItemLocked(menu)" (click)="handleMenuLinkClick($event, menu.url, menu)">
+              @if (menu.icon) {
+              <i [class]="menu.icon" class="nav-icon-animated"></i>
+              }
+              {{ menu.title }}
+              @if (isMenuItemLocked(menu)) {
+                <i class="fas fa-lock lock-icon"></i>
+              }
+            </a>
+            } @else if (menu.url) {
+            <a [routerLink]="isNavLinkAccessible(menu) ? getRoutePath(menu.url) : null" [queryParams]="isNavLinkAccessible(menu) ? getRouteQueryParams(menu.url) : null" class="nav-link"
+              [class.disabled-link]="isMenuItemLocked(menu)" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: menu.url === '/' }" (click)="handleMenuLinkClick($event, menu.url, menu)">
+              @if (menu.icon) {
+              <i [class]="menu.icon" class="nav-icon-animated"></i>
+              }
+              {{ menu.title }}
+              @if (isMenuItemLocked(menu)) {
+                <i class="fas fa-lock lock-icon"></i>
+              }
+            </a>
+            } @else {
+            <span class="nav-link no-link">
+              @if (menu.icon) {
+              <i [class]="menu.icon" class="nav-icon-animated"></i>
+              }
+              {{ menu.title }}
+            </span>
+            }
+            } @else {
+            <div class="dropdown-trigger" [class.active]="isDropdownActive(menu)">
+              <span class="nav-link" [class.active]="isDropdownActive(menu)">{{ menu.title }}</span>
+              <i class="fas fa-chevron-down dropdown-icon" [class.active]="isDropdownActive(menu)"></i>
+            </div>
+
+            @if (activeDropdown() === menu.title) {
+            <div class="dropdown-menu">
+              @for (item of menu.items; track item.title) {
+              <div class="dropdown-item-container" (mouseenter)="
+                          item.type === 'nested-dropdown'
+                            ? activeSubDropdown.set(item.title)
+                            : null
+                        " (mouseleave)="
+                          item.type === 'nested-dropdown'
+                            ? activeSubDropdown.set(null)
+                            : null
+                        ">
+                @if (item.type === "nested-dropdown") {
+                <div class="dropdown-item nested-trigger" [class.active]="
+                              isDropdownActive({
+                                type: 'dropdown',
+                                items: [item],
+                              })
+                            ">
+                  <span>{{ item.title }}</span>
+                  <i class="fas fa-chevron-right nested-icon"></i>
+
+                  @if (activeSubDropdown() === item.title) {
+                  <div class="sub-dropdown-menu">
+                    @for (
+                    subItem of item.items;
+                    track subItem.title
+                    ) {
+                    @if (subItem.url.startsWith("http")) {
+                    <a [attr.href]="isBoardSubItemAccessible(subItem) ? subItem.url : null" [attr.target]="isBoardSubItemAccessible(subItem) ? '_blank' : null" class="dropdown-item" [class.disabled-link]="isBoardSubItemLocked(subItem)" [class.board-match]="subItem.boardKey && !isBoardSubItemLocked(subItem)" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
+                      {{ subItem.title }}
+                      @if (isBoardSubItemLocked(subItem)) {
+                        <i class="fas fa-lock lock-icon"></i>
+                      } @else if (subItem.boardKey) {
+                        <i class="fas fa-unlock board-unlock-icon"></i>
+                      }
+                    </a>
+                    } @else {
+                    <a [routerLink]="isBoardSubItemAccessible(subItem) ? getRoutePath(subItem.url) : null" [queryParams]="
+                                        isBoardSubItemAccessible(subItem) ? getRouteQueryParams(subItem.url) : null
+                                      " class="dropdown-item" [class.disabled-link]="isBoardSubItemLocked(subItem)" [class.board-match]="subItem.boardKey && !isBoardSubItemLocked(subItem)" routerLinkActive="active" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
+                      {{ subItem.title }}
+                      @if (isBoardSubItemLocked(subItem)) {
+                        <i class="fas fa-lock lock-icon"></i>
+                      } @else if (subItem.boardKey) {
+                        <i class="fas fa-unlock board-unlock-icon"></i>
+                      }
+                    </a>
+                    }
+                    }
+                  </div>
+                  }
+                </div>
+                } @else {
+                @if (item.url.startsWith("http")) {
+                <a [attr.href]="isMenuItemAccessible(item) ? item.url : null" [attr.target]="isMenuItemAccessible(item) ? '_blank' : null" class="dropdown-item" [class.disabled-link]="isMenuItemLocked(item)" (click)="handleMenuLinkClick($event, item.url, item)">
+                  {{ item.title }}
+                  @if (isMenuItemLocked(item)) {
+                    <i class="fas fa-lock lock-icon"></i>
+                  }
+                </a>
+                } @else {
+                <a [routerLink]="isMenuItemAccessible(item) ? getRoutePath(item.url) : null" [queryParams]="isMenuItemAccessible(item) ? getRouteQueryParams(item.url) : null"
+                  class="dropdown-item" [class.disabled-link]="isMenuItemLocked(item)" routerLinkActive="active" (click)="handleMenuLinkClick($event, item.url, item)">
+                  {{ item.title }}
+                  @if (isMenuItemLocked(item)) {
+                    <i class="fas fa-lock lock-icon"></i>
+                  }
+                </a>
+                }
+                }
+              </div>
+              }
+            </div>
+            }
+            }
+          </li>
+          }
+        </ul>
+      </div>
+
+      <div class="nav-right">
+        <button class="search-trigger" (click)="toggleSearchModal()" aria-label="Open search">
+          <i class="fas fa-search"></i>
+        </button>
+        @if (isLoggedIn) {
+        <div class="user-menu-container" (mouseleave)="closeUserMenu()">
+          <button class="user-avatar-btn" (click)="toggleUserMenu()" title="{{ userName }}">
+            <span class="user-avatar">{{ getUserInitials() }}</span>
+            <i class="fas fa-chevron-down user-chevron" [class.open]="userMenuOpen"></i>
+          </button>
+          @if (userMenuOpen) {
+          <div class="user-dropdown">
+            <a class="user-dropdown-item" (click)="openProfileModal(); $event.stopPropagation()">
+              <i class="fas fa-user"></i> My Profile
+            </a>
+            <a class="user-dropdown-item" (click)="openChangePasswordModal(); $event.stopPropagation()">
+              <i class="fas fa-lock"></i> Change Password
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a class="user-dropdown-item logout" (click)="logout(); $event.stopPropagation()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="auth-pill">
+          <a (click)="openModal('login')" class="pill-btn signup active"
+            [ngClass]="activeTab === 'login' ? 'signup active' : 'login'">
+            Login
+          </a>
+          <a class="pill-btn" (click)="scroll()"> Upgrade </a>
+        </div>
+        }
+
+        <button class="hamburger-menu" (click)="toggleMobileMenu()" aria-label="Toggle mobile menu"
+          [class.active]="mobileMenuOpen()">
+          <div class="hamburger-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="menu-label">Menu</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" [class.open]="mobileMenuOpen()" (click)="closeMobileMenu()"></div>
+
+  <aside class="mobile-menu" [class.open]="mobileMenuOpen()">
+    <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close mobile menu">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="mobile-course-sections">
+      @for (menu of navigationMenu; track menu.title) {
+      <div class="mobile-section">
+        @if (menu.type === "link") {
+        @if (menu.url && menu.url.startsWith("http")) {
+        <a [attr.href]="isNavLinkAccessible(menu) ? menu.url : null" [attr.target]="isNavLinkAccessible(menu) ? '_blank' : null" class="mobile-section-header no-chevron" [class.disabled-link]="isMenuItemLocked(menu)" (click)="closeMobileMenu(); handleMenuLinkClick($event, menu.url, menu)">
+          @if (menu.icon) {
+          <i [class]="menu.icon" class="mobile-icon"></i>
+          }
+          <span class="mobile-section-title">{{ menu.title }}</span>
+          @if (isMenuItemLocked(menu)) {
+            <i class="fas fa-lock lock-icon"></i>
+          }
+        </a>
+        } @else if (menu.url) {
+        <a [routerLink]="isNavLinkAccessible(menu) ? getRoutePath(menu.url) : null" [queryParams]="isNavLinkAccessible(menu) ? getRouteQueryParams(menu.url) : null"
+          class="mobile-section-header no-chevron" [class.disabled-link]="isMenuItemLocked(menu)" routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: menu.url === '/' }" (click)="closeMobileMenu(); handleMenuLinkClick($event, menu.url, menu)">
+          @if (menu.icon) {
+          <i [class]="menu.icon" class="mobile-icon"></i>
+          }
+          <span class="mobile-section-title">{{ menu.title }}</span>
+          @if (isMenuItemLocked(menu)) {
+            <i class="fas fa-lock lock-icon"></i>
+          }
+        </a>
+        } @else {
+        <div class="mobile-section-header no-chevron">
+          @if (menu.icon) {
+          <i [class]="menu.icon" class="mobile-icon"></i>
+          }
+          <span class="mobile-section-title">{{ menu.title }}</span>
+        </div>
+        }
+        } @else {
+        <div class="mobile-section-header" [class.active]="isDropdownActive(menu)" (click)="toggleSection(menu.title)">
+          <span class="mobile-section-title">{{ menu.title }}</span>
+          <i class="fas fa-chevron-down toggle-icon" [class.rotated]="expandedSections() === menu.title"
+            [class.active]="isDropdownActive(menu)"></i>
+        </div>
+
+        @if (expandedSections() === menu.title) {
+        <div class="mobile-section-links">
+          @for (item of menu.items; track item.title) {
+          @if (item.type === "nested-dropdown") {
+          <div class="mobile-nested-section">
+            <div class="mobile-nested-header" [class.active]="
+                          isDropdownActive({ type: 'dropdown', items: [item] })
+                        " (click)="
+                          toggleItem(item.title); $event.stopPropagation()
+                        ">
+              <span>{{ item.title }}</span>
+              <i class="fas fa-chevron-down toggle-icon" [class.rotated]="expandedItems() === item.title"
+                [class.active]="
+                            isDropdownActive({
+                              type: 'dropdown',
+                              items: [item],
+                            })
+                          "></i>
+            </div>
+            @if (expandedItems() === item.title) {
+            <div class="mobile-nested-links">
+              @for (subItem of item.items; track subItem.title) {
+              @if (subItem.url.startsWith("http")) {
+              <a [attr.href]="isBoardSubItemAccessible(subItem) ? subItem.url : null" [attr.target]="isBoardSubItemAccessible(subItem) ? '_blank' : null" class="mobile-link" [class.disabled-link]="isBoardSubItemLocked(subItem)" [class.board-match]="subItem.boardKey && !isBoardSubItemLocked(subItem)" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
+                {{ subItem.title }}
+                @if (isBoardSubItemLocked(subItem)) {
+                  <i class="fas fa-lock lock-icon"></i>
+                } @else if (subItem.boardKey) {
+                  <i class="fas fa-unlock board-unlock-icon"></i>
+                }
+              </a>
+              } @else {
+              <a [routerLink]="isBoardSubItemAccessible(subItem) ? getRoutePath(subItem.url) : null" [queryParams]="isBoardSubItemAccessible(subItem) ? getRouteQueryParams(subItem.url) : null"
+                class="mobile-link" [class.disabled-link]="isBoardSubItemLocked(subItem)" [class.board-match]="subItem.boardKey && !isBoardSubItemLocked(subItem)" routerLinkActive="active" (click)="handleMenuLinkClick($event, subItem.url, subItem)">
+                {{ subItem.title }}
+                @if (isBoardSubItemLocked(subItem)) {
+                  <i class="fas fa-lock lock-icon"></i>
+                } @else if (subItem.boardKey) {
+                  <i class="fas fa-unlock board-unlock-icon"></i>
+                }
+              </a>
+              }
+              }
+            </div>
+            }
+          </div>
+          } @else {
+          @if (item.url.startsWith("http")) {
+          <a [attr.href]="isMenuItemAccessible(item) ? item.url : null" [attr.target]="isMenuItemAccessible(item) ? '_blank' : null" class="mobile-link" [class.disabled-link]="isMenuItemLocked(item)" (click)="handleMenuLinkClick($event, item.url, item)">
+            {{ item.title }}
+            @if (isMenuItemLocked(item)) {
+              <i class="fas fa-lock lock-icon"></i>
+            }
+          </a>
+          } @else {
+          <a [routerLink]="isMenuItemAccessible(item) ? getRoutePath(item.url) : null" [queryParams]="isMenuItemAccessible(item) ? getRouteQueryParams(item.url) : null" class="mobile-link"
+            [class.disabled-link]="isMenuItemLocked(item)" routerLinkActive="active" (click)="handleMenuLinkClick($event, item.url, item)">
+            {{ item.title }}
+            @if (isMenuItemLocked(item)) {
+              <i class="fas fa-lock lock-icon"></i>
+            }
+          </a>
+          }
+          }
+          }
+        </div>
+        }
+        }
+      </div>
+      }
+    </div>
+  </aside>
+  <!-- Signup Modal -->
+  @if (isSignupOpen) {
+  <div class="signup-modal-overlay">
+    <div class="signup-modal-content">
+      <!-- Close Button -->
+      <button class="close-btn" (click)="closeSignupModal()">✕</button>
+
+      <!-- Toggle Tabs -->
+      <div class="auth-pill">
+        <a (click)="openModal('login')" class="pill-btn" [ngClass]="activeTab === 'login' ? 'signup active' : 'login'">
+          Login
+        </a>
+
+        <a (click)="openModal('signup')" class="pill-btn"
+          [ngClass]="activeTab === 'signup' ? 'signup active' : 'login'">
+          Sign Up
+        </a>
+      </div>
+      <!-- LOGIN FORM -->
+      @if (activeTab === "login") {
+      <div class="signup-header">
+        <h3>Login</h3>
+        <p>Welcome back!</p>
+      </div>
+
+     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="signup-form">
+
+  <div class="input-group">
+    <input
+      type="tel"
+      formControlName="mobile_no"
+      placeholder="Mobile Number"
+      maxlength="10"
+      inputmode="numeric"
+    >
+  </div>
+
+  <div
+    class="error"
+    *ngIf="
+      loginForm.get('mobile_no')?.touched &&
+      loginForm.get('mobile_no')?.errors?.['required']
+    "
+  >
+    Mobile number is required.
+  </div>
+
+  <div
+    class="error"
+    *ngIf="
+      loginForm.get('mobile_no')?.touched &&
+      loginForm.get('mobile_no')?.errors?.['pattern']
+    "
+  >
+    Please enter a valid 10 digit mobile number.
+  </div>
+
+  <div class="input-group password-group">
+    <input
+      [type]="showLoginPassword ? 'text' : 'password'"
+      placeholder="Password"
+      formControlName="password"
+    />
+
+    <button
+      type="button"
+      class="toggle-password"
+      (click)="toggleLoginPasswordVisibility()"
+      [attr.aria-label]="
+        showLoginPassword ? 'Hide password' : 'Show password'
+      "
+    >
+      <i
+        class="fas"
+        [class.fa-eye]="!showLoginPassword"
+        [class.fa-eye-slash]="showLoginPassword"
+      ></i>
+    </button>
+  </div>
+
+  <div
+    class="error"
+    *ngIf="
+      loginForm.get('password')?.touched &&
+      loginForm.get('password')?.errors?.['required']
+    "
+  >
+    Password is required.
+  </div>
+
+  <div class="error" *ngIf="loginErrorMessage">
+    {{ loginErrorMessage }}
+  </div>
+
+  <div class="error" *ngIf="loginError">
+    {{ loginError }}
+  </div>
+
+  <div class="forgot-password-row">
+    <a
+      class="forgot-password-link"
+      (click)="openForgotPassword()"
+    >
+      Forgot password?
+    </a>
+  </div>
+
+  <button
+    type="submit"
+    class="submit-btn"
+    [disabled]="isLoginLoading"
+  >
+    <span
+      class="btn-spinner"
+      *ngIf="isLoginLoading"
+    ></span>
+
+    {{ isLoginLoading ? 'Logging in...' : 'Login' }}
+  </button>
+
+</form>
+      }
+
+      <!-- FORGOT PASSWORD FORM -->
+      @if (activeTab === "forgot") {
+      <div class="signup-header">
+        <h3>Forgot Password</h3>
+        <p>Enter your email to reset your password</p>
+      </div>
+
+      @if (!forgotPasswordSubmitted) {
+      <form [formGroup]="forgotPasswordForm" (ngSubmit)="submitForgotPassword()" class="signup-form">
+        <div class="input-group">
+          <input type="email" formControlName="email" placeholder="Email">
+        </div>
+
+        <div class="error" *ngIf="forgotPasswordForm.get('email')?.touched &&
+            forgotPasswordForm.get('email')?.errors?.['required']">
+
+          Email is required.
+
+        </div>
+
+        <div class="error" *ngIf="forgotPasswordForm.get('email')?.touched &&
+            forgotPasswordForm.get('email')?.errors?.['email']">
+
+          Enter a valid email address.
+
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="forgotPasswordLoading">
+          @if (forgotPasswordLoading) {
+            <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Sending...
+          } @else {
+            Send Reset Link
+          }
+        </button>
+
+        <div class="forgot-password-row centered">
+          <a class="forgot-password-link" (click)="backToLoginFromForgot()">Back to Login</a>
+        </div>
+      </form>
+      } @else {
+      <div class="forgot-password-success">
+        <i class="fas fa-envelope-circle-check"></i>
+        <p>If an account exists for {{ forgotPasswordForm.value.email }}, a password reset link has been sent.</p>
+        <button type="button" class="submit-btn" (click)="backToLoginFromForgot()">Back to Login</button>
+      </div>
+      }
+      }
+
+      <!-- SIGNUP FORM -->
+      @if (activeTab === "signup") {
+      <div class="signup-header">
+        <h3>Signup Now</h3>
+        <p>Create your account in seconds</p>
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="submitForm()" class="signup-form">
+        <div class="input-group">
+          <input type="text" placeholder="Name" formControlName="name"
+            (input)="onNameInput($event, signupForm)" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('name')?.touched &&
+            signupForm.get('name')?.errors?.['required']">
+
+          Name is required.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('name')?.errors?.['pattern']">
+
+          Name should only contain letters.
+
+        </div>
+
+        <div class="input-group">
+          <input type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile Number"
+            formControlName="mobile" (input)="onMobileInput($event)" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('mobile')?.touched &&
+            signupForm.get('mobile')?.errors?.['required']">
+
+          Mobile Number is required.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('mobile')?.errors?.['pattern']">
+
+          Enter valid 10 digit mobile number.
+
+        </div>
+
+        <div class="input-group">
+          <input type="email" placeholder="Email" formControlName="Email" />
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('Email')?.touched &&
+            signupForm.get('Email')?.errors?.['required']">
+
+          Email is required.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('Email')?.errors?.['email']">
+
+          Enter valid Email Address.
+
+        </div>
+
+        <div class="input-row">
+          <div class="input-col">
+            <div class="input-group">
+              <select formControlName="board" (change)="setClasses(+$any($event.target).value)">
+
+                <option [ngValue]="null">Select Board</option>
+
+                <option *ngFor="let item of boardList" [ngValue]="item.id">
+                  {{ item.name }}
+                </option>
+
+              </select>
+            </div>
+
+            <div class="error" *ngIf="signupForm.get('board')?.touched &&
+                signupForm.get('board')?.errors?.['required']">
+
+              Please select board.
+
+            </div>
+          </div>
+
+          <div class="input-col" *ngIf="!isSchoolSignup">
+            <div class="input-group">
+              <select formControlName="class" [disabled]="!classList.length">
+                <option [ngValue]="null">Select Class</option>
+
+                @for (item of classList; track item.id) {
+                <option [ngValue]="item.id">
+                  {{ item.name }}
+                </option>
+                }
+
+                @if (!classList.length) {
+                <option disabled>No Classes Available</option>
+                }
+              </select>
+            </div>
+            <div class="error" *ngIf="signupForm.get('class')?.touched &&
+                signupForm.get('class')?.errors?.['required']">
+
+              Please select class.
+
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="input-group password-group">
+          <input [type]="showSignupPassword ? 'text' : 'password'" placeholder="Create Password"
+            formControlName="password" />
+          <button type="button" class="toggle-password" (click)="toggleSignupPasswordVisibility()"
+            [attr.aria-label]="showSignupPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showSignupPassword" [class.fa-eye-slash]="showSignupPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('password')?.touched &&
+            signupForm.get('password')?.errors?.['required']">
+
+          Password is required.
+
+        </div>
+
+        <div class="input-group password-group">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Confirm Password"
+            formControlName="confirmpassword" />
+          <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="signupForm.errors?.['passwordMismatch'] &&
+         signupForm.get('confirmpassword')?.touched">
+
+          Password and Confirm Password do not match.
+
+        </div>
+
+        <div class="error" *ngIf="signupForm.get('confirmpassword')?.touched &&
+            signupForm.get('confirmpassword')?.errors?.['required']">
+
+          Confirm Password is required.
+
+        </div>
+        <div class="error" *ngIf="signupForm.get('password')?.errors?.['minlength']">
+
+          Password should be minimum 6 characters.
+
+        </div>
+        <!-- Board -->
+
+
+        <!-- Class -->
+        <!-- Class -->
+        <!-- Class -->
+        <!-- Class -->
+
+
+
+
+        <button type="submit" class="submit-btn" [disabled]="isSignupLoading">Register</button>
+      </form>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- My Profile Modal -->
+  @if (isProfileOpen) {
+  <div class="signup-modal-overlay">
+    <div class="signup-modal-content profile-modal-content">
+      <button class="close-btn" (click)="closeProfileModal()">✕</button>
+
+      <div class="profile-avatar-block">
+        <span class="profile-avatar-lg">{{ getUserInitials() }}</span>
+      </div>
+
+      <div class="signup-header">
+        <h3>My Profile</h3>
+        <p>View your account details</p>
+      </div>
+
+      <div class="profile-readonly-grid">
+        <div class="profile-readonly-item">
+          <span class="label">Name</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : userName }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Mobile No.</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.mobile_no
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Student ID</span>
+          <span class="value">{{ userStudentId }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Phone Number</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.mobile_no
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Account Type</span>
+          <span class="value">{{ userType }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Board</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.board
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Class</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.class_name
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Course</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.course
+            || '-') }}</span>
+        </div>
+        <div class="profile-readonly-item">
+          <span class="label">Duration</span>
+          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.duration
+            || '-') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Change Password Modal -->
+  @if (isChangePasswordOpen) {
+  <div class="signup-modal-overlay">
+    <div class="signup-modal-content">
+      <button class="close-btn" (click)="closeChangePasswordModal()">✕</button>
+
+      <div class="signup-header">
+        <h3>Change Password</h3>
+        <p>Keep your account secure</p>
+      </div>
+
+      <form [formGroup]="changePasswordForm" (ngSubmit)="submitChangePassword()" class="signup-form">
+        <div class="input-group password-group">
+          <input [type]="showCurrentPassword ? 'text' : 'password'" placeholder="Current Password"
+            formControlName="currentPassword" />
+          <button type="button" class="toggle-password" (click)="toggleCurrentPasswordVisibility()"
+            [attr.aria-label]="showCurrentPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showCurrentPassword" [class.fa-eye-slash]="showCurrentPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('currentPassword')?.touched &&
+            changePasswordForm.get('currentPassword')?.errors?.['required']">
+
+          Current password is required.
+
+        </div>
+
+        <div class="input-group password-group">
+          <input [type]="showNewPassword ? 'text' : 'password'" placeholder="New Password"
+            formControlName="newPassword" />
+          <button type="button" class="toggle-password" (click)="toggleNewPasswordVisibility()"
+            [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showNewPassword" [class.fa-eye-slash]="showNewPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('newPassword')?.touched &&
+            changePasswordForm.get('newPassword')?.errors?.['required']">
+
+          New password is required.
+
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">
+
+          Password should be minimum 6 characters.
+
+        </div>
+
+        <div class="input-group password-group">
+          <input [type]="showConfirmNewPassword ? 'text' : 'password'" placeholder="Confirm New Password"
+            formControlName="confirmNewPassword" />
+          <button type="button" class="toggle-password" (click)="toggleConfirmNewPasswordVisibility()"
+            [attr.aria-label]="showConfirmNewPassword ? 'Hide password' : 'Show password'">
+            <i class="fas" [class.fa-eye]="!showConfirmNewPassword" [class.fa-eye-slash]="showConfirmNewPassword"></i>
+          </button>
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.get('confirmNewPassword')?.touched &&
+            changePasswordForm.get('confirmNewPassword')?.errors?.['required']">
+
+          Confirm new password is required.
+
+        </div>
+
+        <div class="error" *ngIf="changePasswordForm.errors?.['passwordMismatch'] &&
+            changePasswordForm.get('confirmNewPassword')?.touched">
+
+          New Password and Confirm Password do not match.
+
+        </div>
+
+        <div class="error" *ngIf="changePasswordError">
+          {{ changePasswordError }}
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="changePasswordLoading">
+          {{ changePasswordLoading ? 'Updating...' : 'Update Password' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  }
+  <!-- =========================================
+        PAYMENT SUMMARY POPUP
+  ========================================== -->
+
+  @if (showPaymentPopup) {
+
+  <div class="payment-overlay">
+
+    <div class="payment-popup">
+
+      <div class="payment-header">
+        <h2>
+
+        </h2>
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+        <h2>{{headermsg}}</h2>
+
+
+
+      </div>
+
+      <div class="payment-body">
+
+        <div class="school-details">
+
+          <div class="detail-row">
+            <span>ID</span>
+            <strong>{{ paymentSummary.schoolId }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span> Name</span>
+            <strong>{{ paymentSummary.schoolName }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Plan</span>
+            <strong>{{ paymentSummary.planName }}</strong>
+          </div>
+
+        </div>
+
+        <div class="summary-box">
+
+          <h3>Payment Summary</h3>
+
+          <div class="detail-row">
+            <span>Taxable Amount</span>
+            <strong>₹{{ paymentSummary.taxableAmount }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>GST (18%)</span>
+            <strong>₹{{ paymentSummary.gstAmount }}</strong>
+          </div>
+
+          <hr>
+
+          <div class="detail-row total">
+            <span>Total Amount</span>
+            <strong>₹{{ paymentSummary.totalAmount }}</strong>
+          </div>
+
+        </div>
+
+        <div class="gst-note">
+          <i class="fas fa-check-circle"></i>
+          GST Included in Total Amount
+        </div>
+
+      </div>
+
+      <div class="payment-footer">
+
+        <button class="cancel-btn" (click)="showPaymentPopup = false">
+          Cancel
+        </button>
+
+        <button class="btn btn-success w-100 pay-btn" (click)="proceedPayment()" [disabled]="isPaymentProcessing">
+          {{ isPaymentProcessing ? 'Processing...' : 'Proceed To Payment' }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+  <!-- Search Modal -->
+  @if (isSearchModalOpen()) {
+  <div class="search-modal-overlay" (click)="closeSearchModal()">
+    <div class="search-modal-content" (click)="$event.stopPropagation()">
+      <div class="search-modal-header">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input #searchInput type="text" placeholder="Search for courses, boards, skills..." [(ngModel)]="searchQuery"
+            (ngModelChange)="searchQuery.set($event)" autocomplete="off" />
+          @if (searchQuery()) {
+          <button class="clear-search" (click)="searchQuery.set('')">
+            <i class="fas fa-times"></i>
+          </button>
+          }
+        </div>
+        <button class="close-search-modal" (click)="closeSearchModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="search-results-container">
+        @if (!searchQuery()) {
+        <div class="search-placeholder">
+          <i class="fas fa-lightbulb"></i>
+          <p>
+            Type to search for courses, skills, and prepare for your future!
+          </p>
+        </div>
+        } @else if (filteredSearchItems.length > 0) {
+        <div class="search-results-list">
+          @for (item of filteredSearchItems; track item.title) {
+          <div class="search-result-item" (click)="onSearchItemClick(item.url, item.requiresPlan)">
+            <div class="result-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="result-info">
+              <span class="result-title">{{ item.title }}</span>
+              <!-- <span class="result-url">{{ item.url }}</span> -->
+            </div>
+            <i class="fas fa-chevron-right arrow-icon"></i>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="no-results">
+          <i class="fas fa-search-minus"></i>
+          <p>No results found for "{{ searchQuery() }}"</p>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+
+  <div class="message-overlay" *ngIf="showMessageModal">
+    <div class="message-modal">
+
+      <p>{{ message }}</p>
+
+      <button (click)="closeMessage()">OK</button>
+
+    </div>
+  </div>
+</header>

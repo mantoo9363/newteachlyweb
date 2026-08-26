@@ -1,0 +1,85 @@
+<section class="feedback-section">
+  <!-- Decorative Blobs -->
+  <div class="blob-wrapper">
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+  </div>
+
+  <div class="feedback-container">
+    <header class="section-header">
+      <div class="badge-row">
+        <span class="modern-badge">
+          <i class="fas fa-sparkles"></i>
+          Testimonials
+        </span>
+      </div>
+      <h2 class="section-title">Loved by <span class="highlight">Students & Parents</span></h2>
+      <p class="section-subtitle">Real experiences from our growing community of learners.</p>
+    </header>
+
+    <div class="slider-outer-container">
+      <div class="slider-wrapper" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
+        <div class="slider-container" 
+             [class.no-transition]="disableTransition"
+             [style.transform]="getTransform()">
+          <div class="testimonial-slide" 
+               *ngFor="let testimonial of displayTestimonials; let i = index"
+               [class.active]="i === currentIndex">
+            <div class="testimonial-card">
+              <div class="card-glass">
+                <div class="card-header">
+                  <div class="rating-pill">
+                    <div class="stars">
+                      <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"></i>
+                    </div>
+                    <span class="rating-text">5.0</span>
+                  </div>
+                  <div class="quote-icon">
+                    <i class="fas fa-quote-right"></i>
+                  </div>
+                </div>
+
+                <div class="card-body">
+                  <p class="testimonial-text">{{ testimonial.text }}</p>
+                </div>
+
+                <footer class="card-footer">
+                  <div class="user-meta">
+                    <div class="avatar-container">
+                      <img [src]="testimonial.avatar" [alt]="testimonial.name" class="avatar-img">
+                      <span class="online-status"></span>
+                    </div>
+                    <div class="user-info">
+                      <h4 class="user-name">{{ testimonial.name }}</h4>
+                      <p class="user-role">{{ testimonial.role }}</p>
+                    </div>
+                  </div>
+                </footer>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Luxury Navigation Arrows -->
+      <button class="nav-btn prev" (click)="prev()" aria-label="Previous slide">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="nav-btn next" (click)="next()" aria-label="Next slide">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <!-- Dots -->
+      <div class="slider-dots">
+        <button 
+          *ngFor="let dot of testimonials; let i = index" 
+          class="dot" 
+          [class.active]="i === getActiveDotIndex()"
+          (click)="goTo(i)"
+          [attr.aria-label]="'Go to slide ' + (i + 1)">
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

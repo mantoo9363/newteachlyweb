@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Hide Tawk.to Chat Widget */
+[id*="tawk" i],
+[class*="tawk" i],
+iframe[src*="tawk.to" i] {
+  display: none !important;
+  visibility: hidden !important;
+}

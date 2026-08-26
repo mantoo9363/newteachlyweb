@@ -1,0 +1,42 @@
+<app-header></app-header>
+<main class="plans-page">
+
+  <!-- FEATURED PLANS -->
+  <section class="featured-section">
+
+    <h1 class="section-title">
+      Featured Plans
+    </h1>
+
+    <div class="featured-grid">
+
+      <app-plan-card-preview
+        *ngFor="let plan of superPlans"
+        [plan]="plan">
+      </app-plan-card-preview>
+
+    </div>
+
+  </section>
+
+
+  <!-- ALL PLANS -->
+  <section class="all-plans-section">
+
+    <h2 class="section-title">
+      All Plans
+    </h2>
+
+    <div class="plans-grid">
+
+      <app-plan-card-preview
+        *ngFor="let plan of allPlans"
+        [plan]="plan">
+      </app-plan-card-preview>
+
+    </div>
+
+  </section>
+
+</main>
+<app-footer></app-footer>

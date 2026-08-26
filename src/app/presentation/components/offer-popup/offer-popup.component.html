@@ -1,0 +1,49 @@
+@if (isVisible()) {
+<div class="popup-overlay" (click)="closePopup()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closePopup()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="popup-header">
+      <span class="launch-tag">LIMITED — LAUNCH OFFER</span>
+      <h2>Start Learning Everything. <span>Risk-Free. Today.</span></h2>
+      <p class="offer-text">3 day free trial</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #offerForm="ngForm" class="popup-form">
+      <div class="input-group">
+        <input 
+          type="text" 
+          name="name" 
+          [(ngModel)]="name" 
+          placeholder="Your name" 
+          required
+          #nameInput="ngModel"
+        >
+      </div>
+      <div class="input-group">
+        <input 
+          type="tel" 
+          name="whatsapp" 
+          [(ngModel)]="whatsapp" 
+          placeholder="WhatsApp number" 
+          required
+          #whatsappInput="ngModel"
+        >
+      </div>
+
+      <button type="submit" [disabled]="!offerForm.form.valid" class="submit-btn">
+        Claim My Free Trial Now — No Payment Required
+      </button>
+    </form>
+
+    <div class="popup-footer">
+      <p>Join 10,000+ students · Cancel anytime</p>
+      <div class="whatsapp-update">
+        Prefer WhatsApp? Get updates <a href="#">here <i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+}

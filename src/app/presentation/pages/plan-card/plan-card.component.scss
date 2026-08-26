@@ -1,0 +1,617 @@
+
+
+
+
+
+
+/* =========================================
+   PLAN CARD
+========================================= */
+
+.card {
+  position: relative;
+
+  width: 100%;
+  max-width: 360px;
+
+  margin: 0 auto;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #e9d5ff;
+  border-radius: 28px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 12px rgba(88, 28, 135, 0.08),
+    0 12px 30px rgba(88, 28, 135, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 18px rgba(88, 28, 135, 0.10),
+    0 18px 35px rgba(88, 28, 135, 0.08);
+}
+
+
+/* =========================================
+   DECORATIVE NOTCHES
+========================================= */
+
+.notch {
+  position: absolute;
+
+  top: 0;
+
+  width: 55px;
+  height: 9px;
+
+  background: linear-gradient(
+    90deg,
+    #9333ea,
+    #6b21a8
+  );
+
+  border-radius: 0 0 999px 999px;
+
+  z-index: 10;
+}
+
+.notch--left {
+  left: 28px;
+}
+
+.notch--right {
+  right: 28px;
+}
+
+
+/* =========================================
+   CARD BODY
+========================================= */
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  padding: 34px 20px 22px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TITLE + IMAGE LINK
+========================================= */
+
+.card__link {
+  display: block;
+
+  width: 100%;
+
+  color: inherit;
+
+  text-decoration: none;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.card__title {
+  display: block;
+
+  width: 100%;
+  min-height: 48px;
+
+  margin: 0 0 8px;
+
+  box-sizing: border-box;
+
+  color: #7e22ce;
+
+  text-align: center;
+
+  font-size: 22px;
+  line-height: 1.15;
+  font-weight: 800;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.card__image-wrap {
+  width: 100%;
+  height: 190px;
+
+  margin: 5px 0 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+.card__image {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  transition: transform 0.25s ease;
+}
+
+.card__link:hover .card__image {
+  transform: scale(1.02);
+}
+
+
+/* =========================================
+   PRICE
+========================================= */
+
+.card__price-block {
+  width: 100%;
+
+  margin: 3px 0 14px;
+
+  text-align: center;
+}
+
+.card__price {
+  display: block;
+
+  color: #7e22ce;
+
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.card__price--applied {
+  color: #059669;
+}
+
+.card__price-meta {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  min-height: 17px;
+
+  margin-top: 3px;
+}
+
+.card__price-strike {
+  color: #9ca3af;
+
+  font-size: 11px;
+
+  text-decoration: line-through;
+}
+
+.card__price-discount {
+  color: #059669;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.card__price-mrp-label {
+  color: #9ca3af;
+
+  font-size: 11px;
+}
+
+.card__contact {
+  display: block;
+
+  color: #7e22ce;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.card__validity-label {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+
+/* =========================================
+   COUPON
+========================================= */
+
+.card__coupon {
+  width: 100%;
+
+  margin: 4px 0 17px;
+}
+
+.card__coupon-row {
+  display: flex;
+
+  align-items: center;
+
+  width: 100%;
+  min-height: 40px;
+
+  padding: 3px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e9d5ff;
+  border-radius: 999px;
+
+  background: #ffffff;
+}
+
+.card__coupon-input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 34px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #374151;
+
+  font-size: 12px;
+}
+
+.card__coupon-input::placeholder {
+  color: #9ca3af;
+}
+
+.card__coupon-apply {
+  flex-shrink: 0;
+
+  height: 34px;
+
+  padding: 0 17px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    #9333ea,
+    #7e22ce
+  );
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: opacity 0.2s ease;
+}
+
+.card__coupon-apply:hover {
+  opacity: 0.9;
+}
+
+
+/* =========================================
+   APPLIED COUPON
+========================================= */
+
+.card__coupon-applied {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: 40px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #a7f3d0;
+  border-radius: 999px;
+
+  background: #ecfdf5;
+}
+
+.card__coupon-applied-text {
+  color: #047857;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.card__coupon-remove {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.card__coupon-error {
+  margin: 5px 5px 0;
+
+  color: #f43f5e;
+
+  text-align: center;
+
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+
+/* =========================================
+   VALIDITY
+========================================= */
+
+.card__validity-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 8px;
+
+  width: 100%;
+
+  margin: 3px 0 18px;
+}
+
+.card__validity-btn {
+  width: 100%;
+  height: 38px;
+
+  padding: 0 8px;
+
+  border: 1.5px solid #9333ea;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #7e22ce;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.card__validity-btn:hover {
+  background: #faf5ff;
+}
+
+.card__validity-btn--active {
+  background: linear-gradient(
+    90deg,
+    #9333ea,
+    #7e22ce
+  );
+
+  border-color: #9333ea;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   VIEW DETAILS
+========================================= */
+
+.card__view-details {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 42px;
+
+  box-sizing: border-box;
+
+  border: 2px solid #9333ea;
+  border-radius: 999px;
+
+  background: #ffffff;
+
+  color: #7e22ce;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.card__view-details:hover {
+  background: #faf5ff;
+}
+
+
+/* =========================================
+   BUY NOW
+========================================= */
+
+.card__buy-now {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 46px;
+
+  margin-top: 9px;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    #9333ea,
+    #581c87
+  );
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  letter-spacing: 0.2px;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.card__buy-now:hover {
+  transform: translateY(-1px);
+
+  opacity: 0.92;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .card {
+    max-width: 340px;
+  }
+
+  .card__body {
+    padding: 32px 18px 20px;
+  }
+
+  .card__title {
+    font-size: 20px;
+  }
+
+  .card__image-wrap {
+    height: 180px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .card {
+    max-width: 100%;
+
+    border-radius: 24px;
+  }
+
+  .card__body {
+    padding: 32px 18px 20px;
+  }
+
+  .card__title {
+    font-size: 21px;
+  }
+
+  .card__image-wrap {
+    height: 200px;
+  }
+}
+
+
+
+.card {
+  position: relative;
+}
+
+.card__status {
+position: absolute;
+  top: 14px;
+  right: 14px;
+
+  z-index: 50;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 26px;
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  background: #22c55e;
+  color: #ffffff;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}

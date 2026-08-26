@@ -1,0 +1,128 @@
+<app-header></app-header>
+
+<main class="detail-page">
+  @if (simulator(); as sim) {
+    <!-- Hero Section with Preview -->
+    <section class="simulator-hero">
+      <div class="preview-container">
+        <div class="preview-wrapper">
+          <img [src]="sim.thumbnail" [alt]="sim.name" [title]="sim.name" class="preview-img">
+          <div class="play-overlay" (click)="playSimulator()">
+            <div class="play-button">
+              <i class="fas fa-play"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Section -->
+    <div class="content-container">
+      <h1 class="sim-title">{{ sim.name }}</h1>
+
+      <div class="action-bar">
+        <div class="left-actions">
+          <button class="action-btn" [title]="'simulator.detail.download' | translate"><i class="fas fa-download"></i></button>
+          <button class="action-btn" [title]="'simulator.detail.embed' | translate"><i class="fas fa-code"></i></button>
+          <button class="action-btn" [title]="'simulator.detail.teacher' | translate"><i class="fas fa-user-tie"></i></button>
+          <button class="action-btn" title="Facebook"><i class="fab fa-facebook"></i></button>
+          <button class="action-btn" title="Twitter"><i class="fab fa-twitter"></i></button>
+        </div>
+        <button class="customize-btn">{{ 'simulator.detail.customize' | translate }} <i class="fas fa-chevron-right"></i></button>
+      </div>
+
+      <!-- Tabs -->
+      <nav class="tabs-nav">
+        @for (tab of tabs; track tab) {
+          <button 
+            class="tab-link" 
+            [class.active]="activeTab() === tab"
+            (click)="setActiveTab(tab)"
+          >
+            {{ getTabTranslation(tab) }}
+            @if (tab === 'Presets') {
+              <span class="new-icon">✨</span>
+            }
+          </button>
+        }
+      </nav>
+
+      <div class="tab-content">
+        @switch (activeTab()) {
+          @case ('About') {
+            <div class="about-pane">
+              <div class="about-grid">
+                <div class="main-info">
+                  <h3>{{ 'simulator.detail.topics' | translate }}</h3>
+                  <div class="topics-tags">
+                    <span class="tag">{{ getSubjectTranslation(sim.subject) }}</span>
+                    <span class="tag">{{ getSubjectTranslation(sim.category) }}</span>
+                  </div>
+                  
+                  <h3>{{ 'simulator.detail.description' | translate }}</h3>
+                  <p>Learn about {{ sim.name.toLowerCase() }} in this interactive simulation. Explore concepts through hands-on experimentation and visual feedback.</p>
+                </div>
+                
+                <!-- <div class="side-info">
+                  <div class="info-item">
+                    <strong>{{ 'simulator.detail.level' | translate }}</strong>
+                    <span>{{ getGradeListTranslation(sim.gradeLevel) }}</span>
+                  </div>
+                  <div class="info-item">
+                    <strong>{{ 'simulator.detail.subject' | translate }}</strong>
+                    <span>{{ getSubjectTranslation(sim.category) }}</span>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          }
+          @case ('Translations') {
+            <div class="translations-pane">
+              <h3>{{ 'simulator.detail.availableLangs' | translate }}</h3>
+              <p>{{ 'simulator.detail.availLangsDesc' | translate }}</p>
+              <div class="languages-list">
+                @for (lang of sim.availableLanguages || ['en']; track lang) {
+                  <div class="lang-item" (click)="setLanguage(lang)">
+                    <span class="lang-name">{{ lang === 'en' ? 'English' : lang === 'ur' ? 'Urdu (اردو)' : lang }}</span>
+                    <button class="switch-lang-btn">{{ 'simulator.detail.switchTo' | translate }} {{ lang === 'en' ? 'English' : lang === 'ur' ? 'Urdu' : lang }}</button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          @case ('Credits') {
+            <div class="credits-pane">
+              <h3>{{ 'simulator.detail.credits' | translate }}</h3>
+              <div class="credits-content">
+                  <p><strong>{{ 'simulator.detail.developedBy' | translate }}</strong> PhET Interactive Simulations, University of Colorado Boulder</p>
+                  <p><strong>{{ 'simulator.detail.integratedBy' | translate }}</strong> Teachly Edutech Team</p>
+                  <p><strong>{{ 'simulator.detail.urduTrans' | translate }}</strong> Teachly Localization Team</p>
+              </div>
+            </div>
+          }
+          @default {
+            @if (activeTab() !== 'About' && activeTab() !== 'Translations' && activeTab() !== 'Credits') {
+              <div class="placeholder-pane">
+                <p>{{ 'simulator.detail.comingSoon' | translate: {tab: getTabTranslation(activeTab())} }}</p>
+              </div>
+            }
+          }
+        }
+      </div>
+    </div>
+  }
+</main>
+
+<!-- Fullscreen Simulator Overlay -->
+@if (isPlaying()) {
+  <div class="simulator-overlay">
+    <div class="overlay-header">
+      <button class="close-btn" (click)="closeSimulator()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <iframe [src]="safeUrl()" class="sim-iframe" frameborder="0" allowfullscreen></iframe>
+  </div>
+}
+
+<app-footer></app-footer>

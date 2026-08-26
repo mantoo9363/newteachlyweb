@@ -1,0 +1,1754 @@
+/* ==========================================================
+   PRICING SECTION
+========================================================== */
+
+.pricing-section {
+  padding: 50px 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 153, 51, 0.07), rgba(255, 153, 51, 0) 18%),
+    linear-gradient(0deg, rgba(19, 136, 8, 0.07), rgba(19, 136, 8, 0) 18%),
+    #f7f8fc;
+  text-align: center;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    max-width: 750px;
+    margin: 0 auto 18px;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+.profile-summary {
+  max-width: 960px;
+  margin: 0 auto 30px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(110px, 1fr));
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(126, 34, 206, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(36, 20, 64, 0.08);
+}
+
+.profile-summary-item {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8f6ff;
+  text-align: left;
+
+  span {
+    display: block;
+    margin-bottom: 4px;
+    color: #777;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  strong {
+    display: block;
+    color: #1f1430;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.profile-summary-item.wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .profile-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-summary-item.wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-summary-item.wide {
+    grid-column: span 1;
+  }
+}
+
+/* ==========================================================
+   INDEPENDENCE DAY BANNER
+========================================================== */
+
+.independence-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto 30px;
+  padding: 10px 24px;
+  border-radius: 100px;
+
+  background-image:
+    linear-gradient(#fff, #fff),
+    linear-gradient(90deg, #ff9933, #ffffff 50%, #138808);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 2px solid transparent;
+
+  color: #000080;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.chakra {
+  display: inline-block;
+  color: #000080;
+  font-size: 18px;
+  animation: spinChakra 6s linear infinite;
+}
+
+@keyframes spinChakra {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .independence-banner {
+    font-size: 12px;
+    padding: 8px 16px;
+    text-align: center;
+  }
+}
+
+/* ==========================================================
+   PRICING CONTAINER
+========================================================== */
+
+/* ==========================================================
+   PRICING CONTAINER
+========================================================== */
+
+/* ==========================================================
+   PRICING CONTAINER & CAROUSEL
+========================================================== */
+
+.pricing-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+  margin: auto;
+  max-width: 1600px;
+  padding: 10px 5px 25px;
+}
+
+.pricing-card,
+.modern-card {
+  position: relative;
+  overflow: hidden;
+
+  flex: 1 1 290px;
+  width: 100%;
+  max-width: 300px;
+  min-height: auto;
+
+  background: #fff;
+  border-radius: 16px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+
+  transition: 0.35s;
+
+  /* Independence Day tricolor top stripe */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(
+      90deg,
+      #ff9933 0%,
+      #ff9933 33.33%,
+      #ffffff 33.33%,
+      #ffffff 66.66%,
+      #138808 66.66%,
+      #138808 100%
+    );
+  }
+
+  /* Faint Ashoka Chakra watermark */
+  &::after {
+    content: "☸";
+    position: absolute;
+    bottom: -22px;
+    right: -14px;
+    font-size: 90px;
+    line-height: 1;
+    color: rgba(0, 0, 128, 0.05);
+    pointer-events: none;
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE CAROUSEL FOR MID AND MOBILE SCREENS
+========================================================== */
+
+@media (max-width: 1200px) {
+  .pricing-container {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    padding: 15px 20px 30px 20px;
+    gap: 20px;
+
+    /* Custom thin styled scrollbar for carousel */
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #ff9933, #7b1fa2, #138808);
+      border-radius: 10px;
+    }
+  }
+
+  .pricing-card,
+  .modern-card {
+    flex: 0 0 320px;
+    width: 320px;
+    max-width: 320px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-section {
+    padding: 40px 10px;
+  }
+
+  .pricing-container {
+    padding: 15px 15px 25px 15px;
+    gap: 16px;
+  }
+
+  .pricing-card,
+  .modern-card {
+    flex: 0 0 86vw;
+    width: 86vw;
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-section {
+    padding: 30px 5px;
+  }
+
+  .pricing-container {
+    padding: 10px 10px 20px 10px;
+    gap: 12px;
+  }
+
+  .pricing-card,
+  .modern-card {
+    flex: 0 0 88vw;
+    width: 88vw;
+    max-width: 320px;
+  }
+}
+
+.school::after {
+  color: rgba(122, 51, 0, 0.08);
+}
+
+.pricing-card.purchased-plan {
+  padding-top: 54px;
+  border: 3px solid #f7c948;
+  box-shadow:
+    0 22px 55px rgba(126, 34, 206, 0.22),
+    0 0 0 6px rgba(247, 201, 72, 0.18);
+  transform: translateY(-6px);
+}
+
+.pricing-card.purchased-plan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(247, 201, 72, 0.18), transparent 32%);
+}
+
+.crown-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffcf33, #ff9f1c);
+  color: #341600;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 10px 22px rgba(255, 159, 28, 0.35);
+}
+
+.crown-badge i {
+  font-size: 13px;
+}
+
+.purchased-plan .buy-btn,
+.purchased-plan .buy-outline {
+  cursor: default;
+  background: linear-gradient(135deg, #f7c948, #ff9f1c) !important;
+  color: #2b1600 !important;
+  box-shadow: none;
+}
+
+.pricing-card:hover,
+.modern-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================
+   SCHOOL CARD
+========================================================== */
+
+.school {
+  background: linear-gradient(0deg, #ffce88 0%, #ffca94c9 5%, #fff5e6 90%, #ffffff 100%);
+
+  color: #7a3300;
+}
+
+.school .price span {
+  color: #8a5a2b;
+}
+
+.school .divider {
+  background: rgba(122, 51, 0, 0.15);
+}
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.plan-label {
+  display: block;
+
+  font-size: 11px;
+
+  color: #999;
+
+  letter-spacing: 2px;
+
+  font-weight: 700;
+
+  margin-bottom: 10px;
+}
+
+.plan-title {
+  font-size: 18px;
+
+  font-weight: 700;
+
+  color: #222;
+
+  margin-bottom: 8px;
+}
+
+.school .plan-title {
+  color: #7a3300;
+}
+
+/* ==========================================================
+   PRICE
+========================================================== */
+
+.price-section {
+  display: flex;
+
+  justify-content: center;
+
+  margin: 0 auto;
+  align-items: center;
+
+  margin-bottom: 6px;
+}
+
+.price h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.price span {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.old-price {
+  display: block;
+
+  text-decoration: line-through;
+
+  color: #999;
+
+  font-size: 13px;
+}
+
+.new-price {
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #111;
+}
+
+.new-price span {
+  font-size: 15px;
+
+  color: #777;
+
+  font-weight: 500;
+}
+
+.school .new-price {
+  color: #fff;
+}
+
+.school .old-price {
+  color: #ddd;
+}
+
+/* ==========================================================
+   DISCOUNT
+========================================================== */
+
+.discount-badge {
+  width: 72px;
+
+  height: 72px;
+
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #ff9933, #138808);
+
+  color: #fff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.discount-badge strong {
+  font-size: 24px;
+}
+
+.discount-badge span {
+  font-size: 11px;
+}
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+.view-btn,
+.buy-outline {
+  width: 100%;
+  height: 36px;
+
+  margin-top: 12px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: linear-gradient(90deg, #ff9933, #138808);
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+.view-btn {
+  margin: 8px 0;
+
+  border: 2px solid #000080;
+
+  color: #000080;
+
+  background: #fff;
+}
+
+.view-btn:hover {
+  background: #000080;
+
+  color: #fff;
+}
+
+.school .view-btn {
+  border-color: #cc7a00;
+
+  color: #cc7a00;
+}
+
+.school .view-btn:hover {
+  background: #cc7a00;
+
+  color: #fff;
+}
+
+.buy-outline {
+  margin-top: auto;
+
+  border: none;
+
+  background: linear-gradient(135deg, #ff9933, #138808);
+
+  color: #fff;
+
+  margin-top: 16px;
+}
+
+.buy-outline:hover {
+  transform: translateY(-2px);
+}
+
+.buy-outline:disabled,
+.buy-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.buy-outline:disabled:hover,
+.buy-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================================
+   COUPON
+========================================================== */
+
+.coupon-wrap {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.coupon-badge {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px 6px 12px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #064e3b, #047857);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
+  animation: badgePop 0.5s ease;
+}
+
+.coupon-badge.user-applied {
+  background: linear-gradient(135deg, #7c2d12, #b45309);
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.3);
+}
+
+.badge-icon {
+  font-size: 16px;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+.badge-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: shine 3s ease-in-out infinite;
+}
+
+.coupon-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px;
+  border: 1.5px solid #d1fae5;
+  border-radius: 10px;
+  background: #f0fdf4;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.coupon-field:focus-within {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+.coupon-input {
+  flex: 1;
+  height: 42px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+}
+
+.coupon-input {
+  flex: 1;
+
+  height: 36px;
+
+  padding: 0 12px;
+
+  border: 1.5px solid #34d399;
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: #111827;
+
+  font-size: 13px;
+
+  outline: none;
+
+  transition: all 0.3s ease;
+}
+
+.coupon-input::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.coupon-go {
+  min-width: 48px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.coupon-go:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.coupon-go:active {
+  transform: scale(0.95);
+}
+
+.coupon-applied {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 14px;
+  background: linear-gradient(135deg, #064e3b, #047857);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
+  animation: badgePop 0.5s ease;
+}
+
+.applied-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.remove-coupon {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  line-height: 1;
+}
+
+.remove-coupon:hover {
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(1.15);
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  20% {
+    left: 120%;
+  }
+  100% {
+    left: 120%;
+  }
+}
+
+/* ==========================================================
+   VALIDITY
+========================================================== */
+
+.validity {
+  margin-top: 10px;
+}
+
+.validity h4 {
+  font-size: 13px;
+
+  margin-bottom: 8px;
+}
+
+.month-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 8px;
+}
+
+.month-btn {
+  height: 36px;
+
+  border-radius: 10px;
+
+  border: 2px solid #000080;
+
+  background: #fff;
+
+  color: #000080;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.month-btn:hover,
+.month-btn.active {
+  background: #000080;
+
+  color: #fff;
+}
+
+/* ==========================================================
+   OFFER
+========================================================== */
+
+.offer-text {
+  margin-top: 10px;
+
+  padding-top: 10px;
+
+  border-top: 1px solid #eee;
+
+  font-size: 12px;
+
+  text-align: center;
+
+  color: #555;
+}
+
+.offer-text b {
+  color: #5b21b6;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+  .pricing-card,
+  .modern-card {
+    max-width: 340px;
+  }
+
+  .pricing-section h1 {
+    font-size: 28px;
+  }
+}
+
+/* ==========================================================
+   POPUP OVERLAY & MODAL (PREMIUM DESIGN)
+========================================================== */
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.popup-card {
+  position: relative;
+  width: 1000px;
+  max-width: 95vw;
+  height: 650px;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: popup 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================
+   CLOSE BUTTON
+========================================================== */
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: #ffffff;
+    color: #0f172a;
+    transform: rotate(90deg) scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* ==========================================================
+   POPUP CONTENT
+========================================================== */
+
+.popup-content {
+  display: flex;
+  height: 100%;
+}
+
+/* ==========================================================
+   LEFT PANEL
+========================================================== */
+
+.popup-left {
+  flex: 1;
+  padding: 38px 40px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.popup-left h2 {
+  color: #1e1b4b;
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.popup-left .subtitle {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.section {
+  margin-bottom: 22px;
+  flex-shrink: 0;
+
+  h4 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #475569;
+    margin-bottom: 10px;
+  }
+}
+
+.popup-left .section:last-of-type {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+/* ==========================================================
+   DURATION SELECTION DROPDOWN
+========================================================== */
+
+.duration-select-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.duration-dropdown {
+  width: 100%;
+  height: 52px;
+  border: 2px solid #7c3aed;
+  background: #fcfaff;
+  border-radius: 16px;
+  padding: 0 20px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #6d28d9;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 18px;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.12);
+  transition: all 0.25s ease;
+
+  &:hover, &:focus {
+    border-color: #6d28d9;
+    background-color: #ffffff;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.18);
+  }
+
+  option {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e1b4b;
+    background: #ffffff;
+    padding: 10px;
+  }
+}
+
+/* ==========================================================
+   COUPON FIELD
+========================================================== */
+
+.coupon-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.coupon-box input {
+  flex: 1;
+  height: 48px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #0f172a;
+  background: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #7c3aed;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+  }
+}
+
+.coupon-box button,
+.apply-btn {
+  min-width: 100px;
+  height: 48px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
+
+  &:hover {
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(109, 40, 217, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================
+   FEATURES LIST
+========================================================== */
+
+.features-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+.feature-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.feature-box {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 18px 20px;
+
+  h5 {
+    color: #4c1d95;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    padding: 7px 0;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px dashed #e2e8f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+/* ==========================================================
+   RIGHT PANEL (PREMIUM SIDEBAR CHECKOUT)
+========================================================== */
+
+.popup-right {
+  width: 360px;
+  background: linear-gradient(160deg, #1e1b4b 0%, #311042 50%, #0f172a 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+
+  /* Subtle ambient lighting inside right panel */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.price-box {
+  text-align: center;
+  margin-bottom: 36px;
+  z-index: 1;
+  width: 100%;
+
+  h2 {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 8px 0;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .old-price {
+    color: #94a3b8;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: line-through;
+    margin: 4px 0 10px;
+  }
+
+  .discount {
+    display: inline-block;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+    margin-top: 6px;
+  }
+}
+
+.popup-right .buy-btn {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff9933 0%, #138808 100%);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(19, 136, 8, 0.4);
+  z-index: 1;
+
+  &:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(19, 136, 8, 0.55);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+/* ==========================================================
+   BUY BUTTON
+========================================================== */
+
+.all-in {
+  font-size: 13px;
+  margin: 4px 0 8px;
+  opacity: 0.85;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0 6px;
+
+  .validity {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .buy-btn {
+    width: auto;
+    height: 30px;
+    margin-top: 0;
+    padding: 0 16px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #ff9933, #138808);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 153, 51, 0.4);
+    }
+  }
+}
+
+.buy-btn {
+  width: 100%;
+
+  height: 54px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #ff9933, #138808);
+
+  color: #fff;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.buy-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 25px rgba(19, 136, 8, 0.25);
+}
+
+/* ==========================================================
+   ANIMATION
+========================================================== */
+
+@keyframes popup {
+  from {
+    transform: scale(0.85);
+
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================
+   POPUP RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+  .popup-card {
+    height: 90vh;
+    max-height: 90vh;
+  }
+
+  .popup-content {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .popup-left {
+    padding: 28px 24px;
+    overflow: visible;
+  }
+
+  .popup-right {
+    width: 100%;
+    padding: 30px 24px;
+    box-sizing: border-box;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .feature-columns {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .popup-card {
+    width: 100%;
+    height: 94vh;
+    border-radius: 20px;
+  }
+
+  .popup-left {
+    padding: 24px 18px;
+  }
+
+  .popup-right {
+    padding: 24px 18px;
+  }
+
+  .price-box h2 {
+    font-size: 28px;
+  }
+}
+
+/* ==========================================================
+   PLAN LOGO
+========================================================== */
+
+.popup-left {
+  position: relative;
+}
+
+.plan-logo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 140px;
+  height: 140px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.plan-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  opacity: 0.08;
+
+  border-radius: 50%;
+}
+
+/* ==========================================================
+   POPUP LOGO
+========================================================== */
+
+.popup-logo {
+  position: absolute;
+
+  top: 25px;
+  right: 420px;
+
+  width: 120px;
+  height: 120px;
+
+  z-index: 2;
+}
+
+.popup-logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+/* ==========================================================
+   INPUTS
+========================================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+  width: 100%;
+  height: 48px;
+
+  border: 2px solid #22c55e;
+
+  border-radius: 25px;
+
+  padding: 0 18px;
+
+  background: #fff;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #16a34a;
+
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+
+input::placeholder {
+  color: #777;
+}
+
+/* ==========================================================
+   APPLY BUTTON
+========================================================== */
+
+.apply-btn {
+  min-width: 120px;
+  height: 48px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: linear-gradient(135deg, #7b1fa2, #5b21b6);
+
+  color: #fff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(135deg, #6d28d9, #4c1d95);
+}
+
+/* ==========================================================
+   CUSTOM SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7b1fa2;
+
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5b21b6;
+}
+
+/* ==========================================================
+   COMMON TRANSITIONS
+========================================================== */
+
+button,
+input,
+.month-btn,
+.view-btn,
+.buy-btn,
+.buy-outline,
+.apply-btn {
+  transition: all 0.3s ease;
+}
+
+/* ==========================================================
+   CARD HOVER
+========================================================== */
+
+.pricing-card:hover,
+.modern-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.offer-text {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #444;
+}
+
+.offer-text b {
+  color: #d60000;
+  font-size: 13px;
+  font-weight: 800;
+  animation: blinkOffer 1s infinite;
+}
+
+@keyframes blinkOffer {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.2;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* new scss for gif*/
+
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-gif {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 15px; // card ke dono side thoda gap
+  box-sizing: border-box;
+
+  img {
+    width: 100%;
+    max-width: 180px; // desktop par maximum size
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+.tech-plan-offer {
+  width: 92%;
+  margin: 15px auto;
+  padding: 14px 18px;
+  background: #fff;
+  color: #6a1b9a;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: offerBlink 1s infinite;
+  transition: all 0.3s ease;
+}
+
+.tech-plan-offer strong {
+  color: #ff1744;
+  font-size: 20px;
+}
+
+@keyframes offerBlink {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.3);
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 0.75;
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.7);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.3);
+  }
+}
+
+.school-offer-box {
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  padding: 6px 0;
+  margin-top: 8px;
+  opacity: 0.9;
+}
+
+/* ==========================================================
+   BEST CHOICE (INDEPENDENCE DAY HIGHLIGHT)
+========================================================== */
+
+.highlight {
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(#fff, #fff),
+    linear-gradient(135deg, #ff9933, #138808);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  padding-top: 54px;
+}
+
+.best-badge {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px 12px;
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #ff9933, #138808);
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+
+  box-shadow: 0 8px 18px rgba(19, 136, 8, 0.3);
+}
+
+.best-badge i {
+  font-size: 10px;
+}

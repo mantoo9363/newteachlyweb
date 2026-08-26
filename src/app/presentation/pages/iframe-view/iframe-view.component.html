@@ -1,0 +1,61 @@
+<app-header></app-header>
+
+<div class="iframe-view-page">
+  <div class="iframe-header">
+    <button (click)="closeIframe()" class="close-btn">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </button>
+ 
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading content...</p>
+      </div>
+    </div>
+  }
+
+  @if (hasError) {
+    <div class="error-overlay">
+      <div class="error-content">
+        <div class="error-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3 class="error-title">Content Unavailable</h3>
+        <p class="error-message">{{ errorMessage }}</p>
+        <div class="error-actions">
+          <button (click)="openInNewTab()" class="button-uiverse primary">
+            <div class="dots_border"></div>
+            <span class="text_button">Open in New Tab</span>
+          </button>
+          <button (click)="closeIframe()" class="button-uiverse secondary">
+            <span class="text_button"><i class="fas fa-arrow-left"></i> Go Back</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (externalUrl && !hasError) {
+    <iframe
+      [src]="externalUrl"
+      class="external-iframe"
+      (load)="onIframeLoad()"
+      (error)="onIframeError()"
+      frameborder="0"
+      allow="
+        accelerometer;
+        autoplay;
+        clipboard-write;
+        encrypted-media;
+        gyroscope;
+        picture-in-picture;
+      "
+      allowfullscreen
+    ></iframe>
+  }
+</div>
+
+<app-footer></app-footer>

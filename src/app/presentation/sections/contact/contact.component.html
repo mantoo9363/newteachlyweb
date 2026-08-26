@@ -1,0 +1,68 @@
+<div class="contact-form-container">
+  <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <div class="form-header">
+      <h3 class="form-heading">{{ 'contact.formHeading' | translate }}</h3>
+      <p class="form-subheading">Fill out the form below and we'll get back to you shortly.</p>
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-user input-icon"></i>
+      <input 
+        type="text" 
+        id="name" 
+        class="form-input"
+        formControlName="name"
+        [placeholder]="'contact.namePlaceholder' | translate"
+      />
+    </div>
+
+    <div class="input-group">
+      <i class="fas fa-envelope input-icon"></i>
+      <input 
+        type="email" 
+        id="email" 
+        class="form-input"
+        formControlName="email"
+        [placeholder]="'contact.emailPlaceholder' | translate"
+      />
+    </div>
+
+    <div class="input-group">
+      <i class="fas fa-phone input-icon"></i>
+      <input 
+        type="tel" 
+        id="phone" 
+        class="form-input"
+        formControlName="phone"
+        [placeholder]="'contact.phonePlaceholder' | translate"
+      />
+    </div>
+
+    <div class="input-group">
+      <i class="fas fa-tag input-icon"></i>
+      <input 
+        type="text" 
+        id="subject" 
+        class="form-input"
+        formControlName="subject"
+        [placeholder]="'contact.subjectPlaceholder' | translate"
+      />
+    </div>
+
+    <div class="input-group">
+      <i class="fas fa-comment-alt input-icon textarea-icon"></i>
+      <textarea 
+        id="message" 
+        class="form-textarea"
+        formControlName="message"
+        [placeholder]="'contact.messagePlaceholder' | translate"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn" [disabled]="contactForm.invalid">
+      <span>{{ 'contact.submit' | translate }}</span>
+      <i class="fas fa-paper-plane btn-icon"></i>
+    </button>
+  </form>
+</div>

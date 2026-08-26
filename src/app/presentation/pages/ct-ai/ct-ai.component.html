@@ -1,0 +1,198 @@
+
+<div class="app">
+
+    <!-- ================= Sidebar ================= -->
+
+    <aside class="binder">
+
+        <div class="binder-head">
+
+            <span class="brand mono">
+
+                <b>NCERT</b>
+
+                CURRICULUM <br>
+
+                EXPLORER
+
+            </span>
+
+        </div>
+
+        <nav class="tabs">
+
+            <button
+                *ngFor="let cls of classes.slice(0,6)"
+                class="tab"
+                [class.active]="selectedClass.n===cls.n"
+                (click)="selectClass(cls)"
+                [style.--accent]="cls.accent">
+
+                <span
+                    class="dot"
+                    [style.background]="cls.accent">
+                </span>
+                <div class="lbl mono">
+                    <span>CLASS</span>
+                    <br/>
+                    <strong>{{ pad(cls.n) }}</strong>
+                </div>
+
+                
+
+            </button>
+        </nav>
+
+        <div class="binder-head">
+
+            <span class="brand mono">
+
+                <b>What</b>
+
+                Teachly <br>
+
+                Offers
+
+            </span>
+
+        </div>
+         <nav class="tabs">
+
+            <button
+                *ngFor="let cls of classes.slice(6)"
+                class="tab"
+                [class.active]="selectedClass.n===cls.n"
+                (click)="selectClass(cls)"
+                [style.--accent]="cls.accent">
+
+                <span
+                    class="dot"
+                    [style.background]="cls.accent">
+                </span>
+                <div class="lbl mono">
+                    <span>CLASS</span>
+                    <br/>
+                    <strong>{{ pad(cls.n) }}</strong>
+                </div>
+
+                
+
+            </button>
+        </nav>
+
+    </aside>
+
+    <!-- ================= Right Content ================= -->
+
+    <main
+        class="content"
+        [style.--accent]="selectedClass.accent">
+
+        <!-- Header -->
+
+        <div class="content-head">
+
+            <div>
+
+                <span class="eyebrow mono">
+                    CLASS {{ pad(selectedClass.n) }}
+                    ·
+                    {{ selectedClass.leftTitle || 'MATHEMATICS' }}
+                </span>
+
+                <h1>
+
+                    {{ selectedClass.title }}
+
+                </h1>
+
+            </div>
+
+            <div class="count">
+
+                Chapters
+
+                <b>
+
+                    {{ total }}
+
+                </b>
+
+            </div>
+
+        </div>
+
+        <!-- Mathematics -->
+
+        <div class="section-label">
+
+            <span>
+                {{ selectedClass.leftTitle || 'Mathematics' }}
+            </span>
+
+            <i></i>
+
+        </div>
+
+         <ul class="chapter-list">
+
+            <li
+                *ngFor="let chapter of selectedClass.math; let i = index"
+                (click)="openPDF(chapter)"
+                style="cursor:pointer"
+            >
+                <span class="num mono">
+                    {{ pad(i + 1) }}
+                </span>
+
+                <span class="title">
+                    {{ chapter.title }}
+                </span>
+            </li>
+
+        </ul>
+        
+    
+        <!-- AI Section -->
+
+        <ng-container *ngIf="selectedClass.ai.length">
+
+            <div class="section-label">
+
+                <span>
+                    {{ selectedClass.rightTitle || 'AI & Digital Literacy' }}
+                </span>
+                <i></i>
+
+            </div>
+
+            <ul class="chapter-list">
+                <li
+                    *ngFor="let chapter of selectedClass.ai; let i = index"
+                    (click)="openPDF(chapter)"
+                    style="cursor: pointer;"
+                >
+                    <span class="num mono">
+                    {{ pad(selectedClass.math.length + i + 1) }}
+                    </span>
+
+                    <span class="title">
+                    {{ chapter.title }}
+                    </span>
+                </li>
+            </ul>
+        </ng-container>
+
+        <!-- Footer -->
+
+        <p class="footer-note">
+
+            Tap a class tab to browse its chapter list ·
+            AI & Digital Literacy strand begins at Class {{ pad(selectedClass.n) }}
+
+        </p>
+
+    </main>
+
+</div>
+
