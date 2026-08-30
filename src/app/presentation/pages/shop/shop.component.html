@@ -1,0 +1,259 @@
+<app-header></app-header>
+
+<main class="shop-page">
+  <section class="shop-hero">
+    <span class="eyebrow">Shop</span>
+    <h1 class="section-title">Parts, Kits & Lab Equipment</h1>
+    <p>
+      From industrial 3D printers to complete Coding, AI & Robotics lab setups — explore what we work
+      with, then reach out to our team for pricing, availability and bulk orders.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       SECTION 1 — 3CUBIC 3D PRINTER CATALOGUE
+  ============================================================= -->
+  <section class="shop-section">
+    <div class="section-banner">
+      <div class="banner-copy">
+        <span class="eyebrow">3D Printing</span>
+        <h2 class="section-title">Industrial 3D Printers by 3Cubic</h2>
+        <p class="section-subtext">
+          ISO 9001:2015 certified, Made-in-India FDM 3D printers built for rapid prototyping and additive
+          manufacturing.
+        </p>
+
+        <div class="trust-stats">
+          @for (stat of printerTrustStats; track stat.label) {
+          <div class="trust-stat">
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+          </div>
+          }
+        </div>
+
+        <p class="trust-line">
+          <span>Trusted by</span> {{ printerClients.join(' · ') }}
+        </p>
+      </div>
+      <figure class="banner-photo">
+        <img src="image/shop/3d-printer.jpg" alt="Industrial FDM 3D printer" loading="lazy" />
+        <figcaption>Photo: Benlisquare / Wikimedia Commons, CC BY-SA 4.0</figcaption>
+      </figure>
+    </div>
+
+    <div class="printer-carousel">
+      <swiper-container
+        slides-per-view="1.15"
+        space-between="20"
+        [breakpoints]="{
+          '560': { slidesPerView: 2, spaceBetween: 20 },
+          '860': { slidesPerView: 3, spaceBetween: 22 },
+          '1180': { slidesPerView:5 , spaceBetween: 24 }
+        }"
+        navigation="true"
+      >
+        @for (printer of printerModels; track printer.name) {
+        <swiper-slide>
+          <div class="printer-card">
+            <div class="printer-card__header">
+              <span class="printer-card__icon"><i class="fas fa-cube"></i></span>
+              <h3>{{ printer.name }}</h3>
+            </div>
+            <div class="printer-card__body">
+              <div class="printer-card__stat">
+                <span class="printer-card__stat-label">Build Size</span>
+                <strong class="printer-card__stat-value">{{ printer.buildSize }}</strong>
+              </div>
+              <div class="printer-card__stat printer-card__stat--muted">
+                <span class="printer-card__stat-label">Weight</span>
+                <strong class="printer-card__stat-value">{{ printer.weight }}</strong>
+              </div>
+              <button type="button" class="printer-card__cta" (click)="scrollToContact()">
+                Enquire <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </swiper-slide>
+        }
+      </swiper-container>
+    </div>
+
+    <div class="feature-strip">
+      @for (feature of printerFeatures; track feature) {
+      <div class="feature-item"><i class="fas fa-check-circle"></i><span>{{ feature }}</span></div>
+      }
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — DUET STEM LAB PROGRAM
+  ============================================================= -->
+  <section class="shop-section shop-section--tinted">
+    <div class="section-banner reverse">
+      <div class="banner-copy">
+        <h2 class="section-title">STEM, AI & Robotics Lab Program</h2>
+        <p class="section-subtext">
+          A complete one-stop solution for Coding, AI/ML, Robotics and Astronomy — aligned with
+          CBSE/ICSE/State Boards and NEP 2020, with setup, curriculum and teacher training included.
+        </p>
+      </div>
+      <figure class="banner-photo">
+        <img src="image/shop/robotics-lab.jpg" alt="Students working on a robotics project in an Atal Tinkering Lab" loading="lazy" />
+        <figcaption>Photo: Al124aa / Wikimedia Commons, CC BY-SA 4.0</figcaption>
+      </figure>
+    </div>
+
+    <div class="package-grid">
+      @for (pkg of labPackages; track pkg.name) {
+      <div class="card package-card">
+        <span class="notch notch--left"></span>
+        <span class="notch notch--right"></span>
+        @if (pkg.badge) {
+        <span class="card__status">{{ pkg.badge }}</span>
+        }
+        <div class="card__body">
+          <h3 class="card__title">{{ pkg.name }}</h3>
+          <div class="package-price">{{ pkg.price }}</div>
+          <ul>
+            @for (feature of pkg.features; track feature) {
+            <li><i class="fas fa-check"></i>{{ feature }}</li>
+            }
+          </ul>
+          <button type="button" class="pill-btn pill-btn--outline" (click)="scrollToContact()">Get Started</button>
+        </div>
+      </div>
+      }
+    </div>
+
+    <h3 class="section-subtitle">Lab Types We Set Up</h3>
+    <div class="lab-type-grid">
+      @for (lab of labTypes; track lab.title) {
+      <div class="card lab-type-card">
+        <div class="card__body">
+          <div class="icon-badge icon-badge--sm"><i [class]="lab.icon"></i></div>
+          <h4>{{ lab.title }}</h4>
+          <ul>
+            @for (feature of lab.features; track feature) {
+            <li>{{ feature }}</li>
+            }
+          </ul>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3 — CODING, AI & ROBOTICS DIY KIT
+  ============================================================= -->
+  <section class="shop-section">
+    <figure class="banner-photo banner-photo--wide">
+      <img src="image/shop/robotics-kit.jpg" alt="Arduino robotics DIY kit with breadboard, wires and motors" loading="lazy" />
+      <figcaption class="overlay-caption">
+        <h2 class="section-title">Coding, AI & Robotics DIY Kit</h2>
+        <p class="section-subtext">
+          One kit, ten years of learning. A working 2WD robot platform with 6 sensor types and a
+          120-project library mapped from Class 3 to Class 12 — Ages 8+.
+        </p>
+      </figcaption>
+    </figure>
+    <p class="photo-credit">Photo: oomlout / Wikimedia Commons, CC BY-SA 2.0</p>
+
+    <div class="kit-highlight-grid">
+      @for (item of kitHighlights; track item.label) {
+      <div class="card kit-highlight-card">
+        <div class="card__body">
+          <div class="icon-badge icon-badge--sm"><i [class]="item.icon"></i></div>
+          <div>
+            <h4>{{ item.label }}</h4>
+            <p>{{ item.detail }}</p>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <h3 class="section-subtitle">Learning Journey</h3>
+    <div class="stage-timeline">
+      @for (stage of learningStages; track stage.stage; let i = $index) {
+      <div class="stage-item">
+        <div class="stage-marker">{{ i + 1 }}</div>
+        <div class="stage-content">
+          <h4>{{ stage.stage }} <span>{{ stage.classes }}</span></h4>
+          <p>{{ stage.description }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT US FOR PARTS
+  ============================================================= -->
+  <section class="shop-contact" id="shop-contact">
+    <div class="card contact-card">
+      <span class="notch notch--left"></span>
+      <span class="notch notch--right"></span>
+      <div class="card__body">
+        @if (!isSubmitted) {
+        <div class="contact-header">
+          <h2 class="section-title">Contact Us for Parts</h2>
+          <p>Tell us what you need and our team will get back to you with details and pricing.</p>
+        </div>
+
+        <form [formGroup]="contactForm" (ngSubmit)="submitContactForm()" class="contact-form">
+          <div class="input-group">
+            <input type="text" placeholder="Your Name" formControlName="name" />
+          </div>
+          <div class="error" *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.errors?.['required']">
+            Name is required.
+          </div>
+
+          <div class="input-group">
+            <input type="tel" placeholder="Mobile Number" formControlName="mobile" maxlength="10" inputmode="numeric" />
+          </div>
+          <div class="error" *ngIf="contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['required']">
+            Mobile number is required.
+          </div>
+          <div class="error" *ngIf="contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['pattern']">
+            Please enter a valid 10 digit mobile number.
+          </div>
+
+          <div class="input-group">
+            <input type="email" placeholder="Email" formControlName="email" />
+          </div>
+          <div class="error" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.errors?.['required']">
+            Email is required.
+          </div>
+          <div class="error" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.errors?.['email']">
+            Enter a valid email address.
+          </div>
+
+          <div class="input-group">
+            <input type="text" placeholder="Part / Kit you need" formControlName="partNeeded" />
+          </div>
+          <div class="error" *ngIf="contactForm.get('partNeeded')?.touched && contactForm.get('partNeeded')?.errors?.['required']">
+            Please tell us what part or kit you need.
+          </div>
+
+          <div class="input-group">
+            <textarea rows="4" placeholder="Additional details (optional)" formControlName="message"></textarea>
+          </div>
+
+          <button type="submit" class="pill-btn pill-btn--solid">Send Enquiry</button>
+        </form>
+        } @else {
+        <div class="contact-success">
+          <i class="fas fa-check-circle"></i>
+          <h2 class="section-title">Thanks for reaching out!</h2>
+          <p>We've received your enquiry and our team will contact you shortly.</p>
+          <button type="button" class="pill-btn pill-btn--solid" (click)="submitAnother()">Send Another Enquiry</button>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

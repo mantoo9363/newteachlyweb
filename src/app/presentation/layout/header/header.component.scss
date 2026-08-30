@@ -822,6 +822,39 @@
   }
 }
 
+.shop-trigger {
+  background: white;
+  border: 2px solid rgba(124, 58, 237, 0.1);
+  color: var(--primary-purple);
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    border-color: var(--primary-purple);
+    background: var(--light-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(124, 58, 237, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 480px) {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+}
+
 /* SEARCH FEATURE STYLES */
 .search-trigger {
   background: white;
