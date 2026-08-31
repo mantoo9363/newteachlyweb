@@ -2,12 +2,32 @@
 
 <main class="shop-page">
   <section class="shop-hero">
-    <span class="eyebrow">Shop</span>
-    <h1 class="section-title">Parts, Kits & Lab Equipment</h1>
-    <p>
-      From industrial 3D printers to complete Coding, AI & Robotics lab setups — explore what we work
-      with, then reach out to our team for pricing, availability and bulk orders.
+    <div class="shop-hero__badge">
+      <i class="fas fa-store"></i>
+      <span>Official Hardware & Lab Store</span>
+    </div>
+
+    <h1 class="shop-hero__title">Parts, Kits & Lab Equipment</h1>
+
+    <p class="shop-hero__desc">
+      From industrial 3D printers to complete Coding, AI & Robotics lab setups — explore hardware,
+      tools, and DIY kits built for school innovation, institutions, and young innovators.
     </p>
+
+    <div class="shop-hero__tags">
+      <div class="hero-tag">
+        <i class="fas fa-shield-halved"></i>
+        <span>ISO 9001:2015 Certified</span>
+      </div>
+      <div class="hero-tag">
+        <i class="fas fa-truck-fast"></i>
+        <span>Bulk & School Supply</span>
+      </div>
+      <div class="hero-tag">
+        <i class="fas fa-certificate"></i>
+        <span>NEP 2020 & ATL Ready</span>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================
@@ -37,8 +57,7 @@
         </p>
       </div>
       <figure class="banner-photo">
-        <img src="image/shop/3d-printer.jpg" alt="Industrial FDM 3D printer" loading="lazy" />
-        <figcaption>Photo: Benlisquare / Wikimedia Commons, CC BY-SA 4.0</figcaption>
+        <img src="shop/3dprinter.png" alt="Industrial 3D Printers by 3Cubic" loading="lazy" />
       </figure>
     </div>
 
@@ -49,30 +68,56 @@
         [breakpoints]="{
           '560': { slidesPerView: 2, spaceBetween: 20 },
           '860': { slidesPerView: 3, spaceBetween: 22 },
-          '1180': { slidesPerView:5 , spaceBetween: 24 }
+          '1180': { slidesPerView: 5, spaceBetween: 24 }
         }"
+        loop="true"
+        autoplay-delay="1800"
+        autoplay-disable-on-interaction="false"
+        autoplay-pause-on-mouse-enter="true"
+        speed="800"
+        grab-cursor="true"
         navigation="true"
       >
         @for (printer of printerModels; track printer.name) {
         <swiper-slide>
           <div class="printer-card">
-            <div class="printer-card__header">
-              <span class="printer-card__icon"><i class="fas fa-cube"></i></span>
-              <h3>{{ printer.name }}</h3>
-            </div>
-            <div class="printer-card__body">
-              <div class="printer-card__stat">
-                <span class="printer-card__stat-label">Build Size</span>
-                <strong class="printer-card__stat-value">{{ printer.buildSize }}</strong>
+            <span class="printer-card__badge">Industrial FDM</span>
+            <div class="printer-card__top">
+              <div class="printer-card__icon-wrap">
+                <i class="fas fa-cube"></i>
               </div>
-              <div class="printer-card__stat printer-card__stat--muted">
-                <span class="printer-card__stat-label">Weight</span>
-                <strong class="printer-card__stat-value">{{ printer.weight }}</strong>
+              <div class="printer-card__title-group">
+                <span class="printer-card__series">3Cubic Series</span>
+                <h3 class="printer-card__name">{{ printer.name }}</h3>
               </div>
-              <button type="button" class="printer-card__cta" (click)="scrollToContact()">
-                Enquire <i class="fas fa-arrow-right"></i>
-              </button>
             </div>
+
+            <div class="printer-card__specs">
+              <div class="printer-spec">
+                <div class="printer-spec__icon">
+                  <i class="fas fa-vector-square"></i>
+                </div>
+                <div class="printer-spec__info">
+                  <span class="printer-spec__label">Build Volume</span>
+                  <strong class="printer-spec__value">{{ printer.buildSize }}</strong>
+                </div>
+              </div>
+
+              <div class="printer-spec">
+                <div class="printer-spec__icon">
+                  <i class="fas fa-weight-hanging"></i>
+                </div>
+                <div class="printer-spec__info">
+                  <span class="printer-spec__label">Machine Weight</span>
+                  <strong class="printer-spec__value">{{ printer.weight }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="printer-card__btn" (click)="scrollToContact()">
+              <span>Enquire Now</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </swiper-slide>
         }
@@ -92,6 +137,7 @@
   <section class="shop-section shop-section--tinted">
     <div class="section-banner reverse">
       <div class="banner-copy">
+        <span class="eyebrow">Lab Program</span>
         <h2 class="section-title">STEM, AI & Robotics Lab Program</h2>
         <p class="section-subtext">
           A complete one-stop solution for Coding, AI/ML, Robotics and Astronomy — aligned with
@@ -99,8 +145,7 @@
         </p>
       </div>
       <figure class="banner-photo">
-        <img src="image/shop/robotics-lab.jpg" alt="Students working on a robotics project in an Atal Tinkering Lab" loading="lazy" />
-        <figcaption>Photo: Al124aa / Wikimedia Commons, CC BY-SA 4.0</figcaption>
+        <img src="shop/robotic.png" alt="STEM, AI & Robotics Lab Program" loading="lazy" />
       </figure>
     </div>
 
@@ -126,18 +171,40 @@
       }
     </div>
 
-    <h3 class="section-subtitle">Lab Types We Set Up</h3>
+    <div class="lab-types-header">
+      <h3 class="section-subtitle">Lab Types We Set Up</h3>
+      <p class="section-subtext">Turnkey lab infrastructure equipped with hardware, kits, curriculum, and faculty training.</p>
+    </div>
+
     <div class="lab-type-grid">
       @for (lab of labTypes; track lab.title) {
-      <div class="card lab-type-card">
-        <div class="card__body">
-          <div class="icon-badge icon-badge--sm"><i [class]="lab.icon"></i></div>
-          <h4>{{ lab.title }}</h4>
-          <ul>
+      <div class="lab-type-card">
+        <div class="lab-type-card__header">
+          <div class="lab-type-card__icon-box">
+            <i [class]="lab.icon"></i>
+          </div>
+          <div class="lab-type-card__meta">
+            <span class="lab-type-card__tag">Turnkey Lab</span>
+            <h4 class="lab-type-card__title">{{ lab.title }}</h4>
+          </div>
+        </div>
+
+        <div class="lab-type-card__body">
+          <div class="lab-type-card__chips">
             @for (feature of lab.features; track feature) {
-            <li>{{ feature }}</li>
+            <span class="lab-chip">
+              <i class="fas fa-check-circle"></i>
+              {{ feature }}
+            </span>
             }
-          </ul>
+          </div>
+        </div>
+
+        <div class="lab-type-card__footer">
+          <button type="button" class="lab-type-card__btn" (click)="scrollToContact()">
+            <span>Enquire Setup</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
       </div>
       }
@@ -149,8 +216,9 @@
   ============================================================= -->
   <section class="shop-section">
     <figure class="banner-photo banner-photo--wide">
-      <img src="image/shop/robotics-kit.jpg" alt="Arduino robotics DIY kit with breadboard, wires and motors" loading="lazy" />
+      <img src="shop/stem.png" alt="Coding, AI & Robotics DIY Kit" loading="lazy" />
       <figcaption class="overlay-caption">
+        <span class="eyebrow">DIY Kit</span>
         <h2 class="section-title">Coding, AI & Robotics DIY Kit</h2>
         <p class="section-subtext">
           One kit, ten years of learning. A working 2WD robot platform with 6 sensor types and a
@@ -158,7 +226,6 @@
         </p>
       </figcaption>
     </figure>
-    <p class="photo-credit">Photo: oomlout / Wikimedia Commons, CC BY-SA 2.0</p>
 
     <div class="kit-highlight-grid">
       @for (item of kitHighlights; track item.label) {
@@ -192,66 +259,151 @@
        CONTACT US FOR PARTS
   ============================================================= -->
   <section class="shop-contact" id="shop-contact">
-    <div class="card contact-card">
-      <span class="notch notch--left"></span>
-      <span class="notch notch--right"></span>
-      <div class="card__body">
-        @if (!isSubmitted) {
-        <div class="contact-header">
-          <h2 class="section-title">Contact Us for Parts</h2>
-          <p>Tell us what you need and our team will get back to you with details and pricing.</p>
+    <div class="contact-wrapper">
+      @if (!isSubmitted) {
+      <div class="contact-info">
+        <span class="eyebrow">Get in Touch</span>
+        <h2 class="section-title">Let's Find the Right <span class="highlight">Parts & Solutions</span> for You</h2>
+        <p class="contact-desc">Whether you're looking for a single component or a complete lab setup, our team is ready to help you with pricing, availability and expert recommendations.</p>
+
+        <div class="contact-channels">
+          <div class="channel-card">
+            <div class="channel-icon"><i class="fas fa-headset"></i></div>
+            <div>
+              <h4>Talk to Our Team</h4>
+              <p>Get expert advice on the right products for your needs</p>
+            </div>
+          </div>
+          <div class="channel-card">
+            <div class="channel-icon"><i class="fas fa-truck-fast"></i></div>
+            <div>
+              <h4>Bulk & Institutional Orders</h4>
+              <p>Special pricing for schools, colleges and organisations</p>
+            </div>
+          </div>
+          <div class="channel-card">
+            <div class="channel-icon"><i class="fas fa-box-open"></i></div>
+            <div>
+              <h4>Custom Lab Setups</h4>
+              <p>End-to-end STEM, AI & Robotics lab solutions</p>
+            </div>
+          </div>
         </div>
-
-        <form [formGroup]="contactForm" (ngSubmit)="submitContactForm()" class="contact-form">
-          <div class="input-group">
-            <input type="text" placeholder="Your Name" formControlName="name" />
-          </div>
-          <div class="error" *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.errors?.['required']">
-            Name is required.
-          </div>
-
-          <div class="input-group">
-            <input type="tel" placeholder="Mobile Number" formControlName="mobile" maxlength="10" inputmode="numeric" />
-          </div>
-          <div class="error" *ngIf="contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['required']">
-            Mobile number is required.
-          </div>
-          <div class="error" *ngIf="contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['pattern']">
-            Please enter a valid 10 digit mobile number.
-          </div>
-
-          <div class="input-group">
-            <input type="email" placeholder="Email" formControlName="email" />
-          </div>
-          <div class="error" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.errors?.['required']">
-            Email is required.
-          </div>
-          <div class="error" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.errors?.['email']">
-            Enter a valid email address.
-          </div>
-
-          <div class="input-group">
-            <input type="text" placeholder="Part / Kit you need" formControlName="partNeeded" />
-          </div>
-          <div class="error" *ngIf="contactForm.get('partNeeded')?.touched && contactForm.get('partNeeded')?.errors?.['required']">
-            Please tell us what part or kit you need.
-          </div>
-
-          <div class="input-group">
-            <textarea rows="4" placeholder="Additional details (optional)" formControlName="message"></textarea>
-          </div>
-
-          <button type="submit" class="pill-btn pill-btn--solid">Send Enquiry</button>
-        </form>
-        } @else {
-        <div class="contact-success">
-          <i class="fas fa-check-circle"></i>
-          <h2 class="section-title">Thanks for reaching out!</h2>
-          <p>We've received your enquiry and our team will contact you shortly.</p>
-          <button type="button" class="pill-btn pill-btn--solid" (click)="submitAnother()">Send Another Enquiry</button>
-        </div>
-        }
       </div>
+
+      <div class="card contact-form-card">
+        <span class="notch notch--left"></span>
+        <span class="notch notch--right"></span>
+        <div class="card__body">
+          <div class="form-header">
+            <div class="form-header__icon"><i class="fas fa-paper-plane"></i></div>
+            <div>
+              <h3>Send an Enquiry</h3>
+              <p>We'll respond within 24 hours</p>
+            </div>
+          </div>
+
+          <form [formGroup]="contactForm" (ngSubmit)="submitContactForm()" class="contact-form">
+            <div class="form-row">
+              <div class="input-group">
+                <label for="contact-name">Full Name <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i class="fas fa-user"></i>
+                  <input id="contact-name" type="text" placeholder="e.g. Rahul Sharma" formControlName="name" />
+                </div>
+                @if (contactForm.get('name')?.touched && contactForm.get('name')?.errors?.['required']) {
+                <span class="error"><i class="fas fa-exclamation-circle"></i> Name is required</span>
+                }
+              </div>
+
+              <div class="input-group">
+                <label for="contact-mobile">Mobile Number <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i class="fas fa-phone"></i>
+                  <input id="contact-mobile" type="tel" placeholder="10-digit number" formControlName="mobile" maxlength="10" inputmode="numeric" />
+                </div>
+                @if (contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['required']) {
+                <span class="error"><i class="fas fa-exclamation-circle"></i> Mobile number is required</span>
+                }
+                @if (contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['pattern']) {
+                <span class="error"><i class="fas fa-exclamation-circle"></i> Enter a valid 10-digit number</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-group">
+                <label for="contact-email">Email Address <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i class="fas fa-envelope"></i>
+                  <input id="contact-email" type="email" placeholder="you@company.com" formControlName="email" />
+                </div>
+                @if (contactForm.get('email')?.touched && contactForm.get('email')?.errors?.['required']) {
+                <span class="error"><i class="fas fa-exclamation-circle"></i> Email is required</span>
+                }
+                @if (contactForm.get('email')?.touched && contactForm.get('email')?.errors?.['email']) {
+                <span class="error"><i class="fas fa-exclamation-circle"></i> Enter a valid email address</span>
+                }
+              </div>
+
+              <div class="input-group">
+                <label for="contact-part">Part / Kit Needed <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i class="fas fa-cube"></i>
+                  <input id="contact-part" type="text" placeholder="e.g. CUB 3.5, Arduino Kit" formControlName="partNeeded" />
+                </div>
+                @if (contactForm.get('partNeeded')?.touched && contactForm.get('partNeeded')?.errors?.['required']) {
+                <span class="error"><i class="fas fa-exclamation-circle"></i> Please tell us what you need</span>
+                }
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="contact-message">Additional Details</label>
+              <div class="input-wrapper input-wrapper--textarea">
+                <i class="fas fa-comment-dots"></i>
+                <textarea id="contact-message" rows="3" placeholder="Quantity, specifications, timeline..." formControlName="message"></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <span>Send Enquiry</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <p class="form-note"><i class="fas fa-lock"></i> Your information is secure and will never be shared.</p>
+          </form>
+        </div>
+      </div>
+      } @else {
+      <div class="contact-success-wrapper">
+        <div class="card contact-success-card">
+          <span class="notch notch--left"></span>
+          <span class="notch notch--right"></span>
+          <div class="card__body">
+            <div class="success-icon-wrap">
+              <div class="success-icon"><i class="fas fa-check"></i></div>
+            </div>
+            <h2 class="section-title">Enquiry Sent Successfully!</h2>
+            <p>Thank you for reaching out. Our team will review your enquiry and get back to you within <strong>24 hours</strong>.</p>
+            <div class="success-details">
+              <div class="success-detail">
+                <i class="fas fa-clock"></i>
+                <span>Typical response: 2-4 business hours</span>
+              </div>
+              <div class="success-detail">
+                <i class="fas fa-shield-halved"></i>
+                <span>We respect your privacy — no spam, ever</span>
+              </div>
+            </div>
+            <button type="button" class="submit-btn" (click)="submitAnother()">
+              <i class="fas fa-plus"></i>
+              <span>Send Another Enquiry</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      }
     </div>
   </section>
 </main>
