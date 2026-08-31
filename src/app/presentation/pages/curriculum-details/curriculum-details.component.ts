@@ -25,18 +25,18 @@ export class CurriculumDetailsComponent implements OnInit {
   @ViewChild(HeaderComponent) headerComponent?: HeaderComponent;
 
   constructor(
-  private route: ActivatedRoute,
-  private router: Router,
-  private apiService: ApiService,
-  private planAccess: PlanAccessService,
-  private toastService: ToastService,
-  private authStorage: AuthStorageService
-) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    private apiService: ApiService,
+    private planAccess: PlanAccessService,
+    private toastService: ToastService,
+    private authStorage: AuthStorageService
+  ) { }
 
 
   message = '';
-showMessageModal = false;
-openMessage(message: string) {
+  showMessageModal = false;
+  openMessage(message: string) {
     this.message = message;
     this.showMessageModal = true;
   }
@@ -237,118 +237,118 @@ openMessage(message: string) {
         image: '/image/simulator/dronew.jpg'
       }
     },
-   '13': {
-  headline: 'AI LEARNING MODULE',
-  subHeadline: 'Unlock the Power of Artificial Intelligence',
-  description:
-    'Master the fundamentals of AI by training models and understanding how machines process information.',
+    '13': {
+      headline: 'AI LEARNING MODULE',
+      subHeadline: 'Unlock the Power of Artificial Intelligence',
+      description:
+        'Master the fundamentals of AI by training models and understanding how machines process information.',
 
-  whatYouDo: [
-    'Understand AI Foundation & Real Meanings',
-    'Master Prompt Engineering Techniques',
-    'Learn Text, Image, Video & Voice AI Tools',
-    'Explore Business Automation & No-Code AI',
-    'Earning Opportunities & Freelancing with AI',
-    'Build Real-world AI Projects & Portfolios'
-  ],
+      whatYouDo: [
+        'Understand AI Foundation & Real Meanings',
+        'Master Prompt Engineering Techniques',
+        'Learn Text, Image, Video & Voice AI Tools',
+        'Explore Business Automation & No-Code AI',
+        'Earning Opportunities & Freelancing with AI',
+        'Build Real-world AI Projects & Portfolios'
+      ],
 
-// learningLevels: [
-//   {
-//     level: 'LEVEL 1',
-//     title: 'AI Explorer',
-//     lessons: 4,
-//     outcomes: [
-//       'Understand the fundamentals of Artificial Intelligence.',
-//       'Learn Prompt Engineering.',
-//       'Use modern AI tools.',
-//       'Build a strong AI foundation.'
-//     ]
-//   },
-//   {
-//     level: 'LEVEL 2',
-//     title: 'AI Foundations',
-//     lessons: 5,
-//     outcomes: [
-//       'Python for AI',
-//       'Machine Learning',
-//       'Deep Learning',
-//       'Student Performance Predictor',
-//       'AI Model Basics'
-//     ]
-//   },
-//   {
-//     level: 'LEVEL 3',
-//     title: 'AI Engineer',
-//     lessons: 5,
-//     outcomes: [
-//       'LLMs',
-//       'Generative AI',
-//       'AI Agents',
-//       'MLOps',
-//       'Deploy AI Applications'
-//     ]
-//   }
-// ],
+      // learningLevels: [
+      //   {
+      //     level: 'LEVEL 1',
+      //     title: 'AI Explorer',
+      //     lessons: 4,
+      //     outcomes: [
+      //       'Understand the fundamentals of Artificial Intelligence.',
+      //       'Learn Prompt Engineering.',
+      //       'Use modern AI tools.',
+      //       'Build a strong AI foundation.'
+      //     ]
+      //   },
+      //   {
+      //     level: 'LEVEL 2',
+      //     title: 'AI Foundations',
+      //     lessons: 5,
+      //     outcomes: [
+      //       'Python for AI',
+      //       'Machine Learning',
+      //       'Deep Learning',
+      //       'Student Performance Predictor',
+      //       'AI Model Basics'
+      //     ]
+      //   },
+      //   {
+      //     level: 'LEVEL 3',
+      //     title: 'AI Engineer',
+      //     lessons: 5,
+      //     outcomes: [
+      //       'LLMs',
+      //       'Generative AI',
+      //       'AI Agents',
+      //       'MLOps',
+      //       'Deploy AI Applications'
+      //     ]
+      //   }
+      // ],
 
-  howItWorks:
-    'Learn AI → Build Projects → Deploy AI Applications → Become Industry Ready.',
+      howItWorks:
+        'Learn AI → Build Projects → Deploy AI Applications → Become Industry Ready.',
 
-  whyThisMatters: {
-    intro:
-      'Artificial Intelligence is transforming every industry. Learning AI today prepares students for tomorrow’s careers.',
-    points: [
-      'Build future-ready AI skills',
-      'Learn through hands-on projects',
-      'Prepare for AI careers',
-      'Become industry ready'
-    ]
-  },
+      whyThisMatters: {
+        intro:
+          'Artificial Intelligence is transforming every industry. Learning AI today prepares students for tomorrow’s careers.',
+        points: [
+          'Build future-ready AI skills',
+          'Learn through hands-on projects',
+          'Prepare for AI careers',
+          'Become industry ready'
+        ]
+      },
 
-  whatYouLearn: [
-    'Artificial Intelligence',
-    'Prompt Engineering',
-    'Python Programming',
-    'Machine Learning',
-    'Deep Learning',
-    'Computer Vision',
-    'Natural Language Processing',
-    'Generative AI',
-    'AI Agents',
-    'MLOps',
-    'AI Deployment'
-  ],
+      whatYouLearn: [
+        'Artificial Intelligence',
+        'Prompt Engineering',
+        'Python Programming',
+        'Machine Learning',
+        'Deep Learning',
+        'Computer Vision',
+        'Natural Language Processing',
+        'Generative AI',
+        'AI Agents',
+        'MLOps',
+        'AI Deployment'
+      ],
 
-  outcome:
-    'Understand core AI concepts and principles, Build and apply AI solutions through hands-on projects, Develop industry-ready AI engineering skills',
+      outcome:
+        'Understand core AI concepts and principles, Build and apply AI solutions through hands-on projects, Develop industry-ready AI engineering skills',
 
-  video: '/video/AI COURSE-20260511T100451Z-3-001/AI COURSE/1.Intro To AI Pro Series.mp4',
+      video: '/video/AI COURSE-20260511T100451Z-3-001/AI COURSE/1.Intro To AI Pro Series.mp4',
 
-  image: '/image/AI Learning.jpeg',
+      image: '/image/AI Learning.jpeg',
 
-  playUrl: this.simulatorUrls.ai,
+      playUrl: this.simulatorUrls.ai,
 
-  lessons: '30+',
-  rating: '10',
-  students: '20k',
-  hidePreviewControls: true,
-  leftCard: {
-    tag: 'Core Theory',
-    title: 'Concept & Mechanics',
-    desc: 'Understand AI fundamentals, from core concepts to AI engineering.',
-    author: 'Teachly Lab',
-    image: '/image/simulator/ai.jpg'
-  },
-  rightCard: {
-    tag: 'Lab Outcome',
-    title: 'Verified Badge',
-    desc: 'Showcase your skills by earning the certification credentials.',
-    author: 'Teachly Academy',
-    image: '/image/simulator/aiw.jpg'
-  }
-},
+      lessons: '30+',
+      rating: '10',
+      students: '20k',
+      hidePreviewControls: true,
+      leftCard: {
+        tag: 'Core Theory',
+        title: 'Concept & Mechanics',
+        desc: 'Understand AI fundamentals, from core concepts to AI engineering.',
+        author: 'Teachly Lab',
+        image: '/image/simulator/ai.jpg'
+      },
+      rightCard: {
+        tag: 'Lab Outcome',
+        title: 'Verified Badge',
+        desc: 'Showcase your skills by earning the certification credentials.',
+        author: 'Teachly Academy',
+        image: '/image/simulator/aiw.jpg'
+      }
+    },
   };
 
- 
+
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -460,91 +460,91 @@ openMessage(message: string) {
 
   launchSimulation(): void {
 
-  const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
-  const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
-
- // console.log(token);
-
-  if (!token) {
-
-    this.headerComponent?.openModal('login');
-
-    return;
-  }
-
-  if (userId && !this.authStorage.wasStudentPanelSsoRecent()) {
-    this.apiService.getSchoolPaymentHistory(userId, false).subscribe({
-      next: (payments) => {
-        console.log('Payment history:', payments);
-        if (!this.hasActiveTechPayment(payments)) {
-          this.blockSimulationAccess();
-          return;
-        }
-
-        this.openSimulationAfterAccessCheck(token);
-      },
-      error: (err) => {
-        console.error(err);
-        if (!this.canOpenSimulation()) {
-          this.blockSimulationAccess();
-          return;
-        }
-
-        this.openSimulationAfterAccessCheck(token);
-      }
-    });
-    return;
-  }
-
-  if (!this.canOpenSimulation()) {
-    this.blockSimulationAccess();
-    return;
-  }
-
-  this.openSimulationAfterAccessCheck(token);
-}
-
-  private openSimulationAfterAccessCheck(token: string): void {
-  if (this.id === '12') {
-    window.location.href = this.simulatorUrls.droneDownload;
-    return;
-  }
-
-const cachedTempToken = this.authStorage.getRecentTempToken();
-if (cachedTempToken) {
-  this.openSimulationWithTempToken(cachedTempToken);
-  return;
-}
-
-this.apiService.generateTempToken(false).subscribe({
-  
-  next: (res) => {
-    const token = res.temp_token;
-   // console.log(token);
-
-    this.openSimulationWithTempToken(token);
-  },
-  error: (err) => {
-    console.error(err);
-    if (token && !sessionStorage.getItem('access_token')) {
-      sessionStorage.setItem('access_token', token);
-    }
-    this.toastService.show('Simulation could not start. Please try again.', 'error');
-  }
-});
-
-
-
-
+    const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+    const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
 
     // console.log(token);
 
- //window.location.href =
-   // `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
+    if (!token) {
+
+      this.headerComponent?.openModal('login');
+
+      return;
+    }
+
+    if (userId && !this.authStorage.wasStudentPanelSsoRecent()) {
+      this.apiService.getSchoolPaymentHistory(userId, false).subscribe({
+        next: (payments) => {
+         
+          if (!this.hasActiveTechPayment(payments)) {
+            this.blockSimulationAccess();
+            return;
+          }
+           console.log('Payment history:', token);
+          this.openSimulationAfterAccessCheck(token);
+        },
+        error: (err) => {
+          console.error(err);
+          if (!this.canOpenSimulation()) {
+            this.blockSimulationAccess();
+            return;
+          }
+
+          this.openSimulationAfterAccessCheck(token);
+        }
+      });
+      return;
+    }
+
+    if (!this.canOpenSimulation()) {
+      this.blockSimulationAccess();
+      return;
+    }
+
+    this.openSimulationAfterAccessCheck(token);
+  }
+
+  private openSimulationAfterAccessCheck(token: string): void {
+    if (this.id === '12') {
+      window.location.href = this.simulatorUrls.droneDownload;
+      return;
+    }
+
+    const cachedTempToken = this.authStorage.getRecentTempToken();
+    if (cachedTempToken) {
+      this.openSimulationWithTempToken(cachedTempToken);
+      return;
+    }
+
+    this.apiService.generateTempToken(false).subscribe({
+
+      next: (res) => {
+        const token = res.temp_token;
+        // console.log(token);
+
+        this.openSimulationWithTempToken(token);
+      },
+      error: (err) => {
+        console.error(err);
+        if (token && !sessionStorage.getItem('access_token')) {
+          sessionStorage.setItem('access_token', token);
+        }
+        this.toastService.show('Simulation could not start. Please try again.', 'error');
+      }
+    });
+
+
+
+
+
+     console.log(`${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`,">>>>>>>>>>>>>>>>>>>>>>");
+
+    window.location.href =
+     `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
 
     //console.log(window.location.href);
 
-}
+  }
 
   private openSimulationWithTempToken(token: string): void {
     this.iframeUrl =
