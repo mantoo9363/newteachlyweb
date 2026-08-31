@@ -1,0 +1,264 @@
+<div class="card">
+    <!-- =========================================
+       ACTIVE STATUS
+  ========================================== -->
+
+  <div
+    class="card__status"
+    *ngIf="plan.isPurchased || plan.isDemoActive"
+  >
+
+    <span *ngIf="plan.isPurchased">
+      Active
+    </span>
+
+    <span *ngIf="!plan.isPurchased && plan.isDemoActive">
+      Demo Active
+    </span>
+
+  </div>
+
+  <!-- Top decorative notches -->
+  <span class="notch notch--left"></span>
+  <span class="notch notch--right"></span>
+
+  <div class="card__body">
+
+    <!-- =========================================
+         TITLE + IMAGE
+    ========================================== -->
+
+    <a
+      [routerLink]="['/plans', plan.pid]"
+      class="card__link"
+    >
+      <h3 class="card__title">
+        {{ plan.productName }}
+      </h3>
+
+      <div class="card__image-wrap">
+        <img
+          [src]="plan.imgUrl"
+          [alt]="plan.productName"
+          class="card__image"
+        />
+      </div>
+    </a>
+
+
+    <!-- =========================================
+         PRICE
+    ========================================== -->
+
+    <div class="card__price-block">
+
+      <ng-container *ngIf="hasPricing; else noPricing">
+
+        <span
+          class="card__price"
+          [class.card__price--applied]="couponApplied"
+        >
+          ₹{{ formatInr(displayedPrice) }}
+        </span>
+
+        <div class="card__price-meta">
+
+          <!-- Coupon applied -->
+          <ng-container *ngIf="couponApplied; else mrpOnly">
+
+            <span class="card__price-strike">
+              ₹{{ formatInr(mrpForValidity) }}
+            </span>
+
+            <span class="card__price-discount">
+              {{ couponDiscountPercentage }}% OFF
+            </span>
+
+          </ng-container>
+
+
+          <!-- No coupon -->
+          <ng-template #mrpOnly>
+
+            <span class="card__price-mrp-label">
+              MRP
+            </span>
+
+          </ng-template>
+
+        </div>
+
+      </ng-container>
+
+
+      <!-- No pricing -->
+
+      <ng-template #noPricing>
+
+        <span class="card__contact">
+          Contact for pricing
+        </span>
+
+      </ng-template>
+
+
+      <!-- =========================================
+           VALIDITY TEXT
+           HIDDEN FOR SUPERPLANS
+      ========================================== -->
+
+      <p
+        class="card__validity-label"
+        *ngIf="!isSuperplan"
+      >
+        For {{ selectedValidity }}
+        Month{{ selectedValidity > 1 ? 's' : '' }}
+      </p>
+
+    </div>
+
+
+    <!-- =========================================
+         COUPON
+    ========================================== -->
+
+    <div
+      class="card__coupon"
+      *ngIf="hasPricing"
+    >
+
+      <!-- Coupon input -->
+
+      <div
+        class="card__coupon-row"
+        *ngIf="!couponApplied"
+      >
+
+        <input
+          type="text"
+          class="card__coupon-input"
+          [ngModel]="couponCode"
+          (ngModelChange)="onCouponInput($event)"
+          placeholder="Coupon Code"
+          autocomplete="off"
+        />
+
+        <button
+          type="button"
+          class="card__coupon-apply"
+          (click)="applyCoupon()"
+        >
+          Apply
+        </button>
+
+      </div>
+
+
+      <!-- Coupon applied -->
+
+      <div
+        class="card__coupon-applied"
+        *ngIf="couponApplied"
+      >
+
+        <span class="card__coupon-applied-text">
+
+          ✓ "{{ couponCode }}" applied
+
+          <span class="card__coupon-percentage">
+            ({{ couponDiscountPercentage }}% OFF)
+          </span>
+
+        </span>
+
+        <button
+          type="button"
+          class="card__coupon-remove"
+          (click)="removeCoupon()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <!-- Coupon error -->
+
+      <div
+        class="card__coupon-error"
+        *ngIf="couponError"
+      >
+        {{ couponError }}
+      </div>
+
+
+      <!-- Coupon success -->
+
+      <!-- <div
+        class="card__coupon-success"
+        *ngIf="couponApplied"
+      >
+        {{ couponDiscountPercentage }}% discount applied successfully
+      </div> -->
+
+      <div
+        class="card__coupon-success"
+        *ngIf="couponApplied"
+      >
+        ✓ {{ couponDiscountPercentage }}% discount applied successfully
+      </div>
+
+    </div>
+
+
+    <!-- =========================================
+         VALIDITY BUTTONS
+         HIDDEN FOR SUPERPLANS
+    ========================================== -->
+
+    <div
+      class="card__validity-grid"
+      *ngIf="!isSuperplan"
+    >
+
+      <button
+        type="button"
+        *ngFor="let option of validityOptions"
+        class="card__validity-btn"
+        [class.card__validity-btn--active]="
+          selectedValidity === option.months
+        "
+        (click)="selectValidity(option.months)"
+      >
+        {{ option.label }}
+      </button>
+
+    </div>
+
+
+    <!-- =========================================
+         VIEW DETAILS
+    ========================================== -->
+
+    <a
+      [routerLink]="['/plan-card', plan.pid]"
+      class="card__view-details"
+    >
+      View Details
+    </a>
+
+
+    <!-- =========================================
+         BUY NOW
+    ========================================== -->
+
+    <a
+      [routerLink]="['/plan-card', plan.pid]"
+      class="card__buy-now"
+    >
+      BUY NOW
+    </a>
+
+  </div>
+
+</div>

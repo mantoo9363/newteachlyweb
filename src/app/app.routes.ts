@@ -14,12 +14,24 @@ import { CtAiComponent } from './presentation/pages/ct-ai/ct-ai.component';
 import { ResetPasswordComponent } from './presentation/pages/reset-password/reset-password.component';
 import { authGuard } from './core/guards/auth.guard';
 import { PdfViewerComponent } from './presentation/pages/pdf-viewer/pdf-viewer.component';
+import { PlanCardPageComponent } from './presentation/pages/plan-card-page/plan-card-page.component';
+import { PlanDetailPageComponent } from './presentation/pages/plan-detail-page/plan-detail-page';
+
 
 export const routes: Routes = [
   {
     path: '',
     component: HomePageComponent,
     title: 'Teachly | Interactive STEM Simulations & Learning Platform'
+  },
+  {
+    path: 'plan-card',
+    component: PlanCardPageComponent
+  },
+
+  {
+    path: 'plan-card/:pid',
+    component: PlanDetailPageComponent
   },
   {
     path: 'reset-password',

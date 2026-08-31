@@ -462,10 +462,10 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
 
       switch (plan) {
         case 'school':
-          amount = 270000;
+          amount = 150000;
           break;
         case 'schooltech':
-          amount = 50000;
+          amount = 125000;
           break;
         case 'tech':
         case 'smart':

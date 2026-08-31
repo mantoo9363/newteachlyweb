@@ -1,0 +1,310 @@
+<app-header></app-header>
+
+<main class="plan-detail-page">
+
+  <!-- =========================================
+       LOADING
+  ========================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading"
+  >
+    Loading plan...
+  </div>
+
+
+  <!-- =========================================
+       PLAN
+  ========================================== -->
+
+  <ng-container *ngIf="!loading && plan">
+
+    <div class="plan-card">
+      <!-- =====================================
+       PLAN STATUS
+  ====================================== -->
+
+  <div
+    class="plan-status"
+    *ngIf="plan.isPurchased || plan.isDemoActive"
+  >
+
+    <!-- Purchased plan has priority -->
+    <span *ngIf="plan.isPurchased">
+      Active
+    </span>
+
+    <!-- Demo active -->
+    <span *ngIf="!plan.isPurchased && plan.isDemoActive">
+      Demo Active
+    </span>
+
+  </div>
+
+      <!-- Decorative tabs -->
+
+      <div class="card-tabs">
+        <span></span>
+        <span></span>
+      </div>
+
+
+      <!-- =====================================
+           PLAN NAME
+      ====================================== -->
+
+      <h1 class="plan-name">
+        {{ plan.productName }}
+      </h1>
+
+
+      <!-- =====================================
+           IMAGE
+      ====================================== -->
+
+      <div class="plan-image-wrap">
+
+        <img
+          class="plan-image"
+          [src]="plan.imgUrl"
+          [alt]="plan.productName"
+        />
+
+      </div>
+
+
+      <!-- =====================================
+           PRICE
+      ====================================== -->
+
+      <div class="price-block">
+
+        <!-- Final / Current Price -->
+
+        <div
+          class="price"
+          [class.discounted]="couponApplied"
+        >
+          ₹{{ formatInr(displayedPrice) }}
+        </div>
+
+
+        <!-- Original Price -->
+
+        <div
+          class="price-original"
+          *ngIf="couponApplied && mrpForValidity != null"
+        >
+          ₹{{ formatInr(mrpForValidity) }}
+        </div>
+
+
+        <!-- Discount Information -->
+
+        <div
+          class="coupon-discount"
+          *ngIf="couponApplied"
+        >
+          {{ couponDiscountPercentage }}% OFF
+        </div>
+
+
+        <div class="price-label">
+          MRP
+        </div>
+
+
+        <!-- Duration -->
+
+        <div
+          class="duration"
+          *ngIf="!isSuperplan"
+        >
+          For {{ selectedValidity }}
+          Month{{ selectedValidity > 1 ? 's' : '' }}
+        </div>
+
+      </div>
+
+
+      <!-- =====================================
+           COUPON
+      ====================================== -->
+
+      <div
+        class="coupon-row"
+        *ngIf="plan.mrp != null"
+      >
+
+        <!-- Coupon Icon -->
+
+        <span class="coupon-icon">
+          %
+        </span>
+
+
+        <!-- Coupon Input -->
+
+        <input
+          type="text"
+          [(ngModel)]="couponCode"
+          (ngModelChange)="onCouponInput($event)"
+          placeholder="Coupon Code"
+          [name]="'coupon-' + plan.id"
+          [disabled]="couponApplied"
+          autocomplete="off"
+        />
+
+
+        <!-- Apply -->
+
+        <button
+          type="button"
+          class="btn-apply"
+          *ngIf="!couponApplied"
+          (click)="applyCoupon()"
+        >
+          Apply
+        </button>
+
+
+        <!-- Remove -->
+
+        <button
+          type="button"
+          class="btn-remove"
+          *ngIf="couponApplied"
+          (click)="removeCoupon()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <!-- =====================================
+           COUPON ERROR
+      ====================================== -->
+
+      <p
+        class="coupon-error"
+        *ngIf="couponError"
+      >
+        {{ couponError }}
+      </p>
+
+
+      <!-- =====================================
+           COUPON SUCCESS
+      ====================================== -->
+
+      <p
+        class="coupon-success"
+        *ngIf="couponApplied"
+      >
+        ✓ {{ couponDiscountPercentage }}% discount applied successfully
+      </p>
+
+
+      <!-- =====================================
+           VIEW DETAILS
+      ====================================== -->
+
+      <button
+        type="button"
+        class="btn-outline"
+      >
+        View Details
+      </button>
+
+
+      <!-- =====================================
+           START DEMO
+           NORMAL PLANS ONLY
+      ====================================== -->
+
+      <button
+        *ngIf="!hideStartDemo"
+        type="button"
+        class="btn-demo"
+        (click)="onStartDemo()"
+      >
+        START DEMO
+      </button>
+
+
+      <!-- =====================================
+           DIVIDER
+      ====================================== -->
+
+      <hr class="divider">
+
+
+      <!-- =====================================
+           VALIDITY
+           NORMAL PLANS ONLY
+      ====================================== -->
+
+      <ng-container *ngIf="!isSuperplan">
+
+        <h2 class="validity-heading">
+          Choose Validity
+        </h2>
+
+
+        <div class="validity-grid">
+
+          <button
+            type="button"
+            *ngFor="let option of validityOptions"
+            class="validity-pill"
+            [class.active]="selectedValidity === option.months"
+            (click)="selectValidity(option.months)"
+          >
+            {{ option.label }}
+          </button>
+
+        </div>
+
+      </ng-container>
+
+
+      <!-- =====================================
+           BUY NOW
+      ====================================== -->
+
+      <button
+        type="button"
+        class="btn-buy"
+        (click)="onBuyNow()"
+      >
+        BUY NOW
+      </button>
+
+    </div>
+
+  </ng-container>
+
+
+  <!-- =========================================
+       NOT FOUND
+  ========================================== -->
+
+  <div
+    class="not-found"
+    *ngIf="!loading && !plan"
+  >
+
+    <h2>
+      Plan not found
+    </h2>
+
+    <p>
+      The requested plan could not be found.
+    </p>
+
+  </div>
+
+</main>
+<app-footer></app-footer>

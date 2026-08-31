@@ -42,6 +42,36 @@ export class ApiService {
     );
   }
 
+  startPlanDemo(planId: number) {
+  const token = this.authStorage.getToken();
+
+  return this.http.post<any>(
+    `${this.baseUrl}/api/demo/start`,
+    {
+      plan_id: planId
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+}
+
+  validateCoupon(couponCode: string): Observable<any> {
+  return this.request(
+    this.http.post<any>(
+      this.url('/coupon/validate'),
+      {
+        coupon_code: couponCode
+      },
+      {
+        headers: this.getAuthHeaders(),
+      }
+    )
+  );
+}
+
   private shouldLogoutForAuthError(error: HttpErrorResponse): boolean {
     const detail = error.error?.detail;
     return error.status === 401 || detail === 'Session expired or logged in elsewhere';

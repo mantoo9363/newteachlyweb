@@ -97,6 +97,7 @@ export class CurriculumDetailsComponent implements OnInit {
   iframeUrl = ''; // URL to embed in iframe
   simulationModules: { id: string; name: string; url: string }[] = []; // Available simulation modules
   studentsCount = '';
+  private readonly aiIframeLoginCookie = 'teachly_ai_logged_in';
   private readonly simulatorUrls = environment.simulatorUrls;
 
   activeCadVideoIndex = 0;
@@ -460,89 +461,89 @@ export class CurriculumDetailsComponent implements OnInit {
 
   launchSimulation(): void {
 
-    const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
-    const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
+  const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+  const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
 
-    // console.log(token);
+ // console.log(token);
 
-    if (!token) {
+  if (!token) {
 
-      this.headerComponent?.openModal('login');
+    this.headerComponent?.openModal('login');
 
-      return;
-    }
-
-    if (userId && !this.authStorage.wasStudentPanelSsoRecent()) {
-      this.apiService.getSchoolPaymentHistory(userId, false).subscribe({
-        next: (payments) => {
-         
-          if (!this.hasActiveTechPayment(payments)) {
-            this.blockSimulationAccess();
-            return;
-          }
-           console.log('Payment history:', token);
-          this.openSimulationAfterAccessCheck(token);
-        },
-        error: (err) => {
-          console.error(err);
-          if (!this.canOpenSimulation()) {
-            this.blockSimulationAccess();
-            return;
-          }
-
-          this.openSimulationAfterAccessCheck(token);
-        }
-      });
-      return;
-    }
-
-    if (!this.canOpenSimulation()) {
-      this.blockSimulationAccess();
-      return;
-    }
-
-    this.openSimulationAfterAccessCheck(token);
+    return;
   }
 
-  private openSimulationAfterAccessCheck(token: string): void {
-    if (this.id === '12') {
-      window.location.href = this.simulatorUrls.droneDownload;
-      return;
-    }
+  if (userId && !this.authStorage.wasStudentPanelSsoRecent()) {
+    this.apiService.getSchoolPaymentHistory(userId, false).subscribe({
+      next: (payments) => {
+        console.log('Payment history:', payments);
+        if (!this.hasActiveTechPayment(payments)) {
+          this.blockSimulationAccess();
+          return;
+        }
 
-    const cachedTempToken = this.authStorage.getRecentTempToken();
-    if (cachedTempToken) {
-      this.openSimulationWithTempToken(cachedTempToken);
-      return;
-    }
-
-    this.apiService.generateTempToken(false).subscribe({
-
-      next: (res) => {
-        const token = res.temp_token;
-        // console.log(token);
-
-        this.openSimulationWithTempToken(token);
+        this.openSimulationAfterAccessCheck(token);
       },
       error: (err) => {
         console.error(err);
-        if (token && !sessionStorage.getItem('access_token')) {
-          sessionStorage.setItem('access_token', token);
+        if (!this.canOpenSimulation()) {
+          this.blockSimulationAccess();
+          return;
         }
-        this.toastService.show('Simulation could not start. Please try again.', 'error');
+
+        this.openSimulationAfterAccessCheck(token);
       }
     });
+    return;
+  }
+
+  if (!this.canOpenSimulation()) {
+    this.blockSimulationAccess();
+    return;
+  }
+
+  this.openSimulationAfterAccessCheck(token);
+}
+
+  private openSimulationAfterAccessCheck(token: string): void {
+  if (this.id === '13' && this.hasAiIframeLoginCookie()) {
+    this.iframeUrl = this.moduleData.playUrl;
+    this.showIframe = true;
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  if (this.id === '12') {
+    window.location.href = this.simulatorUrls.droneDownload;
+    return;
+  }
+
+const cachedTempToken = this.authStorage.getRecentTempToken();
+if (cachedTempToken) {
+  this.openSimulationWithTempToken(cachedTempToken);
+  return;
+}
+
+this.apiService.generateTempToken(false).subscribe({
+  
+  next: (res) => {
+    const token = res.temp_token;
+   // console.log(token);
+
+    this.openSimulationWithTempToken(token);
+  },
+  error: (err) => {
+    console.error(err);
+    if (token && !sessionStorage.getItem('access_token')) {
+      sessionStorage.setItem('access_token', token);
+    }
+    this.toastService.show('Simulation could not start. Please try again.', 'error');
+  }
+});
 
 
 
 
-
-     console.log(`${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`,">>>>>>>>>>>>>>>>>>>>>>");
-
-    window.location.href =
-     `${this.moduleData.playUrl}?token=${encodeURIComponent(token)}`;
-
-    //console.log(window.location.href);
 
   }
 
@@ -593,6 +594,12 @@ export class CurriculumDetailsComponent implements OnInit {
     if (!expiresAt) return false;
     const expiryTime = Date.parse(expiresAt);
     return Number.isFinite(expiryTime) && expiryTime <= Date.now();
+  }
+
+  private hasAiIframeLoginCookie(): boolean {
+    return document.cookie
+      .split(';')
+      .some((cookie) => cookie.trim() === `${this.aiIframeLoginCookie}=true`);
   }
 
   closeIframe(): void {

@@ -219,15 +219,88 @@ export class HeaderComponent implements OnInit {
 
   // Routes that no longer require authGuard (see app.routes.ts) - the pages themselves
   // handle login/plan gating, so nav links to them should stay navigable for guests.
-  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password'];
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password' , '/plan-card'];
+
+  // hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
+  //   if (!this.hasPurchasedPackage()) return false;
+  //   if (this.authStorage.hasAllAccessPlan()) return true;
+  //   if (group === 'tech' && this.authStorage.hasTechAccessPlan()) return true;
+  //   const activePlanKeys = this.authStorage.getActivePackageKeys();
+  //   return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
+  // }
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
-    if (!this.hasPurchasedPackage()) return false;
-    if (this.authStorage.hasAllAccessPlan()) return true;
-    if (group === 'tech' && this.authStorage.hasTechAccessPlan()) return true;
-    const activePlanKeys = this.authStorage.getActivePackageKeys();
-    return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
+
+  // ==========================================
+  // 1. Check purchased package
+  // ==========================================
+
+  if (this.hasPurchasedPackage()) {
+
+    // All-access purchased plan
+    if (this.authStorage.hasAllAccessPlan()) {
+      return true;
+    }
+
+    // Tech purchased plan
+    if (
+      group === 'tech' &&
+      this.authStorage.hasTechAccessPlan()
+    ) {
+      return true;
+    }
+
+    // Check purchased plan keys
+    const activePlanKeys =
+      this.authStorage.getActivePackageKeys();
+
+    if (
+      activePlanKeys.some((planKey) =>
+        this.planGroups[group].includes(planKey)
+      )
+    ) {
+      return true;
+    }
   }
+
+  // ==========================================
+  // 2. Check DEMO access
+  // ==========================================
+
+  const demoPlanIds = JSON.parse(
+    this.authStorage.getItem('demo_plan_ids') || '[]'
+  );
+
+  // TODO:
+  // Put the actual demo plan IDs for each group here.
+  const demoPlanGroups: Record<string, number[]> = {
+    tech: [
+      // example: 5, 6
+    ],
+
+    smart: [
+      // example: 7, 8
+    ]
+  };
+
+  const groupDemoPlanIds =
+    demoPlanGroups[group] || [];
+
+  const hasDemoAccess = demoPlanIds.some(
+    (demoPlanId: number) =>
+      groupDemoPlanIds.includes(Number(demoPlanId))
+  );
+
+  if (hasDemoAccess) {
+    return true;
+  }
+
+  // ==========================================
+  // 3. No purchase and no demo
+  // ==========================================
+
+  return false;
+}
 
   planGroupLabel(group: 'tech' | 'smart'): string {
     return this.planGroupLabels[group];
@@ -386,76 +459,243 @@ export class HeaderComponent implements OnInit {
     }));
   }
 
+  // private setPackageStatusFromResponse(res: any): void {
+  //   const activePlans = Array.isArray(res?.active_plans)
+  //     ? res.active_plans.filter((plan: any) =>
+  //         plan?.has_active_package !== false &&
+  //         plan?.is_expired !== true &&
+  //         !this.isPackageExpired(plan?.expires_at)
+  //       )
+  //     : [];
+  //   const activePlanKeysFromPlans = activePlans
+  //     .map((plan: any) => plan?.active_package_key || this.getPlanKeyFromName(plan?.plan_name))
+  //     .filter(Boolean);
+  //   const activePackageKeys = Array.from(new Set([
+  //     ...(Array.isArray(res?.active_package_keys) ? res.active_package_keys : []),
+  //     ...activePlanKeysFromPlans,
+  //     res?.active_package_key,
+  //     res?.payment?.active_package_key,
+  //     res?.user?.active_package_key,
+  //     this.getPlanKeyFromName(res?.course),
+  //     this.getPlanKeyFromName(res?.payment?.plan_name),
+  //   ].filter(Boolean)));
+  //   const planExpiries = activePlans.reduce((expiries: Record<string, string>, plan: any) => {
+  //     const planKey = plan?.active_package_key || this.getPlanKeyFromName(plan?.plan_name);
+  //     if (planKey && plan?.expires_at) {
+  //       expiries[planKey] = plan.expires_at;
+  //     }
+  //     return expiries;
+  //   }, {});
+  //   const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
+  //   const hasActivePackage = activePackageKeys.length > 0 || (
+  //     Boolean(
+  //       res?.user?.has_active_package ||
+  //       res?.payment?.has_active_package ||
+  //       res?.has_active_package
+  //     ) && !this.isPackageExpired(packageExpiresAt)
+  //   );
+
+  //   this.authStorage.setItem('has_active_package', String(hasActivePackage));
+
+  //   const activePackageKey = activePackageKeys[0] ||
+  //     res?.active_package_key ||
+  //     res?.payment?.active_package_key ||
+  //     res?.user?.active_package_key ||
+  //     this.getPlanKeyFromName(res?.course) ||
+  //     this.getPlanKeyFromName(res?.payment?.plan_name);
+
+  //   if (activePackageKey && hasActivePackage) {
+  //     this.authStorage.setItem('active_package_key', activePackageKey);
+  //     this.authStorage.setItem('active_package_keys', JSON.stringify(activePackageKeys));
+  //     this.authStorage.setItem('active_plan_expiries', JSON.stringify(planExpiries));
+  //   } else if (!hasActivePackage) {
+  //     this.authStorage.removeItem('active_package_key');
+  //     this.authStorage.removeItem('active_package_keys');
+  //     this.authStorage.removeItem('active_plan_expiries');
+  //   }
+
+  //   if (packageExpiresAt && hasActivePackage) {
+  //     this.authStorage.setItem('package_expires_at', packageExpiresAt);
+  //   } else if (!hasActivePackage) {
+  //     this.authStorage.removeItem('package_expires_at');
+  //   }
+
+  //   const activeCourse = activePlans.map((plan: any) => plan?.plan_name).filter(Boolean).join(', ') || res?.course || res?.payment?.plan_name;
+  //   if (activeCourse && hasActivePackage) {
+  //     this.authStorage.setItem('active_course', activeCourse);
+  //   } else {
+  //     this.authStorage.removeItem('active_course');
+  //   }
+
+  //   this.notifyPackageStatusChanged(res);
+  // }
+
+  // this is where i apply new setPackageStatusFromResponse
+
   private setPackageStatusFromResponse(res: any): void {
-    const activePlans = Array.isArray(res?.active_plans)
-      ? res.active_plans.filter((plan: any) =>
-          plan?.has_active_package !== false &&
-          plan?.is_expired !== true &&
-          !this.isPackageExpired(plan?.expires_at)
-        )
-      : [];
-    const activePlanKeysFromPlans = activePlans
-      .map((plan: any) => plan?.active_package_key || this.getPlanKeyFromName(plan?.plan_name))
-      .filter(Boolean);
-    const activePackageKeys = Array.from(new Set([
-      ...(Array.isArray(res?.active_package_keys) ? res.active_package_keys : []),
-      ...activePlanKeysFromPlans,
-      res?.active_package_key,
-      res?.payment?.active_package_key,
-      res?.user?.active_package_key,
-      this.getPlanKeyFromName(res?.course),
-      this.getPlanKeyFromName(res?.payment?.plan_name),
-    ].filter(Boolean)));
-    const planExpiries = activePlans.reduce((expiries: Record<string, string>, plan: any) => {
-      const planKey = plan?.active_package_key || this.getPlanKeyFromName(plan?.plan_name);
-      if (planKey && plan?.expires_at) {
-        expiries[planKey] = plan.expires_at;
-      }
-      return expiries;
-    }, {});
-    const packageExpiresAt = res?.package_expires_at || res?.payment?.expires_at;
-    const hasActivePackage = activePackageKeys.length > 0 || (
-      Boolean(
-        res?.user?.has_active_package ||
-        res?.payment?.has_active_package ||
-        res?.has_active_package
-      ) && !this.isPackageExpired(packageExpiresAt)
+
+  const user = res?.user;
+
+  if (!user) {
+    this.clearPackageStatus();
+    return;
+  }
+
+  // ==========================================
+  // PURCHASED PLAN KEYS
+  // ==========================================
+
+  const purchasedPlanKeys: string[] = Array.from(
+    new Set(
+      [
+        ...(Array.isArray(user.active_package_keys)
+          ? user.active_package_keys
+          : []),
+
+        user.active_package_key,
+
+        // Backward compatibility
+        res?.active_package_key,
+        ...(Array.isArray(res?.active_package_keys)
+          ? res.active_package_keys
+          : []),
+
+        res?.payment?.active_package_key,
+      ].filter(Boolean)
+    )
+  );
+
+  // ==========================================
+  // DEMO PLAN IDS
+  // ==========================================
+
+  const demoPlanIds: number[] = Array.from(
+    new Set(
+      (Array.isArray(user.demo_plan_ids)
+        ? user.demo_plan_ids
+        : []
+      )
+        .map((id: any) => Number(id))
+        .filter((id: number) => Number.isFinite(id))
+    )
+  );
+
+  // ==========================================
+  // DEMO ACCESS
+  // ==========================================
+
+  const hasDemoAccess =
+    user.has_demo_access === true &&
+    demoPlanIds.length > 0;
+
+  // ==========================================
+  // PURCHASE ACCESS
+  // ==========================================
+
+  const hasActivePackage =
+    user.has_active_package === true &&
+    purchasedPlanKeys.length > 0;
+
+  // ==========================================
+  // ANY ACCESS
+  // Purchase OR Demo
+  // ==========================================
+
+  const hasAnyAccess =
+    hasActivePackage || hasDemoAccess;
+
+  // ==========================================
+  // SAVE PURCHASED PLAN KEYS
+  // ==========================================
+
+  if (purchasedPlanKeys.length > 0) {
+
+    this.authStorage.setItem(
+      'active_package_keys',
+      JSON.stringify(purchasedPlanKeys)
     );
 
-    this.authStorage.setItem('has_active_package', String(hasActivePackage));
+    // Keep old frontend compatibility
+    this.authStorage.setItem(
+      'active_package_key',
+      purchasedPlanKeys[0]
+    );
 
-    const activePackageKey = activePackageKeys[0] ||
-      res?.active_package_key ||
-      res?.payment?.active_package_key ||
-      res?.user?.active_package_key ||
-      this.getPlanKeyFromName(res?.course) ||
-      this.getPlanKeyFromName(res?.payment?.plan_name);
+  } else {
 
-    if (activePackageKey && hasActivePackage) {
-      this.authStorage.setItem('active_package_key', activePackageKey);
-      this.authStorage.setItem('active_package_keys', JSON.stringify(activePackageKeys));
-      this.authStorage.setItem('active_plan_expiries', JSON.stringify(planExpiries));
-    } else if (!hasActivePackage) {
-      this.authStorage.removeItem('active_package_key');
-      this.authStorage.removeItem('active_package_keys');
-      this.authStorage.removeItem('active_plan_expiries');
-    }
+    this.authStorage.removeItem(
+      'active_package_keys'
+    );
 
-    if (packageExpiresAt && hasActivePackage) {
-      this.authStorage.setItem('package_expires_at', packageExpiresAt);
-    } else if (!hasActivePackage) {
-      this.authStorage.removeItem('package_expires_at');
-    }
-
-    const activeCourse = activePlans.map((plan: any) => plan?.plan_name).filter(Boolean).join(', ') || res?.course || res?.payment?.plan_name;
-    if (activeCourse && hasActivePackage) {
-      this.authStorage.setItem('active_course', activeCourse);
-    } else {
-      this.authStorage.removeItem('active_course');
-    }
-
-    this.notifyPackageStatusChanged(res);
+    this.authStorage.removeItem(
+      'active_package_key'
+    );
   }
+
+  // ==========================================
+  // SAVE DEMO PLAN IDS
+  // ==========================================
+
+  if (demoPlanIds.length > 0) {
+
+    this.authStorage.setItem(
+      'demo_plan_ids',
+      JSON.stringify(demoPlanIds)
+    );
+
+  } else {
+
+    this.authStorage.removeItem(
+      'demo_plan_ids'
+    );
+  }
+
+  // ==========================================
+  // SAVE ACCESS FLAGS
+  // ==========================================
+
+  this.authStorage.setItem(
+    'has_active_package',
+    String(hasActivePackage)
+  );
+
+  this.authStorage.setItem(
+    'has_demo_access',
+    String(hasDemoAccess)
+  );
+
+  this.authStorage.setItem(
+    'has_any_access',
+    String(hasAnyAccess)
+  );
+
+  // ==========================================
+  // SAVE COMPLETE ACCESS LIST
+  // ==========================================
+
+  if (
+    Array.isArray(user.accessible_plans) &&
+    user.accessible_plans.length > 0
+  ) {
+
+    this.authStorage.setItem(
+      'accessible_plans',
+      JSON.stringify(user.accessible_plans)
+    );
+
+  } else {
+
+    this.authStorage.removeItem(
+      'accessible_plans'
+    );
+  }
+
+  // ==========================================
+  // NOTIFY APPLICATION
+  // ==========================================
+
+  this.notifyPackageStatusChanged(user);
+}
 
   private syncPackageStatus(logoutOnAuthError = true): void {
     const userId = Number(this.authStorage.getItem('user_id'));
@@ -636,8 +876,11 @@ export class HeaderComponent implements OnInit {
       url: '/',
       type: 'link'
     },
-
-
+    {
+      title: 'Plans',
+      url: '/plan-card',
+      type: 'link'
+    },
     {
       title: 'Curriculum',
       type: 'dropdown',
@@ -1081,7 +1324,7 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+  console.log('🔥 HEADER INITIALIZED');
     this.popupService.popupData$.subscribe((plan) => {
 
       if (plan) {
@@ -1095,12 +1338,27 @@ export class HeaderComponent implements OnInit {
       }
     });
 
+    // this.popupService.signup$.subscribe((shouldOpen: boolean) => {
+    //   console.log('HEADER RECEIVED:', shouldOpen);
+    //   if (shouldOpen) {
+    //     this.openModal('signup');
+    //     this.popupService.closeSignup();
+    //   }
+    // });
+
     this.popupService.signup$.subscribe((shouldOpen: boolean) => {
+
+      console.log('🔥 HEADER RECEIVED SIGNUP EVENT:', shouldOpen);
+
       if (shouldOpen) {
+
+        console.log('🔥 HEADER CALLING OPEN MODAL');
+
         this.openModal('signup');
-        this.popupService.closeSignup();
       }
+
     });
+   
 
     this.translateService.setDefaultLang('en');
     this.selectedLanguage = '';
@@ -1631,6 +1889,43 @@ export class HeaderComponent implements OnInit {
   sessionStorage.setItem('student_id', res.user.student_id);
   sessionStorage.setItem('school_name', res.user.first_name);
   sessionStorage.setItem('user_type', res.user.user_type || '');
+
+//   this.authStorage.setItem('access_token', res.access_token);
+
+// this.authStorage.setItem(
+//   'user_id',
+//   String(res.user.user_id)
+// );
+
+// this.authStorage.setItem(
+//   'student_id',
+//   res.user.student_id
+// );
+
+// this.authStorage.setItem(
+//   'school_name',
+//   res.user.first_name
+// );
+
+// this.authStorage.setItem(
+//   'user_type',
+//   res.user.user_type || ''
+// );
+
+
+// console.log('Backend token:', res.access_token);
+// console.log(
+//   'Session token:',
+//   sessionStorage.getItem('access_token')
+// );
+// console.log(
+//   'Local token:',
+//   localStorage.getItem('access_token')
+// );
+// console.log(
+//   'AuthStorage token:',
+//   this.authStorage.getToken()
+// );
   if (res.user.board) {
     sessionStorage.setItem('user_board', res.user.board);
   }

@@ -3,13 +3,16 @@ import { RouterOutlet } from '@angular/router';
 import { ContactComponent } from './presentation/sections/contact/contact.component';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from './presentation/components/toast/toast.component';
+// import { HeaderComponent } from './presentation/layout/header/header.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, ContactComponent, CommonModule, ToastComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+ 
+
 })
 export class App implements OnInit, OnDestroy {
   protected readonly title = signal('teachlywebsite');
