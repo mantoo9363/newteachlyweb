@@ -219,15 +219,7 @@ export class HeaderComponent implements OnInit {
 
   // Routes that no longer require authGuard (see app.routes.ts) - the pages themselves
   // handle login/plan gating, so nav links to them should stay navigable for guests.
-  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password' , '/plan-card'];
-
-  // hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
-  //   if (!this.hasPurchasedPackage()) return false;
-  //   if (this.authStorage.hasAllAccessPlan()) return true;
-  //   if (group === 'tech' && this.authStorage.hasTechAccessPlan()) return true;
-  //   const activePlanKeys = this.authStorage.getActivePackageKeys();
-  //   return activePlanKeys.some((planKey) => this.planGroups[group].includes(planKey));
-  // }
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password','/plan-card'];
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
 
@@ -801,10 +793,12 @@ export class HeaderComponent implements OnInit {
         }
 
          if (profile?.mobile_no) {
-          sessionStorage.setItem('user_board', profile.mobile_no);
+          sessionStorage.setItem('user_mobile', profile.mobile_no);
         }
 
+        //this.setPackageStatusFromResponse(profile);
         this.setPackageStatusFromResponse(profile);
+        this.syncPackageStatus(false);
       },
       error: (err) => {
         console.error('Failed to load profile', err);
@@ -876,11 +870,13 @@ export class HeaderComponent implements OnInit {
       url: '/',
       type: 'link'
     },
-    {
+ {
       title: 'Plans',
       url: '/plan-card',
       type: 'link'
     },
+
+
     {
       title: 'Curriculum',
       type: 'dropdown',
@@ -2427,3 +2423,5 @@ next: (res: any) => {
     }
   }
 }
+
+

@@ -122,6 +122,18 @@ export class ApiService {
     );
   }
 
+  createDbPlanOrder(data: any): Observable<any> {
+  return this.request(
+    this.http.post(
+      this.url(API_ENDPOINTS.schoolPayment.createDbPlanOrder),
+      data,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    )
+  );
+}
+
   verifySchoolPayment(data: any): Observable<any> {
     return this.request(
       this.http.post(this.url(API_ENDPOINTS.schoolPayment.verifyPayment), data, {

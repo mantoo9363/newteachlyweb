@@ -298,9 +298,9 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
     school: {
       type: 'yearly',
       title: 'School Plan',
-      price: '₹70,000 / Year',
+      price: '₹150,000 / Year',
       oldPrice: '₹148937',
-      discount: '53% OFF',
+     
 
       features: [
         {
@@ -337,7 +337,7 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
     schooltech: {
       type: 'yearly',
       title: 'School Tech Plan',
-      price: '₹50,000 / Year',
+      price: '₹125,000 / Year',
       oldPrice: '106383',
       discount: '53% OFF',
 

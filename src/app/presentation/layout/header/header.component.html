@@ -662,11 +662,7 @@
           <span class="label">Name</span>
           <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : userName }}</span>
         </div>
-        <div class="profile-readonly-item">
-          <span class="label">Mobile No.</span>
-          <span class="value" [class.skeleton]="isProfileLoading">{{ isProfileLoading ? '' : (profileData?.mobile_no
-            || '-') }}</span>
-        </div>
+       
         <div class="profile-readonly-item">
           <span class="label">Student ID</span>
           <span class="value">{{ userStudentId }}</span>

@@ -1,6 +1,7 @@
 const urls = {
   site: 'https://theteachly.com',
-  api: 'https://apifuturexcamp.theteachly.com',
+  //api: 'https://apifuturexcamp.theteachly.com',
+  api: 'https://127.0.0.1:8000',
   uploads: 'https://apifuturexcamp.theteachly.com/uploads',
   zenAi: 'https://zenai.theteachly.com',
   cadApi: 'https://cadapi.theteachly.com',

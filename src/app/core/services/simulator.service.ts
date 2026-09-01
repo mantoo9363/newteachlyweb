@@ -221,18 +221,18 @@ export class SimulatorService {
   availableLanguages: ['en', 'ur'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/molecu;e shapes.mp4'
 },
-{
-  id: 'molecule-shapes-basics',
-  name: 'Molecule Shapes: Basics',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/molecule-shapes-basics-420.png',
-  url: '/virtual_lab/molecule-shapes-basics_en.html',
-  category: 'Chemistry',
-  subject: 'General Chemistry',
-  classes: ['10', '11'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'molecule-shapes-basics',
+//   name: 'Molecule Shapes: Basics',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/molecule-shapes-basics-420.png',
+//   url: '/virtual_lab/molecule-shapes-basics_en.html',
+//   category: 'Chemistry',
+//   subject: 'General Chemistry',
+//   classes: ['10', '11'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'neuron',
   name: 'Neuron',
@@ -285,30 +285,30 @@ export class SimulatorService {
     '11-university': 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/ohms law 2.mp4'
   }
 },
-{
-  id: 'pendulum-lab',
-  name: 'Pendulum Lab',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/pendulum-lab-420.png',
-  url: '/virtual_lab/pendulum-lab_en.html',
-  category: 'Physics',
-  subject: 'Motion',
-  classes: ['7', '8', '9'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'ph-scale',
-  name: 'pH Scale',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/ph-scale-420.png',
-  url: '/virtual_lab/ph-scale_en.html',
-  category: 'Chemistry',
-  subject: 'General Chemistry',
-  classes: ['10', '11', '12'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/ph scale 6-10.mp4'
-},
+// {
+//   id: 'pendulum-lab',
+//   name: 'Pendulum Lab',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/pendulum-lab-420.png',
+//   url: '/virtual_lab/pendulum-lab_en.html',
+//   category: 'Physics',
+//   subject: 'Motion',
+//   classes: ['7', '8', '9'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'ph-scale',
+//   name: 'pH Scale',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/ph-scale-420.png',
+//   url: '/virtual_lab/ph-scale_en.html',
+//   category: 'Chemistry',
+//   subject: 'General Chemistry',
+//   classes: ['10', '11', '12'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/ph scale 6-10.mp4'
+// },
 {
   id: 'ph-scale-basics',
   name: 'pH Scale: Basics',
@@ -319,56 +319,56 @@ export class SimulatorService {
   classes: ['7', '8', '9'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/ph scale 6-10.mp4'
 },
-{
-  id: 'projectile-motion',
-  name: 'Projectile Motion',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/projectile-motion-420.png',
-  url: '/virtual_lab/projectile-motion_en.html',
-  category: 'Physics',
-  subject: 'Motion',
-  classes: ['11', '12'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'resistance-in-a-wire',
-  name: 'Resistance in a Wire',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/resistance-in-a-wire-420.png',
-  url: '/virtual_lab/resistance-in-a-wire_en.html',
-  category: 'Physics',
-  subject: 'Electricity, Magnets & Circuits',
-  classes: ['10', '11', '12'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'rutherford-scattering',
-  name: 'Rutherford Scattering',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/rutherford-scattering-420.png',
-  url: '/virtual_lab/concentration_en.html',
-  category: 'Physics',
-  subject: 'Quantum Phenomena',
-  classes: ['12'],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'states-of-matter',
-  name: 'States of Matter',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/states-of-matter-420.png',
-  url: '/virtual_lab/states-of-matter_en.html',
-  category: 'Physics',
-  subject: 'Heat & Thermo',
-  classes: ['7', '8', '9'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/states of matter 6-10.mp4'
-},
+// {
+//   id: 'projectile-motion',
+//   name: 'Projectile Motion',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/projectile-motion-420.png',
+//   url: '/virtual_lab/projectile-motion_en.html',
+//   category: 'Physics',
+//   subject: 'Motion',
+//   classes: ['11', '12'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'resistance-in-a-wire',
+//   name: 'Resistance in a Wire',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/resistance-in-a-wire-420.png',
+//   url: '/virtual_lab/resistance-in-a-wire_en.html',
+//   category: 'Physics',
+//   subject: 'Electricity, Magnets & Circuits',
+//   classes: ['10', '11', '12'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'rutherford-scattering',
+//   name: 'Rutherford Scattering',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/rutherford-scattering-420.png',
+//   url: '/virtual_lab/concentration_en.html',
+//   category: 'Physics',
+//   subject: 'Quantum Phenomena',
+//   classes: ['12'],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'states-of-matter',
+//   name: 'States of Matter',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/states-of-matter-420.png',
+//   url: '/virtual_lab/states-of-matter_en.html',
+//   category: 'Physics',
+//   subject: 'Heat & Thermo',
+//   classes: ['7', '8', '9'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/states of matter 6-10.mp4'
+// },
 {
   id: 'states-of-matter-basics',
   name: 'States of Matter: Basics',
@@ -379,7 +379,7 @@ export class SimulatorService {
   classes: ['5', '6', '7'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/states of matter 6-10.mp4'
 },
 {
   id: 'trig-tour',
@@ -403,7 +403,7 @@ export class SimulatorService {
   classes: ['11', '12'],
   isNew: false,
   availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Wave Interface.mp4'
 },
 {
   id: 'area-model-multiplication',
@@ -417,30 +417,30 @@ export class SimulatorService {
   availableLanguages: ['en'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA MODEL MULTIPLICATION.mp4'
 },
-{
-  id: 'mean-share-and-balance',
-  name: 'Mean: Share and Balance',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/mean-share-and-balance-420.png',
-  url: '/virtual_lab/mean-share-and-balance_en.html',
-  category: 'Math & Statistics',
-  subject: 'Math Applications',
-  classes: ['7', '8', '9'],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'models-of-the-hydrogen-atom',
-  name: 'Models of the Hydrogen Atom',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/models-of-the-hydrogen-atom-420.png',
-  url: '/virtual_lab/models-of-the-hydrogen-atom_en.html',
-  category: 'Physics',
-  subject: 'Quantum Phenomena',
-  classes: ['12'],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'mean-share-and-balance',
+//   name: 'Mean: Share and Balance',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/mean-share-and-balance-420.png',
+//   url: '/virtual_lab/mean-share-and-balance_en.html',
+//   category: 'Math & Statistics',
+//   subject: 'Math Applications',
+//   classes: ['7', '8', '9'],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'models-of-the-hydrogen-atom',
+//   name: 'Models of the Hydrogen Atom',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/models-of-the-hydrogen-atom-420.png',
+//   url: '/virtual_lab/models-of-the-hydrogen-atom_en.html',
+//   category: 'Physics',
+//   subject: 'Quantum Phenomena',
+//   classes: ['12'],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'my-solar-system',
   name: 'My Solar System',
@@ -453,42 +453,42 @@ export class SimulatorService {
   availableLanguages: ['en'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/my solar system.mp4'
 },
-{
-  id: 'quantum-coin-toss',
-  name: 'Quantum Coin Toss',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/quantum-coin-toss-420.png',
-  url: '/virtual_lab/quantum-coin-toss_en.html',
-  category: 'Physics',
-  subject: 'Quantum Phenomena',
-  classes: [],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'quantum-measurement',
-  name: 'Quantum Measurement',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/quantum-measurement-420.png',
-  url: '/virtual_lab/quantum-measurement_en.html',
-  category: 'Physics',
-  subject: 'Quantum Phenomena',
-  classes: [],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
-{
-  id: 'buoyancy-basics',
-  name: 'Buoyancy: Basics',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/buoyancy-basics-420.png',
-  url: '/virtual_lab/buoyancy-basics_en.htmll',
-  category: 'Physics',
-  subject: 'Motion',
-  classes: [],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'quantum-coin-toss',
+//   name: 'Quantum Coin Toss',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/quantum-coin-toss-420.png',
+//   url: '/virtual_lab/quantum-coin-toss_en.html',
+//   category: 'Physics',
+//   subject: 'Quantum Phenomena',
+//   classes: [],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'quantum-measurement',
+//   name: 'Quantum Measurement',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/quantum-measurement-420.png',
+//   url: '/virtual_lab/quantum-measurement_en.html',
+//   category: 'Physics',
+//   subject: 'Quantum Phenomena',
+//   classes: [],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
+// {
+//   id: 'buoyancy-basics',
+//   name: 'Buoyancy: Basics',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/buoyancy-basics-420.png',
+//   url: '/virtual_lab/buoyancy-basics_en.htmll',
+//   category: 'Physics',
+//   subject: 'Motion',
+//   classes: [],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'circuit-construction-kit-dc',
   name: 'Circuit Construction Kit: DC',
@@ -501,18 +501,18 @@ export class SimulatorService {
   availableLanguages: ['en', 'ur'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Circuit construction kit;DC 6 to 12.mp4'
 },
-{
-  id: 'circuit-construction-kit-dc-virtual-lab',
-  name: 'Circuit Construction Kit: DC - Virtual Lab',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/circuit-construction-kit-dc-virtual-lab-420.png',
-  url: '/virtual_lab/concentration_en.html',
-  category: 'Physics',
-  subject: 'Electricity, Magnets & Circuits',
-  classes: ['9', '10', '11'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'circuit-construction-kit-dc-virtual-lab',
+//   name: 'Circuit Construction Kit: DC - Virtual Lab',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/circuit-construction-kit-dc-virtual-lab-420.png',
+//   url: '/virtual_lab/concentration_en.html',
+//   category: 'Physics',
+//   subject: 'Electricity, Magnets & Circuits',
+//   classes: ['9', '10', '11'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'color-vision',
   name: 'Color Vision',
@@ -535,7 +535,7 @@ export class SimulatorService {
   classes: [],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Density 6 to 10.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/Density 6 to 10'
 },
 {
   id: 'energy-skate-park',
@@ -562,20 +562,20 @@ export class SimulatorService {
   classes: ['12'],
   isNew: false,
   availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/faradays law.mp4'
 },
-{
-  id: 'forces-and-motion-basics',
-  name: 'Forces and Motion: Basics',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/forces-and-motion-basics-420.png',
-  url: '/virtual_lab/forces-and-motion-basics_en.html',
-  category: 'Physics',
-  subject: 'Motion',
-  classes: ['6', '7', '8'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'forces-and-motion-basics',
+//   name: 'Forces and Motion: Basics',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/forces-and-motion-basics-420.png',
+//   url: '/virtual_lab/forces-and-motion-basics_en.html',
+//   category: 'Physics',
+//   subject: 'Motion',
+//   classes: ['6', '7', '8'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'fourier-making-waves',
   name: 'Fourier: Making Waves',
@@ -585,8 +585,8 @@ export class SimulatorService {
   subject: 'Sound & Waves',
   classes: ['11', '12'],
   isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: '/video/Simulators/AREA BUILDER.mp4'
+  availableLanguages: ['en']//,
+  //videoUrl: '/video/Simulators/AREA BUILDER.mp4'
 },
 {
   id: 'gas-properties',
@@ -600,18 +600,18 @@ export class SimulatorService {
   availableLanguages: ['en', 'ur'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/gas properties 2.mp4'
 },
-{
-  id: 'gravity-and-orbits',
-  name: 'Gravity and Orbits',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/gravity-and-orbits-420.png',
-  url: '/virtual_lab/gravity-and-orbits_en.html',
-  category: 'Earth & Space',
-  subject: 'Earth & Space',
-  classes: ['9', '11'],
-  isNew: false,
-  availableLanguages: ['en', 'ur'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'gravity-and-orbits',
+//   name: 'Gravity and Orbits',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/gravity-and-orbits-420.png',
+//   url: '/virtual_lab/gravity-and-orbits_en.html',
+//   category: 'Earth & Space',
+//   subject: 'Earth & Space',
+//   classes: ['9', '11'],
+//   isNew: false,
+//   availableLanguages: ['en', 'ur'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'gravity-force-lab',
   name: 'Gravity Force Lab',
@@ -624,18 +624,18 @@ export class SimulatorService {
   availableLanguages: ['en'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/gravity force lab 6-10.mp4'
 },
-{
-  id: 'hookes-law',
-  name: "Hooke's Law",
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/hookes-law-420.png',
-  url: '/virtual_lab/hookes-law_en.html',
-  category: 'Physics',
-  subject: 'Work, Energy & Power',
-  classes: ['10', '11'],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'hookes-law',
+//   name: "Hooke's Law",
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/hookes-law-420.png',
+//   url: '/virtual_lab/hookes-law_en.html',
+//   category: 'Physics',
+//   subject: 'Work, Energy & Power',
+//   classes: ['10', '11'],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 {
   id: 'john-travoltage',
   name: 'John Travoltage',
@@ -648,44 +648,44 @@ export class SimulatorService {
   availableLanguages: ['en'],
   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/john travoltage 1-5.mp4'
 },
-{
-  id: 'magnets-and-electromagnets',
-  name: 'Magnets and Electromagnets',
-  thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/magnets-and-electromagnets-420.png',
-  url: '/virtual_lab/magnets-and-electromagnets_en.html',
-  category: 'Physics',
-  subject: 'Electricity, Magnets & Circuits',
-  classes: ['10', '11', '12'],
-  isNew: false,
-  availableLanguages: ['en'],
-  videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
-},
+// {
+//   id: 'magnets-and-electromagnets',
+//   name: 'Magnets and Electromagnets',
+//   thumbnail: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators_Thumbnail/magnets-and-electromagnets-420.png',
+//   url: '/virtual_lab/magnets-and-electromagnets_en.html',
+//   category: 'Physics',
+//   subject: 'Electricity, Magnets & Circuits',
+//   classes: ['10', '11', '12'],
+//   isNew: false,
+//   availableLanguages: ['en'],
+//   videoUrl: 'https://apifuturexcamp.theteachly.com/uploads/videos/Simulators/AREA BUILDER.mp4'
+// },
 
 
- {
-   id: 'make-a-ten',
-   name: 'Make a Ten',
-   thumbnail: '/video/Simulators_Thumbnail/make-a-ten-420.png',
-   url: '/virtual_lab/make-a-ten_en.html',
-   category: 'Math & Statistics',
-   subject: 'Mathematics',
-   classes: ['1', '2', '3'],
-   isNew: false,
-   availableLanguages: ['en', 'ur'],
-   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/MAKE A TEN.mp4'
- },
- {
-   id: 'number-play',
-   name: 'Number Play',
-   thumbnail: '/video/Simulators_Thumbnail/number-play-420.png',
-   url: '/virtual_lab/number-play_en.html',
-   category: 'Math & Statistics',
-   subject: 'Mathematics',
-   classes: ['1', '2', '3'],
-   isNew: false,
-   availableLanguages: ['en', 'ur'],
-   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NUMBER PLAY.mp4'
- },
+//  {
+//    id: 'make-a-ten',
+//    name: 'Make a Ten',
+//    thumbnail: '/video/Simulators_Thumbnail/make-a-ten-420.png',
+//    url: '/virtual_lab/make-a-ten_en.html',
+//    category: 'Math & Statistics',
+//    subject: 'Mathematics',
+//    classes: ['1', '2', '3'],
+//    isNew: false,
+//    availableLanguages: ['en', 'ur'],
+//    videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/MAKE A TEN.mp4'
+//  },
+//  {
+//    id: 'number-play',
+//    name: 'Number Play',
+//    thumbnail: '/video/Simulators_Thumbnail/number-play-420.png',
+//    url: '/virtual_lab/number-play_en.html',
+//    category: 'Math & Statistics',
+//    subject: 'Mathematics',
+//    classes: ['1', '2', '3'],
+//    isNew: false,
+//    availableLanguages: ['en', 'ur'],
+//    videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NUMBER PLAY.mp4'
+//  },
  {
    id: 'arithmetic',
    name: 'Arithmetic',
@@ -696,7 +696,7 @@ export class SimulatorService {
    classes: ['1', '2', '3'],
    isNew: false,
    availableLanguages: ['en', 'ur'],
-   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/ARITHMETIC.mp4'
+   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/Arithmetic 1-5.mp4'
  },
  {
    id: 'fractions-intro',
@@ -782,18 +782,18 @@ export class SimulatorService {
 //   availableLanguages: ['en', 'ur'],
 //   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/FRACTIONS MIXED NUMBERS.mp4'
 // },
-// {
-//   id: 'ratio-and-proportion',
-//   name: 'Ratio and Proportion',
-//   thumbnail: '/video/Simulators_Thumbnail/ratio-and-proportion-420.png',
-//   url: '/virtual_lab/ratio-and-proportion_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['6', '7', '8'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/RATIO AND PROPORTION.mp4'
-// },
+{
+  id: 'ratio-and-proportion',
+  name: 'Ratio and Proportion',
+  thumbnail: '/video/Simulators_Thumbnail/ratio-and-proportion-420.png',
+  url: '/virtual_lab/ratio-and-proportion_en.html',
+  category: 'Math & Statistics',
+  subject: 'Mathematics',
+  classes: ['6', '7', '8'],
+  isNew: false,
+  availableLanguages: ['en', 'ur'],
+  videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/ratio_and_proportion_6-10.mp4'
+},
 // {
 //   id: 'proportion-playground',
 //   name: 'Proportion Playground',
@@ -806,18 +806,18 @@ export class SimulatorService {
 //   availableLanguages: ['en'],
 //   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/PROPORTION PLAYGROUND.mp4'
 // },
-// {
-//   id: 'unit-rates',
-//   name: 'Unit Rates',
-//   thumbnail: '/video/Simulators_Thumbnail/unit-rates-420.png',
-//   url: '/virtual_lab/unit-rates_en.html',
-//   category: 'Math & Statistics',
-//   subject: 'Mathematics',
-//   classes: ['6', '7'],
-//   isNew: false,
-//   availableLanguages: ['en'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/UNIT RATES.mp4'
-// },
+ {
+    id: 'unit-rates',
+   name: 'Unit Rates',
+  thumbnail: '/video/Simulators_Thumbnail/unit-rates-420.png',
+  url: '/virtual_lab/unit-rates_en.html',
+  category: 'Math & Statistics',
+  subject: 'Mathematics',
+  classes: ['6', '7'],
+  isNew: false,
+  availableLanguages: ['en'],
+  videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/UNIT RATES.mp4'
+},
 // {
 //   id: 'number-line-distance',
 //   name: 'Number Line: Distance',
@@ -830,18 +830,18 @@ export class SimulatorService {
 //   availableLanguages: ['en'],
 //   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NUMBER LINE DISTANCE.mp4'
 // },
-// {
-//   id: 'wave-on-a-string',
-//   name: 'Wave on a String',
-//   thumbnail: '/video/Simulators_Thumbnail/wave-on-a-string-420.png',
-//   url: '/virtual_lab/wave-on-a-string_en.html',
-//   category: 'Physics',
-//   subject: 'Science',
-//   classes: ['7', '8', '9', '10'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/WAVE ON A STRING.mp4'
-// },
+{
+  id: 'wave-on-a-string',
+  name: 'Wave on a String',
+  thumbnail: '/video/Simulators_Thumbnail/wave-on-a-string-420.png',
+  url: '/virtual_lab/wave-on-a-string_en.html',
+  category: 'Physics',
+  subject: 'Science',
+  classes: ['7', '8', '9', '10'],
+  isNew: false,
+  availableLanguages: ['en', 'ur'],
+  videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/WAVE ON A STRING.mp4'
+},
 // {
 //   id: 'probability',
 //   name: 'Probability',
@@ -878,18 +878,18 @@ export class SimulatorService {
 //   availableLanguages: ['en', 'ur'],
 //   videoUrl: '/video/Simulators/BENDING LIGHT.mp4'
 // },
-// {
-//   id: 'build-an-atom',
-//   name: 'Build an Atom',
-//   thumbnail: '/video/Simulators_Thumbnail/build-an-atom-420.png',
-//   url: '/virtual_lab/build-an-atom_en.html',
-//   category: 'Physics',
-//   subject: 'Physics',
-//   classes: ['8', '9', '10', '11'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/BUILD AN ATOM.mp4'
-// },
+{
+  id: 'build-an-atom',
+  name: 'Build an Atom',
+  thumbnail: '/video/Simulators_Thumbnail/build-an-atom-420.png',
+  url: '/virtual_lab/build-an-atom_en.html',
+  category: 'Physics',
+  subject: 'Physics',
+  classes: ['8', '9', '10', '11'],
+  isNew: false,
+  availableLanguages: ['en', 'ur'],
+  videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/BUILD AN ATOM.mp4'
+},
 // {
 //   id: 'masses-and-springs',
 //   name: 'Masses and Springs',
@@ -902,18 +902,18 @@ export class SimulatorService {
 //   availableLanguages: ['en', 'ur'],
 //   videoUrl: '/video/Simulators/MASSES AND SPRINGS.mp4'
 // },
-// {
-//   id: 'natural-selection',
-//   name: 'Natural Selection',
-//   thumbnail: '/video/Simulators_Thumbnail/natural-selection-420.png',
-//   url: '/virtual_lab/natural-selection_en.html',
-//   category: 'Biology',
-//   subject: 'Biology',
-//   classes: ['8', '9', '10'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NATURAL SELECTION.mp4'
-// },
+{
+  id: 'natural-selection',
+  name: 'Natural Selection',
+  thumbnail: '/video/Simulators_Thumbnail/natural-selection-420.png',
+  url: '/virtual_lab/natural-selection_en.html',
+  category: 'Biology',
+  subject: 'Biology',
+  classes: ['8', '9', '10'],
+  isNew: false,
+  availableLanguages: ['en', 'ur'],
+  videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/NATURAL SELECTION.mp4'
+},
 // {
 //   id: 'moving-man',
 //   name: 'Moving Man',
@@ -1046,18 +1046,18 @@ export class SimulatorService {
 //   availableLanguages: ['en', 'ur'],
 //   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/GEOMETRIC OPTICS.mp4'
 // },
-// {
-//   id: 'gene-expression-essentials',
-//   name: 'Gene Expression Essentials',
-//   thumbnail: '/video/Simulators_Thumbnail/gene-expression-essentials-420.png',
-//   url: '/virtual_lab/gene-expression-essentials_en.html',
-//   category: 'Biology',
-//   subject: 'Biology',
-//   classes: ['10', '11', '12'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: '/video/Simulators/GENE EXPRESSION ESSENTIALS.mp4'
-// },
+{
+  id: 'gene-expression-essentials',
+  name: 'Gene Expression Essentials',
+  thumbnail: '/video/Simulators_Thumbnail/gene-expression-essentials-420.png',
+  url: '/virtual_lab/gene-expression-essentials_en.html',
+  category: 'Biology',
+  subject: 'Biology',
+  classes: ['10', '11', '12'],
+  isNew: false,
+  availableLanguages: ['en', 'ur'],
+  videoUrl: '/video/Simulators/GENE EXPRESSION ESSENTIALS.mp4'
+},
 // {
 //   id: 'greenhouse-effect',
 //   name: 'Greenhouse Effect',
@@ -1142,18 +1142,18 @@ export class SimulatorService {
 //   availableLanguages: ['en', 'ur'],
 //   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/MOLARITY.mp4'
 // },
-// {
-//   id: 'coulombs-law',
-//   name: "Coulomb's Law",
-//   thumbnail: '/video/Simulators_Thumbnail/coulombs-law-420.png',
-//   url: '/virtual_lab/coulombs-law_en.html',
-//   category: 'Physics',
-//   subject: 'Electricity, Magnets & Circuits',
-//   classes: ['11', '12'],
-//   isNew: false,
-//   availableLanguages: ['en', 'ur'],
-//   videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/COULOMBS LAW.mp4'
-// },
+{
+  id: 'coulombs-law',
+  name: "Coulomb's Law",
+  thumbnail: '/video/Simulators_Thumbnail/coulombs-law-420.png',
+  url: '/virtual_lab/coulombs-law_en.html',
+  category: 'Physics',
+  subject: 'Electricity, Magnets & Circuits',
+  classes: ['11', '12'],
+  isNew: false,
+  availableLanguages: ['en', 'ur'],
+  videoUrl: 'https://apifuturexcamp.theteachly.com/upload/video/Simulators/COULOMBS LAW.mp4'
+},
 // {
 //   id: 'charges-and-fields',
 //   name: 'Charges and Fields',

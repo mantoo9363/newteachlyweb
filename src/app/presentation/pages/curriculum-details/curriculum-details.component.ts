@@ -505,14 +505,9 @@ export class CurriculumDetailsComponent implements OnInit {
   this.openSimulationAfterAccessCheck(token);
 }
 
-  private openSimulationAfterAccessCheck(token: string): void {
-  if (this.id === '13' && this.hasAiIframeLoginCookie()) {
-    this.iframeUrl = this.moduleData.playUrl;
-    this.showIframe = true;
-    window.scrollTo(0, 0);
-    return;
-  }
+//new code
 
+  private openSimulationAfterAccessCheck(token: string): void {
   if (this.id === '12') {
     window.location.href = this.simulatorUrls.droneDownload;
     return;
@@ -531,11 +526,13 @@ this.apiService.generateTempToken(false).subscribe({
    // console.log(token);
 
     this.openSimulationWithTempToken(token);
+    console.log(token);
   },
   error: (err) => {
     console.error(err);
     if (token && !sessionStorage.getItem('access_token')) {
       sessionStorage.setItem('access_token', token);
+      //console.log(token);
     }
     this.toastService.show('Simulation could not start. Please try again.', 'error');
   }
@@ -545,7 +542,7 @@ this.apiService.generateTempToken(false).subscribe({
 
 
 
-  }
+}
 
   private openSimulationWithTempToken(token: string): void {
     this.iframeUrl =

@@ -574,12 +574,10 @@ export class PlanDetailPageComponent implements OnInit {
         'Unable to create payment order.',
         'error'
       );
-
     }
 
   });
 }
-
 
   /* ==========================================
      DISCOUNTED PRICE

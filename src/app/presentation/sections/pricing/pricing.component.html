@@ -5,11 +5,7 @@
     available in one place.
   </p>
 
-  <div class="independence-banner">
-    <span class="chakra">☸</span>
-    Happy Independence Day — Special Pricing Valid Till 15 August 2026
-    <span class="chakra">☸</span>
-  </div>
+  
 
   <div 
     class="pricing-container" 
@@ -33,7 +29,7 @@
         <b>
           <h2>₹ 150000 /- <span>Per year</span></h2>
         </b>
-        <p>5 Users</p>
+       
       </div>
 
       <button class="view-btn" (click)="openPopup('school')">
@@ -49,9 +45,7 @@
         </button>
       </div>
 
-      <div class="plan-gif">
-        <img src="image/Indian_Flag_with_Teachly_Logo_Transparent.gif" alt="School Plan" />
-      </div>
+     
 
       <!-- <div class="school-offer-box">Independence Day Offer
         <br/> Valid Till 15 August 2026</div> -->
@@ -86,9 +80,7 @@
         </button>
       </div>
 
-      <div class="plan-gif">
-        <img src="image/Indian_Flag_with_Teachly_Logo_Transparent.gif" alt="School Plan" />
-      </div>
+    
 
       <!-- <div class="school-offer-box">Independence Day Offer <br/>Valid Till 15 August 2026</div> -->
     </div>
@@ -151,13 +143,7 @@
         </div>
       </div>
 
-      <div class="offer-text">
-        <span>
-          Independence Day Offer — Valid Till
-          <br />
-          <b>15 August 2026</b>
-        </span>
-      </div>
+    
 
       <!-- Validity -->
 
@@ -265,13 +251,7 @@
         </div>
       </div>
 
-      <div class="offer-text">
-        <span>
-          Independence Day Offer — Valid Till
-          <br />
-          <b>15 August 2026</b>
-        </span>
-      </div>
+      
 
       <!-- Validity -->
       <div class="validity">
@@ -384,13 +364,7 @@
         </div>
       </div>
 
-      <div class="offer-text">
-        <span>
-          Independence Day Offer — Valid Till
-          <br />
-          <b>15 August 2026</b>
-        </span>
-      </div>
+    
 
       <!-- Validity -->
       <div class="validity">
@@ -529,10 +503,10 @@
       <div class="popup-right">
         <div class="price-box">
           <!-- School -->
-          <h2 *ngIf="selectedPlanKey == 'school'">₹70,000 / Year</h2>
+          <h2 *ngIf="selectedPlanKey == 'school'">₹150,000 / Year</h2>
 
           <!-- School Tech -->
-          <h2 *ngIf="selectedPlanKey == 'schooltech'">₹50,000 / Year</h2>
+          <h2 *ngIf="selectedPlanKey == 'schooltech'">₹125,000 / Year</h2>
 
           <!-- Tech -->
           <h2 *ngIf="selectedPlanKey == 'tech'">
@@ -574,21 +548,9 @@
 
           <!-- Discount -->
 
-          <span
-            class="discount"
-            *ngIf="
-              selectedPlanKey == 'school' || selectedPlanKey == 'schooltech'
-            "
-          >
-            {{ selectedPlan.discount }}
-          </span>
+        
 
-          <span
-            class="discount"
-            *ngIf="selectedPlanKey == 'tech' && showOldPrice.tech"
-          >
-            {{ selectedPlan.discount }}
-          </span>
+      
 
           <span
             class="discount"
@@ -601,7 +563,7 @@
             class="discount"
             *ngIf="selectedPlanKey == 'combo' && showOldPrice.combo"
           >
-            {{ selectedPlan.discount }}
+           
           </span>
         </div>
 
