@@ -62,22 +62,12 @@
     </div>
 
     <div class="printer-carousel">
-      <swiper-container
-        slides-per-view="1.15"
-        space-between="20"
-        [breakpoints]="{
+      <swiper-container slides-per-view="1.15" space-between="20" [breakpoints]="{
           '560': { slidesPerView: 2, spaceBetween: 20 },
           '860': { slidesPerView: 3, spaceBetween: 22 },
-          '1180': { slidesPerView: 5, spaceBetween: 24 }
-        }"
-        loop="true"
-        autoplay-delay="1800"
-        autoplay-disable-on-interaction="false"
-        autoplay-pause-on-mouse-enter="true"
-        speed="800"
-        grab-cursor="true"
-        navigation="true"
-      >
+          '1180': { slidesPerView: 4, spaceBetween: 24 }
+        }" loop="true" autoplay-delay="1800" autoplay-disable-on-interaction="false"
+        autoplay-pause-on-mouse-enter="true" speed="800" grab-cursor="true" navigation="true">
         @for (printer of printerModels; track printer.name) {
         <swiper-slide>
           <div class="printer-card">
@@ -173,7 +163,8 @@
 
     <div class="lab-types-header">
       <h3 class="section-subtitle">Lab Types We Set Up</h3>
-      <p class="section-subtext">Turnkey lab infrastructure equipped with hardware, kits, curriculum, and faculty training.</p>
+      <p class="section-subtext">Turnkey lab infrastructure equipped with hardware, kits, curriculum, and faculty
+        training.</p>
     </div>
 
     <div class="lab-type-grid">
@@ -264,7 +255,8 @@
       <div class="contact-info">
         <span class="eyebrow">Get in Touch</span>
         <h2 class="section-title">Let's Find the Right <span class="highlight">Parts & Solutions</span> for You</h2>
-        <p class="contact-desc">Whether you're looking for a single component or a complete lab setup, our team is ready to help you with pricing, availability and expert recommendations.</p>
+        <p class="contact-desc">Whether you're looking for a single component or a complete lab setup, our team is ready
+          to help you with pricing, availability and expert recommendations.</p>
 
         <div class="contact-channels">
           <div class="channel-card">
@@ -320,7 +312,8 @@
                 <label for="contact-mobile">Mobile Number <span class="req">*</span></label>
                 <div class="input-wrapper">
                   <i class="fas fa-phone"></i>
-                  <input id="contact-mobile" type="tel" placeholder="10-digit number" formControlName="mobile" maxlength="10" inputmode="numeric" />
+                  <input id="contact-mobile" type="tel" placeholder="10-digit number" formControlName="mobile"
+                    maxlength="10" inputmode="numeric" />
                 </div>
                 @if (contactForm.get('mobile')?.touched && contactForm.get('mobile')?.errors?.['required']) {
                 <span class="error"><i class="fas fa-exclamation-circle"></i> Mobile number is required</span>
@@ -350,7 +343,8 @@
                 <label for="contact-part">Part / Kit Needed <span class="req">*</span></label>
                 <div class="input-wrapper">
                   <i class="fas fa-cube"></i>
-                  <input id="contact-part" type="text" placeholder="e.g. CUB 3.5, Arduino Kit" formControlName="partNeeded" />
+                  <input id="contact-part" type="text" placeholder="e.g. CUB 3.5, Arduino Kit"
+                    formControlName="partNeeded" />
                 </div>
                 @if (contactForm.get('partNeeded')?.touched && contactForm.get('partNeeded')?.errors?.['required']) {
                 <span class="error"><i class="fas fa-exclamation-circle"></i> Please tell us what you need</span>
@@ -362,7 +356,8 @@
               <label for="contact-message">Additional Details</label>
               <div class="input-wrapper input-wrapper--textarea">
                 <i class="fas fa-comment-dots"></i>
-                <textarea id="contact-message" rows="3" placeholder="Quantity, specifications, timeline..." formControlName="message"></textarea>
+                <textarea id="contact-message" rows="3" placeholder="Quantity, specifications, timeline..."
+                  formControlName="message"></textarea>
               </div>
             </div>
 
@@ -385,7 +380,8 @@
               <div class="success-icon"><i class="fas fa-check"></i></div>
             </div>
             <h2 class="section-title">Enquiry Sent Successfully!</h2>
-            <p>Thank you for reaching out. Our team will review your enquiry and get back to you within <strong>24 hours</strong>.</p>
+            <p>Thank you for reaching out. Our team will review your enquiry and get back to you within <strong>24
+                hours</strong>.</p>
             <div class="success-details">
               <div class="success-detail">
                 <i class="fas fa-clock"></i>

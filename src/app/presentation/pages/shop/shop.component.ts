@@ -60,11 +60,7 @@ export class ShopComponent {
     { name: 'CUB 2.25 / 2.4', buildSize: '250 x 250 x 250/400 mm', weight: '48 / 56 Kg' },
     { name: 'CUB 3.5', buildSize: '350 x 350 x 350 mm', weight: '80 Kg' },
     { name: 'CUB 4.5', buildSize: '400 x 400 x 450 mm', weight: '95 Kg' },
-    { name: 'CUB 5.5 / 5.10', buildSize: '550 x 550 x 550/1000 mm', weight: '136 / 195 Kg' },
     { name: 'CUB 6.0', buildSize: '600 x 600 x 600 mm', weight: '158 Kg' },
-    { name: 'CUB 7.10', buildSize: '700 x 700 x 1000 mm', weight: '232 Kg' },
-    { name: 'CUB 10.5 / 10.10', buildSize: '1000 x 1000 x 500/1000 mm', weight: '260 / 292 Kg' },
-    { name: 'CUB 15.15', buildSize: '1500 x 1500 x 1500 mm', weight: '570 Kg' },
   ];
 
   printerFeatures: string[] = [
