@@ -208,11 +208,7 @@ export class PlanCardPreviewComponent {
     this.couponError = '';
 
 
-    console.log(
-      'VALIDATING COUPON:',
-      coupon
-    );
-
+   
 
     this.apiService
       .validateCoupon(coupon)
@@ -224,10 +220,7 @@ export class PlanCardPreviewComponent {
 
         next: (res: any) => {
 
-          console.log(
-            'COUPON RESPONSE:',
-            res
-          );
+        
 
 
           if (res?.success === true) {

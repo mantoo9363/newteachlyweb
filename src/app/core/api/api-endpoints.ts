@@ -23,4 +23,9 @@ export const API_ENDPOINTS = {
   token: {
     generateTempToken: '/token/generate-token',
   },
+
+   enquiry: {
+    submit: '/enquiries/',
+  },
+
 } as const;

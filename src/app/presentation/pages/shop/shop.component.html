@@ -361,10 +361,15 @@
               </div>
             </div>
 
-            <button type="submit" class="submit-btn">
-              <span>Send Enquiry</span>
-              <i class="fas fa-arrow-right"></i>
-            </button>
+            <button type="submit" class="submit-btn" [disabled]="isLoading" >
+                @if (isLoading) {
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <span>Sending...</span>
+                } @else {
+                  <span>Send Enquiry</span>
+                  <i class="fas fa-arrow-right"></i>
+                }
+</button>
 
             <p class="form-note"><i class="fas fa-lock"></i> Your information is secure and will never be shared.</p>
           </form>

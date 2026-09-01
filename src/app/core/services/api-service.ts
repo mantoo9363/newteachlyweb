@@ -193,4 +193,14 @@ export class ApiService {
       })
     );
   }
+
+    submitEnquiry(data: any): Observable<any> {
+    return this.request(
+      this.http.post(
+        this.url(API_ENDPOINTS.enquiry.submit),
+        data
+      ),
+      false
+    );
+  }
 }
