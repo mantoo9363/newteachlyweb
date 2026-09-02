@@ -251,7 +251,7 @@
   ============================================================= -->
   <section class="shop-contact" id="shop-contact">
     <div class="contact-wrapper">
-      @if (!isSubmitted) {
+  
       <div class="contact-info">
         <span class="eyebrow">Get in Touch</span>
         <h2 class="section-title">Let's Find the Right <span class="highlight">Parts & Solutions</span> for You</h2>
@@ -282,7 +282,6 @@
           </div>
         </div>
       </div>
-
       <div class="card contact-form-card">
         <span class="notch notch--left"></span>
         <span class="notch notch--right"></span>
@@ -375,37 +374,19 @@
           </form>
         </div>
       </div>
-      } @else {
-      <div class="contact-success-wrapper">
-        <div class="card contact-success-card">
-          <span class="notch notch--left"></span>
-          <span class="notch notch--right"></span>
-          <div class="card__body">
-            <div class="success-icon-wrap">
-              <div class="success-icon"><i class="fas fa-check"></i></div>
-            </div>
-            <h2 class="section-title">Enquiry Sent Successfully!</h2>
-            <p>Thank you for reaching out. Our team will review your enquiry and get back to you within <strong>24
-                hours</strong>.</p>
-            <div class="success-details">
-              <div class="success-detail">
-                <i class="fas fa-clock"></i>
-                <span>Typical response: 2-4 business hours</span>
-              </div>
-              <div class="success-detail">
-                <i class="fas fa-shield-halved"></i>
-                <span>We respect your privacy — no spam, ever</span>
-              </div>
-            </div>
-            <button type="button" class="submit-btn" (click)="submitAnother()">
-              <i class="fas fa-plus"></i>
-              <span>Send Another Enquiry</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      }
     </div>
+
+    <app-success-modal
+      [isOpen]="showSuccessModal"
+      title="Enquiry Sent Successfully!"
+      message="Thank you for reaching out. Our team will review your enquiry and get back to you within <strong>24 hours</strong>."
+      [details]="[
+        { icon: 'fas fa-clock', text: 'Typical response: 2-4 business hours' },
+        { icon: 'fas fa-shield-halved', text: 'We respect your privacy — no spam, ever' }
+      ]"
+      buttonText="Send Another Enquiry"
+      (closed)="closeSuccessModal()"
+    ></app-success-modal>
   </section>
 </main>
 

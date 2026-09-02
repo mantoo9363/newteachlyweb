@@ -11,6 +11,7 @@ import { register } from 'swiper/element/bundle';
 
 import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
+import { SuccessModalComponent } from '../../components/success-modal/success-modal.component';
 
 import { ApiService } from '../../../core/services/api-service';
 
@@ -59,7 +60,8 @@ interface LearningStage {
     CommonModule,
     ReactiveFormsModule,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    SuccessModalComponent
   ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
@@ -69,11 +71,11 @@ export class ShopComponent {
 
   contactForm: FormGroup;
 
-  isSubmitted = false;
-
   isLoading = false;
 
   submitError = '';
+
+  showSuccessModal = false;
 
 
   // =====================================================
@@ -476,7 +478,9 @@ export class ShopComponent {
 
           this.isLoading = false;
 
-          this.isSubmitted = true;
+          this.showSuccessModal = true;
+
+          this.contactForm.reset();
 
           this.submitError = '';
 
@@ -532,12 +536,16 @@ export class ShopComponent {
 
 
   // =====================================================
-  // Submit Another
+  // Submit Another / Close Modal
   // =====================================================
+
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
+  }
 
   submitAnother(): void {
 
-    this.isSubmitted = false;
+    this.showSuccessModal = false;
 
     this.isLoading = false;
 

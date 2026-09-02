@@ -1100,7 +1100,7 @@
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   gap: 48px;
-  align-items: start;
+  align-items: center;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;

@@ -1,0 +1,33 @@
+@if (isOpen) {
+<div class="modal-overlay" (click)="onOverlayClick($event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="success-icon-wrap">
+        <div class="success-icon"><i class="fas fa-check"></i></div>
+      </div>
+      <h2 id="modal-title" class="modal-title">{{ title }}</h2>
+    </div>
+    
+    <div class="modal-body">
+      <p class="modal-message" [innerHTML]="message"></p>
+      
+      @if (details.length > 0) {
+      <div class="modal-details">
+        @for (detail of details; track detail.text) {
+        <div class="modal-detail">
+          <i [class]="detail.icon"></i>
+          <span>{{ detail.text }}</span>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="modal-btn" (click)="onClose()">
+        {{ buttonText }}
+      </button>
+    </div>
+  </div>
+</div>
+}
