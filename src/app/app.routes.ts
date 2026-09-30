@@ -17,6 +17,7 @@ import { PdfViewerComponent } from './presentation/pages/pdf-viewer/pdf-viewer.c
 import { PlanCardPageComponent } from './presentation/pages/plan-card-page/plan-card-page.component';
 import { PlanDetailPageComponent } from './presentation/pages/plan-detail-page/plan-detail-page';
 import { ShopComponent  } from './presentation/pages/shop/shop.component';
+import {CareerVisualization} from './presentation/pages/career-visualization/career-visualization';
 
 
 
@@ -28,14 +29,15 @@ export const routes: Routes = [
   },
 
    {
-    path: 'plan-card',
-    component: PlanCardPageComponent
+  path: 'CareerVisualization',
+  component: CareerVisualization,
+  title: 'Teachly | Career Visualization'
   },
 
-  {
-    path: 'plan-card/:pid',
-    component: PlanDetailPageComponent
-  },
+  // {
+  //   path: 'plan-card/:pid',
+  //   component: PlanDetailPageComponent
+  // },
 
    {
     path: 'shop',

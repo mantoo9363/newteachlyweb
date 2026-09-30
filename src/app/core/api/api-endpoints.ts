@@ -28,4 +28,9 @@ export const API_ENDPOINTS = {
     submit: '/enquiries/',
   },
 
+   careerVisualization: {
+    create: '/career-visualization/create',
+    list: '/career-visualization/',
+  },
+
 } as const;

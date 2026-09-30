@@ -28,6 +28,7 @@ import { PopupService } from '../../../core/services/popup.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { environment } from '../../../../environments/environment';
 import { AuthStorageService } from '../../../core/services/auth-storage.service';
+import { CareerVisualization } from '../../pages/career-visualization/career-visualization';
 
 const LANGUAGE_MAP: { [key: string]: string } = {
   ENG: 'en',
@@ -219,7 +220,7 @@ export class HeaderComponent implements OnInit {
 
   // Routes that no longer require authGuard (see app.routes.ts) - the pages themselves
   // handle login/plan gating, so nav links to them should stay navigable for guests.
-  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password','/plan-card'];
+  private readonly publicUrls = ['/', '/about-us', '/cognitive-skill-profile', '/child-psychology', '/curriculum-details', '/reset-password','/CareerVisualization'];
 
   hasPlanGroupAccess(group: 'tech' | 'smart'): boolean {
 
@@ -665,10 +666,7 @@ export class HeaderComponent implements OnInit {
   // SAVE COMPLETE ACCESS LIST
   // ==========================================
 
-  if (
-    Array.isArray(user.accessible_plans) &&
-    user.accessible_plans.length > 0
-  ) {
+  if ( Array.isArray(user.accessible_plans) &&   user.accessible_plans.length > 0) {
 
     this.authStorage.setItem(
       'accessible_plans',
@@ -677,9 +675,7 @@ export class HeaderComponent implements OnInit {
 
   } else {
 
-    this.authStorage.removeItem(
-      'accessible_plans'
-    );
+    this.authStorage.removeItem('accessible_plans');
   }
 
   // ==========================================
@@ -870,11 +866,7 @@ export class HeaderComponent implements OnInit {
       url: '/',
       type: 'link'
     },
- {
-      title: 'Plans',
-      url: '/plan-card',
-      type: 'link'
-    },
+ 
 
 
     {
@@ -933,6 +925,11 @@ export class HeaderComponent implements OnInit {
       url: '/child-psychology',
       type: 'link',
       // icon: 'fas fa-child'
+    },
+    {
+    title: 'Career Visualization',
+    url: '/CareerVisualization',
+    type: 'link'
     },
     {
       title: 'Competitive Exams',

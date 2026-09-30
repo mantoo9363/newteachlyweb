@@ -289,9 +289,7 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  /* ===========================
-      PLANS
-  ========================== */
+
 
   plans = {
 
@@ -608,3 +606,5 @@ export class PricingComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.getBasePrice(p);
   }
 }
+
+

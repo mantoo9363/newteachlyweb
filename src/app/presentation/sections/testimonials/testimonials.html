@@ -1,0 +1,200 @@
+<section class="testimonial-section">
+
+  <!-- Heading -->
+  <div class="testimonial-heading">
+
+    <div class="small-title">
+      <span></span>
+      TESTIMONIALS
+      <span></span>
+    </div>
+
+    <h2>What Our Customers Say</h2>
+
+    <p>
+      Real stories from real people who trust us.
+    </p>
+
+  </div>
+
+
+  <!-- TWO INDEPENDENT CAROUSELS -->
+  <div class="testimonial-wrapper">
+
+
+    <!-- ================= LEFT CAROUSEL ================= -->
+
+    <div class="testimonial-carousel left-carousel">
+
+      <!-- Previous -->
+      <button
+        class="carousel-arrow left-arrow"
+        (click)="leftPrevious()">
+
+        ❮
+
+      </button>
+
+
+      <!-- Card -->
+      <div class="testimonial-card orange-card">
+        
+
+        <div class="quote">
+          “
+        </div>
+
+        <div class="testimonial-content">
+
+          <p class="message">
+            {{ leftTestimonials[leftIndex].message }}
+          </p>
+
+          <!-- Stars -->
+          <div class="stars">
+            ★ ★ ★ ★ ★
+          </div>
+
+          <div class="divider"></div>
+
+
+          <!-- User -->
+          <div class="user-info">
+
+            <img
+              [src]="leftTestimonials[leftIndex].image"
+              [alt]="leftTestimonials[leftIndex].name">
+
+            <div>
+
+              <h3>
+                {{ leftTestimonials[leftIndex].name }}
+              </h3>
+
+              <p>
+                {{ leftTestimonials[leftIndex].designation }},
+                {{ leftTestimonials[leftIndex].school }}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Next -->
+      <button
+        class="carousel-arrow right-arrow"
+        (click)="leftNext()">
+
+        ❯
+
+      </button>
+
+
+      <!-- LEFT DOTS -->
+      <div class="carousel-dots">
+
+        <button
+          *ngFor="let item of leftTestimonials; let i = index"
+          [class.active]="i === leftIndex"
+          (click)="leftGoTo(i)">
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ================= RIGHT CAROUSEL ================= -->
+
+    <div class="testimonial-carousel right-carousel">
+
+      <!-- Previous -->
+      <button
+        class="carousel-arrow left-arrow"
+        (click)="rightPrevious()">
+
+        ❮
+
+      </button>
+
+
+      <!-- Card -->
+      <div class="testimonial-card green-card">
+
+        <div class="quote">
+          “
+        </div>
+
+        <div class="testimonial-content">
+
+          <p class="message">
+            {{ rightTestimonials[rightIndex].message }}
+          </p>
+
+          <!-- Stars -->
+          <div class="stars">
+            ★ ★ ★ ★ ★
+          </div>
+
+          <div class="divider"></div>
+
+
+          <!-- User -->
+          <div class="user-info">
+
+            <img
+              [src]="rightTestimonials[rightIndex].image"
+              [alt]="rightTestimonials[rightIndex].name">
+
+            <div>
+
+              <h3>
+                {{ rightTestimonials[rightIndex].name }}
+              </h3>
+
+              <p>
+                {{ rightTestimonials[rightIndex].designation }},
+                {{ rightTestimonials[rightIndex].school }}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Next -->
+      <button
+        class="carousel-arrow right-arrow"
+        (click)="rightNext()">
+
+        ❯
+
+      </button>
+
+
+      <!-- RIGHT DOTS -->
+      <div class="carousel-dots">
+
+        <button
+          *ngFor="let item of rightTestimonials; let i = index"
+          [class.active]="i === rightIndex"
+          (click)="rightGoTo(i)">
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

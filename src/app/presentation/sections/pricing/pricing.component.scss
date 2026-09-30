@@ -154,13 +154,14 @@
 ========================================================== */
 
 .pricing-container {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin: auto;
-  max-width: 1600px;
+  margin: 0;
   padding: 10px 5px 25px;
+  box-sizing: border-box;
 }
 
 .pricing-card,
@@ -170,7 +171,7 @@
 
   flex: 1 1 290px;
   width: 100%;
-  max-width: 300px;
+   max-width: 400px;
   min-height: auto;
 
   background: #fff;
@@ -1721,14 +1722,18 @@ input,
     linear-gradient(135deg, #ff9933, #138808);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  padding-top: 54px;
+  padding-top: 18px;
 }
 
 .best-badge {
   position: absolute;
+
   top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 14px;       // ✅ right side
+  left: auto;        // ✅ left remove
+
+  transform: none;   // ✅ center wala transform remove
+
   z-index: 2;
 
   display: inline-flex;
@@ -1752,3 +1757,7 @@ input,
 .best-badge i {
   font-size: 10px;
 }
+
+
+//-------------------------------new css for testimonals---------------------------------------------
+

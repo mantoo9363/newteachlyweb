@@ -14,8 +14,8 @@
     (mouseleave)="startAutoScroll()" 
     (touchstart)="stopAutoScroll()" 
     (touchend)="startAutoScroll()">
-    <!-- LEFT CARD -->
-    <div class="pricing-card school" [class.purchased-plan]="isPurchasedPlan('school')">
+   
+    <!--<div class="pricing-card school" [class.purchased-plan]="isPurchasedPlan('school')">
       <div class="crown-badge" *ngIf="isPurchasedPlan('school')">
         <i class="fas fa-crown"></i>
         <span>Your Package</span>
@@ -47,8 +47,7 @@
 
      
 
-      <!-- <div class="school-offer-box">Independence Day Offer
-        <br/> Valid Till 15 August 2026</div> -->
+   
     </div>
 
     <div class="pricing-card school" [class.purchased-plan]="isPurchasedPlan('schooltech')">
@@ -82,10 +81,10 @@
 
     
 
-      <!-- <div class="school-offer-box">Independence Day Offer <br/>Valid Till 15 August 2026</div> -->
-    </div>
+    
+    </div>-->
 
-    <!-- CARD 1 -->
+  
     <div class="pricing-card modern-card" [class.purchased-plan]="isPurchasedPlan('tech')">
       <div class="crown-badge" *ngIf="isPurchasedPlan('tech')">
         <i class="fas fa-crown"></i>
@@ -97,7 +96,7 @@
 
       <h2 class="plan-title">Tech Education Plan</h2>
 
-      <!-- Price -->
+   
       <div class="price-section">
         <div class="price-info">
           <span class="old-price" *ngIf="showOldPrice.tech">
@@ -111,17 +110,14 @@
           </div>
         </div>
 
-        <!--<div class="discount-badge">
-    <strong>50%</strong>
-    <span>OFF</span>
-  </div>-->
+    
       </div>
 
-      <!-- View Details -->
+  
 
       <button class="view-btn" (click)="openPopup('tech')">View Details</button>
 
-      <!-- Coupon -->
+     
       <div class="coupon-wrap" *ngIf="!isPurchasedPlan('tech')">
         <div class="coupon-field" *ngIf="appliedCoupons['tech'] === null">
           <input
@@ -145,7 +141,7 @@
 
     
 
-      <!-- Validity -->
+    
 
       <div class="validity">
         <h4>Choose Validity</h4>
@@ -185,16 +181,16 @@
         </div>
       </div>
 
-      <!-- Buy Button -->
+    
 
       <button class="buy-outline" [disabled]="isPurchasedPlan('tech')" (click)="openModal('signup', false, 'tech')">
         {{ getBuyButtonText('tech') }}
       </button>
 
-      <!-- Offer -->
+   
     </div>
 
-    <!-- CARD 2 -->
+   
     <div class="pricing-card modern-card" [class.purchased-plan]="isPurchasedPlan('smart')">
       <div class="crown-badge" *ngIf="isPurchasedPlan('smart')">
         <i class="fas fa-crown"></i>
@@ -219,17 +215,14 @@
           </div>
         </div>
 
-        <!--<div class="discount-badge">
-    <strong>50%
-    <span>OFF</span></strong>
-  </div>-->
+  
       </div>
 
       <button class="view-btn" (click)="openPopup('smart')">
         View Details
       </button>
 
-      <!-- Coupon -->
+     
       <div class="coupon-wrap" *ngIf="!isPurchasedPlan('smart')">
         <div class="coupon-field" *ngIf="appliedCoupons['smart'] === null">
           <input
@@ -253,7 +246,7 @@
 
       
 
-      <!-- Validity -->
+     
       <div class="validity">
         <h4>Choose Validity</h4>
 
@@ -298,7 +291,7 @@
         {{ getBuyButtonText('smart') }}
       </button>
     </div>
-    <!-- CARD 5 -->
+   
     <div class="pricing-card modern-card highlight last-card" [class.purchased-plan]="isPurchasedPlan('combo')">
 
       @if(!isPurchasedPlan('combo')) {
@@ -333,16 +326,13 @@
           </div>
         </div>
 
-        <!--<div class="discount-badge">
-    <strong>50%</strong>
-    <span>OFF</span>
-  </div>-->
+     
       </div>
       <button class="view-btn" (click)="openPopup('combo')">
         View Details
       </button>
 
-      <!-- Coupon -->
+      
       <div class="coupon-wrap" *ngIf="!isPurchasedPlan('combo')">
         <div class="coupon-field" *ngIf="appliedCoupons['combo'] === null">
           <input
@@ -366,7 +356,7 @@
 
     
 
-      <!-- Validity -->
+    
       <div class="validity">
         <h4>Choose Validity</h4>
 
@@ -414,16 +404,15 @@
   </div>
 </section>
 
-<!-- Popup -->
-<!-- RIGHT -->
 
-<!-- Popup -->
+
+
 <div class="popup-overlay" *ngIf="showPopup">
   <div class="popup-card">
     <button class="close-btn" (click)="closePopup()">✕</button>
 
     <div class="popup-content">
-      <!-- LEFT -->
+     
       <div class="popup-left">
         <h2>{{ selectedPlan.title }}</h2>
 
@@ -436,7 +425,7 @@
         <div class="section">
           <h4>Select Plan Duration</h4>
 
-          <!-- School -->
+        
           <div class="duration-list" *ngIf="selectedPlan.type === 'yearly'">
             <div class="duration active">
               <h5>1 Year</h5>
@@ -444,7 +433,7 @@
             </div>
           </div>
 
-          <!-- Monthly Plans Dropdown -->
+        
           <div class="duration-select-wrapper" *ngIf="selectedPlan.type !== 'yearly'">
             <select
               class="duration-dropdown"
@@ -498,32 +487,32 @@
         </div>
       </div>
 
-      <!-- RIGHT -->
+  
 
       <div class="popup-right">
         <div class="price-box">
-          <!-- School -->
+        
           <h2 *ngIf="selectedPlanKey == 'school'">₹150,000 / Year</h2>
 
-          <!-- School Tech -->
+       
           <h2 *ngIf="selectedPlanKey == 'schooltech'">₹125,000 / Year</h2>
 
-          <!-- Tech -->
+         
           <h2 *ngIf="selectedPlanKey == 'tech'">
             ₹{{ getPrice("tech") }} / {{ getDuration("tech") }}
           </h2>
 
-          <!-- Smart -->
+       
           <h2 *ngIf="selectedPlanKey == 'smart'">
             ₹{{ getPrice("smart") }} / {{ getDuration("smart") }}
           </h2>
 
-          <!-- Combo -->
+        
           <h2 *ngIf="selectedPlanKey == 'combo'">
             ₹{{ getPrice("combo") }} / {{ getDuration("combo") }}
           </h2>
 
-          <!-- Old Price -->
+        
 
           <p
             class="old-price"
@@ -546,7 +535,7 @@
             ₹{{ getOldPrice("combo") }}
           </p>
 
-          <!-- Discount -->
+         
 
         
 
@@ -575,3 +564,5 @@
     </div>
   </div>
 </div>
+
+

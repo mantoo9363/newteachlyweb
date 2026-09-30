@@ -1,0 +1,1133 @@
+<app-header></app-header>
+<div class="career-page">
+
+  <!-- =====================================================
+       SECTION 1 : HERO
+  ====================================================== -->
+
+  <section class="hero-section">
+
+    <div class="hero-content">
+
+      <h1>
+        Hear the
+        <span>Story.</span>
+        <br>
+
+        See the
+        <span>Journey.</span>
+        <br>
+
+        <span>Visualize</span> Your
+        <br>
+
+        Future.
+      </h1>
+
+      <p class="hero-description">
+        Hear real voices, see real people, and understand what each
+        career truly looks like — so you can make a confident choice
+        about your future.
+      </p>
+
+    </div>
+
+
+    <div class="hero-image-wrapper">
+
+  <video 
+    class="hero-video"
+    autoplay
+    muted
+    loop
+    preload="auto"  
+  >
+    <source src="video/videos/career__visualization.mp4"  type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
+  
+    
+       <!-- PRICE BOX -->
+  <div class="hero_price-box">
+
+    <div class="hero_price-box-content">
+
+      <span class="hero_price-label">
+        Plans Starting at Just
+      </span>
+
+      <span class="hero_price">
+        <span class="hero_price-currency">₹</span>
+        499
+      </span>
+
+      <span class="hero_price-sub">
+        / plan
+      </span>
+
+    </div>
+
+  </div>
+
+    <button
+    type="button"
+    class="personalized-btn"
+    (click)="openPersonalizedPopup()"
+  >
+    Create My Own Story
+  </button>
+      
+
+</div>
+  </section>
+
+
+
+
+  <!-- =====================================================
+       SECTION 2 : CAREER VISUALIZATION VIDEOS
+  ====================================================== -->
+
+  <section class="video-section">
+
+    <div class="video-heading">
+
+      <h2>
+        Watch engaging
+        <span>career visualization</span>
+        videos, explore
+        different <span>career paths</span>, and
+        <span>imagine</span> yourself achieving
+        your goals with <span>confidence.</span>
+      </h2>
+
+    </div>
+
+
+    <div class="video-grid">
+
+      <!-- VIDEO CARD 1 -->
+
+      <div class="video-card">
+
+        <div class="video-thumbnail">
+
+          <img
+            src="images/career-counselling.png"
+            alt="Career Visualization Video"
+          >
+
+          <button
+            class="play-button"
+            (click)="playVideo(1)"
+          >
+            ▶
+          </button>
+
+        </div>
+
+        <h3>
+          From Curiosity to Career,
+          Discover What’s Right for You.
+        </h3>
+
+      </div>
+
+
+
+      <!-- VIDEO CARD 2 -->
+
+      <div class="video-card">
+
+        <div class="video-thumbnail">
+
+          <img
+            src="images/career-counselling.png"
+            alt="Career Visualization Video"
+          >
+
+          <button
+            class="play-button"
+            (click)="playVideo(2)"
+          >
+            ▶
+          </button>
+
+        </div>
+
+        <h3>
+          Meet Your Future,
+          One Career at a Time.
+        </h3>
+
+      </div>
+
+
+
+      <!-- VIDEO CARD 3 -->
+
+      <div class="video-card">
+
+        <div class="video-thumbnail">
+
+          <img
+            src="images/career-counselling.png"
+            alt="Career Visualization Video"
+          >
+
+          <button
+            class="play-button"
+            (click)="playVideo(3)"
+          >
+            ▶
+          </button>
+
+        </div>
+
+        <h3>
+          Your Future Career,
+          Brought to Life.
+        </h3>
+
+      </div>
+
+    </div>
+
+  </section>
+   
+
+<!-- ================= PRICING SECTION ================= -->
+<section class="pricing-section" id="career-pricing">
+
+  <div class="pricing-header">
+
+    <div class="pricing-label">
+      ✦ &nbsp; PRICING PLANS
+    </div>
+
+    <h2>Choose Your Career Visualization Plan</h2>
+
+    <p>
+      Visualize different career possibilities and see your future come to life.
+    </p>
+
+  </div>
+
+
+  <div class="pricing-cards">
+
+    <!-- ================= 1 STORY ================= -->
+    <div class="pricing-card">
+
+      <div class="card-top-shape"></div>
+
+      <div class="plan-heading">
+
+        <div class="plan-icon">
+          ✦
+        </div>
+
+        <div>
+          <h3>1 STORY</h3>
+          <span class="plan-badge">Standard</span>
+        </div>
+
+      </div>
+
+
+      <div class="price-box">
+
+        <div class="price">
+          ₹499
+        </div>
+
+        <div class="price-sub">
+          / 1 story
+        </div>
+
+      </div>
+
+
+      <div class="features-box">
+
+        <div class="features-title">
+          <span class="gift-icon">🎁</span>
+          <span>What's Included</span>
+        </div>
+
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>1 Career Visualization</span>
+        </div>
+
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>Career-based Story</span>
+        </div>
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>Personalized Face Swap</span>
+        </div>
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span> Your AI Voice Clone</span>
+        </div>
+
+
+      </div>
+
+
+      <button
+        type="button"
+        class="buy-now-btn"
+        (click)="selectPlanAndGoToForm('1 Story', 499)"
+      >
+        BUY NOW
+      </button>
+
+    </div>
+
+
+    <!-- ================= 2 STORIES ================= -->
+    <div class="pricing-card popular-card">
+
+      <div class="popular-badge">
+        ★ &nbsp; MOST POPULAR
+      </div>
+
+      <div class="card-top-shape"></div>
+
+
+      <div class="plan-heading">
+
+        <div class="plan-icon">
+          ✦
+        </div>
+
+        <div>
+          <h3>2 STORIES</h3>
+          <span class="plan-badge">Better Value</span>
+        </div>
+
+      </div>
+
+
+      <div class="price-box">
+
+        <div class="price">
+          ₹849
+        </div>
+
+        <div class="price-sub">
+          / 2 stories
+        </div>
+
+      </div>
+
+
+      <div class="features-box">
+
+        <div class="features-title">
+          <span class="gift-icon">🎁</span>
+          <span>What's Included</span>
+        </div>
+
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>2 Career Visualizations</span>
+        </div>
+
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>Career-based Stories</span>
+        </div>
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>Personalized Face Swap</span>
+        </div>
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span> Your AI Voice Clone</span>
+        </div>
+
+
+      </div>
+
+
+      <button
+        type="button"
+        class="buy-now-btn"
+        (click)="selectPlanAndGoToForm('2 Stories', 849)"
+      >
+        BUY NOW
+      </button>
+
+    </div>
+
+
+    <!-- ================= 4 STORIES ================= -->
+    <div class="pricing-card">
+
+      <div class="card-top-shape"></div>
+
+
+      <div class="plan-heading">
+
+        <div class="plan-icon">
+          ✦
+        </div>
+
+        <div>
+          <h3>4 STORIES</h3>
+          <span class="plan-badge">Premium</span>
+        </div>
+
+      </div>
+
+
+      <div class="price-box">
+
+        <div class="price">
+          ₹1,499
+        </div>
+
+        <div class="price-sub">
+          / 4 stories
+        </div>
+
+      </div>
+
+
+      <div class="features-box">
+
+        <div class="features-title">
+          <span class="gift-icon">🎁</span>
+          <span>What's Included</span>
+        </div>
+
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>4 Career Visualizations</span>
+        </div>
+
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>Career-based Stories</span>
+        </div>
+
+      
+        <div class="feature">
+          <span class="check">✓</span>
+          <span>Personalized Face Swap</span>
+        </div>
+
+        <div class="feature">
+          <span class="check">✓</span>
+          <span> Your AI Voice Clone</span>
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="buy-now-btn"
+        (click)="selectPlanAndGoToForm('4 Stories', 1499)"
+      >
+        BUY NOW
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+  <!-- =====================================================
+       SECTION 3 : REGISTRATION
+  ====================================================== -->
+
+  <section
+  id="career-registration-form"
+  class="registration-section"
+>
+
+    <div class="registration-intro">
+
+      <div class="intro-left">
+
+        <p class="small-title">
+          CAREER VISUALIZATION
+        </p>
+
+        <h2>
+          Visualize Your
+          <br>
+
+          <span>Career Future.</span>
+        </h2>
+
+        <p class="registration-description">
+          Register your child to create a personalized career
+          visualization experience based on their interests,
+          aspirations and chosen career path.
+        </p>
+
+      </div>
+
+
+      <div class="benefits">
+
+        <div class="benefit">
+
+          <div class="check-icon">
+            ✓
+          </div>
+
+          <div>
+            <h3>Personalized Career Journey</h3>
+
+            <p>
+              Explore a career experience designed around your child.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="benefit">
+
+          <div class="check-icon">
+            ✓
+          </div>
+
+          <div>
+            <h3>Visualize the Future</h3>
+
+            <p>
+              Help your child imagine themselves in their future career.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- REGISTRATION FORM -->
+
+    <div
+    class="form-container"
+    id="career-registration">
+
+      <div class="form-heading">
+
+        <h2>
+          Career Visualization Registration
+        </h2>
+
+        <p>
+          Please provide the details below to begin your child's
+          career visualization journey.
+        </p>
+
+      </div>
+
+
+      <form
+        class="career-form"
+        (ngSubmit)="submitForm()"
+      >
+
+
+        <!-- Parent Information -->
+
+        <div class="form-row three-columns">
+
+          <div class="form-group">
+
+            <label>
+              Parent's Name
+            </label>
+
+            <input
+              type="text"
+              name="parentName"
+              [(ngModel)]="formData.parentName"
+              placeholder="Enter parent's name"
+              maxlength="50"
+            (input)="formData.parentName = allowLettersOnly(formData.parentName)"
+           >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Parent Phone
+            </label>
+
+            <input
+             type="tel"
+             name="phone"
+             [(ngModel)]="formData.phone"
+             placeholder="Enter 10-digit mobile number"
+             maxlength="10"
+             inputmode="numeric"
+            (input)="formData.phone = allowNumbersOnly(formData.phone).slice(0, 10)"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Parent Email
+            </label>
+
+            <input
+              type="email"
+              name="parentEmail"
+              [(ngModel)]="formData.parentEmail"
+              placeholder="Enter email"
+              required
+            >
+
+          </div>
+
+        </div>
+
+       @for (story of stories; track $index) {
+
+         <div class="story-upload-section">
+
+          <h3>
+            Story {{$index + 1}}
+          </h3>
+
+        <!-- ================= STUDENT INFORMATION ================= -->
+
+<div class="form-row three-columns">
+
+  <div class="form-group">
+
+    <label [for]="'student-name-' + $index">
+      Student Name
+    </label>
+
+    <input
+      [id]="'student-name-' + $index"
+      type="text"
+      [name]="'studentName-' + $index"
+      [(ngModel)]="story.studentName"
+      placeholder="Enter student's name"
+      maxlength="50"
+     (input)="story.studentName = allowLettersOnly(story.studentName)"
+    >
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label [for]="'student-class-' + $index">
+      Class
+    </label>
+
+    <select
+      [id]="'student-class-' + $index"
+      [name]="'studentClass-' + $index"
+      [(ngModel)]="story.class"
+      required
+    >
+
+      <option value="">
+        Select Class
+      </option>
+
+      <option value="3">Class 3</option>
+      <option value="4">Class 4</option>
+      <option value="5">Class 5</option>
+      <option value="6">Class 6</option>
+      <option value="7">Class 7</option>
+      <option value="8">Class 8</option>
+      <option value="9">Class 9</option>
+      <option value="10">Class 10</option>
+      <option value="11">Class 11</option>
+      <option value="12">Class 12</option>
+
+    </select>
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label [for]="'student-age-' + $index">
+      Age
+    </label>
+
+    <input
+      [id]="'student-age-' + $index"
+      type="number"
+      [name]="'studentAge-' + $index"
+      [(ngModel)]="story.age"
+      placeholder="Enter age"
+      required
+    >
+
+  </div>
+
+</div>
+
+
+
+        <!-- ================= CAREER ================= -->
+
+<div class="form-row two-columns">
+
+  <div class="form-group">
+
+    <label [for]="'career-' + $index">
+      Your Career Choice
+    </label>
+
+    <select
+      [id]="'career-' + $index"
+      [name]="'career-' + $index"
+      [(ngModel)]="story.career"
+      (change)="onCareerChange($event, $index)"
+      required
+    >
+
+      <option value="">
+        Select Career
+      </option>
+
+      <option value="Banker">
+        Banker
+      </option>
+
+      <option value="Doctor">
+        Doctor
+      </option>
+
+      <option value="Defence">
+        Defence
+      </option>
+
+      <option value="Engineering">
+        Engineering
+      </option>
+
+      <option value="Entrepreneurship">
+        Entrepreneurship
+      </option>
+
+      <option value="Law">
+        Law
+      </option>
+
+      <option value="IAS">
+        IAS
+      </option>
+
+      <option value="IPS">
+        IPS
+      </option>
+
+      <option value="Pilot">
+        Pilot
+      </option>
+
+      <option value="Teaching & Education">
+        Teaching & Education
+      </option>
+
+      <option value="Others">
+        Others
+      </option>
+
+    </select>
+
+
+    @if (story.career === 'Others') {
+
+      <div class="other-career-box">
+
+        <label [for]="'other-career-' + $index">
+          Enter Your Career Choice
+        </label>
+
+        <input
+          [id]="'other-career-' + $index"
+          type="text"
+          [name]="'otherCareer-' + $index"
+          [(ngModel)]="story.otherCareer"
+          placeholder="Type your career choice"
+        >
+
+      </div>
+
+    }
+
+  </div>
+
+
+       
+           <!-- VOICE -->
+
+  <div class="form-group">
+
+    <label>
+      Your Voice
+    </label>
+
+    <input
+      [id]="'voice-' + $index"
+      type="file"
+      [name]="'voice-' + $index"
+      accept="audio/mpeg,audio/wav,audio/mp4,audio/x-m4a"
+      (change)="onVoiceSelected($event, $index)"
+    >
+
+  </div>
+
+</div>      
+
+
+        <!-- Student Image -->
+
+        <div class="form-row three-columns">
+
+          <div class="upload-section">
+
+  <label [for]="'full-body-' + $index">
+  Full body image</label>
+
+  <input
+    #fullBodyInput
+    [id]="'full-body-' + $index"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    (change)="onFullBodyImageSelected($event, $index)"
+  >
+
+  @if (story.fullBodyImage) {
+    <div class="uploaded-file-actions">
+
+      <span class="file-name">
+        {{ story.fullBodyImage.name }}
+      </span>
+
+     <button
+       type="button"
+       class="preview-btn"
+       (click)="viewFullBodyPreview($index)"
+      >
+        View Preview
+      </button>
+
+      <button
+        type="button"
+        class="delete-btn"
+        (click)="deleteFullBodyImage($index, fullBodyInput)"
+      >
+        Delete
+      </button>
+
+    </div>
+  }
+
+  @if (showFullBodyPreview) {
+    <div class="preview-overlay">
+
+      <div class="preview-box">
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeFullBodyPreview()">
+          ✕
+        </button>
+
+        <h3>Full Body Preview</h3>
+
+        <img
+          [src]="fullBodyPreview"
+          alt="Full body preview">
+
+      </div>
+
+    </div>
+  }
+
+</div>
+ <div class="upload-section">
+
+  <label  [for]="'shoulder-' + $index">
+    Up to shoulder image</label>
+
+  <input
+    #shoulderInput
+    [id]="'shoulder-' + $index"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    (change)="onShoulderImageSelected($event, $index)"
+  >
+
+  @if (story.shoulderImage) {
+    <div class="uploaded-file-actions">
+
+      <span class="file-name">
+        {{ story.shoulderImage.name }}
+      </span>
+
+      <button
+        type="button"
+        class="preview-btn"
+        (click)="viewShoulderPreview($index)">
+        View Preview
+      </button>
+
+      <button
+  
+        type="button"
+        class="delete-btn"
+        (click)="deleteShoulderImage($index, shoulderInput)">
+        Delete
+      </button>
+
+    </div>
+  }
+
+  @if (showShoulderPreview) {
+    <div class="preview-overlay">
+
+      <div class="preview-box">
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeShoulderPreview()">
+          ✕
+        </button>
+
+        <h3>Shoulder Preview</h3>
+
+        <img
+          [src]="shoulderPreview"
+          alt="Shoulder preview">
+
+      </div>
+
+    </div>
+  }
+
+</div>
+
+ <div class="upload-section">
+
+  <label [for]="'face-' + $index">
+    Only face image</label>
+
+  <input
+    #faceInput
+    [id]="'face-' + $index"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    (change)="onFaceImageSelected($event, $index)"
+  >
+
+  @if (story.faceImage) {
+    <div class="uploaded-file-actions">
+
+      <span class="file-name">
+        {{ story.faceImage.name }}
+      </span>
+
+      <button
+        type="button"
+        class="preview-btn"
+        (click)="viewFacePreview($index)">
+        View Preview
+      </button>
+
+      <button
+        type="button"
+        class="delete-btn"
+        (click)="deleteFaceImage($index, faceInput)">
+        Delete
+      </button>
+
+    </div>
+  }
+
+  @if (showFacePreview) {
+    <div class="preview-overlay">
+
+      <div class="preview-box">
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeFacePreview()">
+          ✕
+        </button>
+
+        <h3>Face Preview</h3>
+
+        <img
+          [src]="facePreview"
+          alt="Face preview">
+
+      </div>
+    </div>
+      }
+
+  </div>   <!-- Face upload-section -->
+
+  </div>   <!-- form-row three-columns -->
+
+  </div>   <!-- story-upload-section -->
+
+}          <!-- @for -->
+
+<!-- ================= ADD ANOTHER CHILD ================= -->
+
+@if (stories.length < getMaxStoryCount()) {
+
+  <div class="add-child-area">
+
+    <button
+      type="button"
+      class="add-child-btn"
+      (click)="addAnotherChild()"
+    >
+      + Add Another Child Details
+    </button>
+
+  </div>
+
+}
+       
+        <!-- ================= CONSENT ================= -->
+
+        <div class="consent-box">
+
+          <input
+            type="checkbox"
+            id="parentConsent"
+             name="parentConsent"
+             [(ngModel)]="parentConsent"
+            [disabled]="!allStoriesReadyForConsent"
+            required
+          />
+
+          <label for="parentConsent">
+
+            I am the parent / legal guardian and I give permission
+            for the submitted information, voice recording and
+            images to be used for creating the child's career
+            visualization experience.
+
+          </label>
+
+        </div>
+
+
+        <!-- Submit -->
+
+        <div class="submit-area">
+         @if (allStoriesReadyForConsent  && parentConsent) {
+          <button
+            type="submit"
+            class="submit-button"
+          >
+            Submit
+          </button>
+        }
+        </div>
+
+      </form>
+
+    </div>
+
+    @if (showPersonalizedPopup) {
+  <div class="popup-overlay" (click)="closePersonalizedPopup()">
+
+    <div class="personalized-popup" (click)="$event.stopPropagation()">
+
+      <button
+        type="button"
+        class="popup-close"
+        (click)="closePersonalizedPopup()"
+      >
+        ×
+      </button>
+
+      <div class="popup-icon">
+        ✨
+      </div>
+
+      <h2>Want a Career Story Made Just for You?</h2>
+
+      <p>
+         
+        Your Story, Your Journey, and Your Dream Career.
+      </p>
+
+      <div class="contact-info">
+
+        <div class="contact-item">
+          <span>📧</span>
+          <div>
+            <strong>Email</strong>
+            <a href="mailto:info@theteachly.com">
+              info@theteachly.com
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span>🗨</span>
+          <div>
+            <strong>Mobile</strong>
+            <a href="tel:9198915757">
+              9198915757
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="popup-footer">
+        Contact us to get started!
+      </p>
+
+    </div>
+
+  </div>
+}
+
+  </section>
+
+</div>
+
+<app-footer></app-footer>

@@ -203,4 +203,23 @@ export class ApiService {
       false
     );
   }
+
+  submitCareerVisualization(formData: FormData): Observable<any> {
+  return this.request(
+    this.http.post(
+      this.url(API_ENDPOINTS.careerVisualization.create),
+      formData
+    ),
+    false
+  );
+}
+
+  getCareerVisualizations(): Observable<any> {
+    return this.request(
+      this.http.get(
+        this.url(API_ENDPOINTS.careerVisualization.list)
+      ),
+      false
+    );
+  }
 }

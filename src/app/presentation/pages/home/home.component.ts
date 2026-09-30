@@ -8,6 +8,7 @@ import { HeroComponent } from '../../sections/hero/hero.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { CoursesComponent } from "../../sections/courses/courses.component";
 import { PricingComponent } from '../../sections/pricing/pricing.component';
+import{Testimonials} from '../../sections/testimonials/testimonials'
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -21,7 +22,8 @@ import { environment } from '../../../../environments/environment';
     FeedbackComponent,
     FooterComponent,
     CoursesComponent,
-    PricingComponent
+    PricingComponent,
+    Testimonials
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],

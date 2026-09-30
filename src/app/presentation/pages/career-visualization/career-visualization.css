@@ -1,0 +1,2415 @@
+/* =========================================================
+   GLOBAL PAGE
+========================================================= */
+
+:host {
+  display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.career-page {
+  min-height: 100vh;
+  background: #f9f8ff;
+  color: #050505;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   HERO SECTION
+========================================================= */
+
+.hero-section {
+  min-height: 680px;
+
+  padding: 100px 7% 90px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 70px;
+}
+
+
+.hero-content {
+  width: 50%;
+  max-width: 650px;
+}
+
+
+.hero-content h1 {
+  margin: 0;
+
+  font-size: clamp(48px, 5vw, 70px);
+
+  line-height: 1.08;
+
+  font-weight: 800;
+
+  letter-spacing: -2px;
+}
+
+
+.hero-content h1 span {
+  color: #a338cf;
+}
+
+
+.hero-description {
+  max-width: 650px;
+
+  margin-top: 42px;
+
+  font-size: 17px;
+
+  line-height: 1.45;
+
+  font-weight: 600;
+
+  letter-spacing: 0.4px;
+
+  color: #65748d;
+}
+
+
+.hero-image-wrapper {
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+}
+
+.hero-video {
+  width: 100%;
+  height: 330px;
+  display: block;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+
+/* =========================================================
+   VIDEO SECTION
+========================================================= */
+
+.video-section {
+  padding: 90px 7% 120px;
+}
+
+
+.video-heading {
+  max-width: 1200px;
+
+  margin: 0 auto 120px;
+
+  text-align: center;
+}
+
+
+.video-heading h2 {
+  margin: 0;
+
+  font-size: clamp(32px, 4vw, 48px);
+
+  line-height: 1.2;
+
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+}
+
+
+.video-heading h2 span {
+  color: #c23db8;
+}
+
+
+.video-grid {
+  max-width: 1200px;
+
+  margin: auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 65px;
+}
+
+
+.video-card {
+  cursor: pointer;
+}
+
+
+.video-thumbnail {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  background: #eee9ff;
+}
+
+
+.video-thumbnail img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: transform 0.4s ease;
+}
+
+
+.video-card:hover .video-thumbnail img {
+  transform: scale(1.04);
+}
+
+
+.play-button {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 58px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  border: none;
+
+  background: linear-gradient(
+    135deg,
+    #8d35d1,
+    #ec3b9d
+  );
+
+  color: white;
+
+  font-size: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 10px 30px rgba(120, 45, 180, 0.35);
+
+  transition: transform 0.3s ease;
+}
+
+
+.play-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+
+.video-card h3 {
+  margin-top: 15px;
+
+  max-width: 320px;
+
+  font-size: 18px;
+
+  line-height: 1.2;
+
+  font-weight: 700;
+}
+ 
+/* =========================================================
+   HERO PRICE BOX - BELOW VIDEO
+   ========================================================= */
+
+.hero_price-box {
+  position: relative;
+  width: 100%;
+  max-width: 410px;
+  height: 72px;
+  margin: 18px auto 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 22px;
+
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid transparent;
+  border-radius: 22px;
+
+  background-image:
+    linear-gradient(#ffffff, #ffffff),
+    linear-gradient(135deg, #8d35d1, #ec3b9d);
+
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
+  box-shadow:
+    0 8px 25px rgba(130, 45, 210, 0.15);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+
+/* =========================
+   PRICE CONTENT
+   ========================= */
+
+.hero_price-box-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+
+.hero_price-label {
+  color: #7024d3;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+
+.hero_price {
+  display: flex;
+  align-items: flex-start;
+
+  color: #c23db8;
+  font-size: 35px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+
+.hero_price-currency {
+  font-size: 19px;
+  margin-right: 2px;
+  margin-top: 2px;
+}
+
+
+.hero_price-sub {
+  color: #7180a0;
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 2px;
+  align-self: flex-end;
+  margin-bottom: 4px;
+}
+
+
+/* =========================================================
+   HOVER EFFECT
+   ========================================================= */
+
+.hero_price-box:hover {
+  transform: translateY(-5px) scale(1.02);
+
+  box-shadow:
+    0 14px 35px rgba(145, 45, 215, 0.25);
+
+  background-image:
+    linear-gradient(#faf4ff, #ffffff),
+    linear-gradient(135deg, #7c2bd4, #ef3b9c);
+}
+
+
+/* Text slightly changes on hover */
+
+.hero_price-box:hover .hero_price-label {
+  color: #8d35d1;
+}
+
+.hero_price-box:hover .hero_price {
+  color: #a338cf;
+}
+
+
+/* =========================================================
+   SMALL SHINE EFFECT
+   ========================================================= */
+
+.hero_price-box::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 70%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+
+  pointer-events: none;
+}
+
+
+.hero_price-box:hover::before {
+  left: 130%;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .hero_price-box {
+    max-width: 340px;
+    height: 64px;
+    padding: 7px 15px;
+    margin-top: 15px;
+    border-radius: 19px;
+  }
+
+  .hero_price-label {
+    font-size: 16px;
+  }
+
+  .hero_price {
+    font-size: 29px;
+  }
+
+  .hero_price-currency {
+    font-size: 16px;
+  }
+
+  .hero_price-sub {
+    font-size: 12px;
+  }
+}
+/* =========================================================
+   REGISTRATION SECTION
+========================================================= */
+
+.registration-section {
+  padding: 80px 7% 100px;
+}
+
+
+.registration-intro {
+  max-width: 1230px;
+
+  margin: 0 auto 25px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+
+.small-title {
+  font-family: Georgia, serif;
+
+  font-size: 21px;
+
+  letter-spacing: 1px;
+
+  margin: 0 0 20px;
+}
+
+
+.intro-left h2 {
+  margin: 0;
+
+  font-size: clamp(40px, 4vw, 58px);
+
+  line-height: 1.05;
+
+  font-weight: 800;
+}
+
+
+.intro-left h2 span {
+  color: #c23db8;
+}
+
+
+.registration-description {
+  max-width: 700px;
+
+  margin-top: 30px;
+
+  font-size: 16px;
+
+  line-height: 1.35;
+
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.benefits {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+
+.benefit {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 18px;
+}
+
+
+.check-icon {
+  min-width: 44px;
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #9c36d0,
+    #e73b9c
+  );
+
+  color: white;
+
+  font-size: 25px;
+
+  font-weight: bold;
+}
+
+
+.benefit h3 {
+  margin: 0 0 6px;
+
+  font-size: 19px;
+}
+
+
+.benefit p {
+  margin: 0;
+
+  color: #65748d;
+
+  font-size: 15px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   FORM CONTAINER
+========================================================= */
+
+.form-container {
+  max-width: 1230px;
+
+  margin: 0 auto;
+
+  padding: 55px 8% 60px;
+
+  border-radius: 55px;
+
+  background: linear-gradient(
+    135deg,
+    #eadcff,
+    #dfd0fa
+  );
+}
+
+
+.form-heading {
+  text-align: center;
+
+  margin-bottom: 55px;
+}
+
+
+.form-heading h2 {
+  margin: 0;
+
+  font-size: 27px;
+
+  color: #a33dcc;
+
+  letter-spacing: 0.5px;
+}
+
+
+.form-heading p {
+  margin: 10px 0 0;
+
+  color: #66748d;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.career-form {
+  width: 100%;
+}
+
+
+.form-row {
+  display: grid;
+
+  gap: 35px;
+
+  margin-bottom: 20px;
+}
+
+
+.three-columns {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+
+.two-columns {
+  grid-template-columns: 1fr 1fr;
+}
+
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+.form-group label {
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.4px;
+}
+
+
+.form-group input,
+.form-group select {
+  width: 100%;
+
+  height: 40px;
+
+  border: none;
+
+  outline: none;
+
+  padding: 0 13px;
+
+  background: #cbd5fa;
+
+  color: #202020;
+
+  font-size: 14px;
+
+  border-radius: 2px;
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+  box-shadow: 0 0 0 2px #a53dcc;
+}
+
+
+.form-group input[type="file"] {
+  padding: 8px;
+
+  cursor: pointer;
+}
+
+
+.image-upload {
+  max-width: 50%;
+}
+
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+
+.submit-area {
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 55px;
+}
+
+
+.submit-button {
+  border: none;
+
+  padding: 10px 35px;
+
+  min-width: 90px;
+
+  background: linear-gradient(
+    90deg,
+    #9335d2,
+    #ef3b9c
+  );
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+
+.submit-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(150, 50, 190, 0.3);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .hero-section {
+    padding-top: 70px;
+
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+
+  .hero-content {
+    width: 100%;
+  }
+
+
+  .hero-description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  .hero-image-wrapper {
+    width: 80%;
+  }
+
+
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 40px;
+  }
+
+
+  .registration-intro {
+    grid-template-columns: 1fr;
+  }
+
+
+  .benefits {
+    margin-top: 20px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .hero-section {
+    padding: 60px 5%;
+  }
+
+
+  .hero-content h1 {
+    font-size: 43px;
+
+    letter-spacing: -1px;
+  }
+
+
+  .hero-description {
+    font-size: 15px;
+  }
+
+
+  .hero-image-wrapper {
+    width: 100%;
+  }
+
+
+  .video-section {
+    padding: 60px 5%;
+  }
+
+
+  .video-heading {
+    margin-bottom: 60px;
+  }
+
+
+  .video-heading h2 {
+    font-size: 30px;
+  }
+
+
+  .video-grid {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+  }
+
+
+  .registration-section {
+    padding: 60px 5%;
+  }
+
+
+  .intro-left h2 {
+    font-size: 40px;
+  }
+
+
+  .form-container {
+    padding: 40px 25px;
+
+    border-radius: 30px;
+  }
+
+
+  .three-columns,
+  .two-columns {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+
+  .image-upload {
+    max-width: 100%;
+  }
+
+
+  .form-heading h2 {
+    font-size: 23px;
+  }
+
+}
+
+.other-career-box {
+  margin-top: 15px;
+}
+
+.other-career-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.other-career-box input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #a83bd4;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.other-career-box input:focus {
+  border-color: #d936a8;
+  box-shadow: 0 0 5px rgba(168, 59, 212, 0.25);
+}
+
+.other-career-box input::placeholder {
+  color: #777;
+}
+.preview-section {
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.preview-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.body-frame,
+.shoulder-frame,
+.face-frame {
+  position: relative;
+  overflow: hidden;
+  background: #e8e8e8;
+  border: 3px solid #9c27d8;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Full Body */
+.body-frame {
+  width: 280px;
+  height: 380px;
+}
+
+/* Shoulder */
+.shoulder-frame {
+  width: 280px;
+  height: 320px;
+}
+
+/* Face */
+.face-frame {
+  width: 240px;
+  height: 280px;
+}
+
+.body-frame img,
+.shoulder-frame img,
+.face-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.body-frame.valid,
+.shoulder-frame.valid,
+.face-frame.valid {
+  border-color: #8e2de2;
+}
+
+.body-frame.invalid,
+.shoulder-frame.invalid,
+.face-frame.invalid {
+  border-color: #e53935;
+}
+
+.frame-guide {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 10px;
+
+  text-align: center;
+
+  color: white;
+  background: rgba(0, 0, 0, 0.65);
+
+  font-size: 13px;
+}
+
+.success-message {
+  margin-top: 8px;
+  color: #16803c;
+  font-weight: 600;
+}
+
+
+.full-body-preview {
+  position: relative;
+
+  width: 420px;
+  height: 560px;
+
+  margin-top: 20px;
+
+  border: 4px solid #a832d8;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  background: #eeeeee;
+}
+
+.full-body-preview img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+.validation-message {
+  margin-top: 12px;
+
+  font-size: 17px;
+
+  font-weight: 600;
+}
+
+.validation-message.success {
+  color: green;
+}
+
+.validation-message.error {
+  color: red;
+}
+
+/* =========================================================
+   IMAGE UPLOAD SECTION
+   Same pattern as normal form fields
+   ========================================================= */
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.upload-section label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+
+/* File input - same height/background as normal inputs */
+.upload-section input[type="file"] {
+  width: 100%;
+  height: 40px;
+
+  border: none;
+  outline: none;
+
+  padding: 8px;
+
+  background: #cbd5fa;
+  color: #202020;
+
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+
+  border-radius: 2px;
+
+  cursor: pointer;
+}
+
+
+/* Choose File button */
+.upload-section input[type="file"]::file-selector-button {
+  height: 28px;
+
+  padding: 0 12px;
+
+  margin-right: 8px;
+
+  border: none;
+  border-radius: 2px;
+
+  background: #ffffff;
+  color: #202020;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+
+/* Selected file + buttons */
+.uploaded-file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  margin-top: 8px;
+}
+
+.file-name {
+  width: 100%;
+  min-width: 0;
+
+  font-size: 14px;
+  color: #202020;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-btn,
+.delete-btn {
+  flex-shrink: 0;
+
+  width: 85px;
+  min-height: 40px;
+
+  padding: 6px 8px;
+
+  border: none;
+  border-radius: 2px;
+
+  color: white;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+/* =========================================================
+   PREVIEW & DELETE BUTTONS
+   ========================================================= */
+
+.preview-btn,
+.delete-btn {
+  border: none;
+  min-width: 100px;
+  min-height: 40px;
+
+  padding: 8px 18px;
+
+  border-radius: 2px;
+
+  color: white;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+
+/* View Preview */
+.preview-btn {
+  background: linear-gradient(
+    90deg,
+    #35d267,
+    #19ad3e
+  );
+}
+.preview-btn span,
+.delete-btn span,
+.preview-btn i,
+.delete-btn i {
+  font-size: 9px;
+  margin-right: 4px;
+}
+
+/* Delete */
+.delete-btn {
+  background: linear-gradient(
+    90deg,
+    #e01310,
+    #c82303
+  );
+}
+
+
+/* Hover */
+.preview-btn:hover,
+.delete-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(150, 50, 190, 0.3);
+}
+
+.file-name {
+  font-size: 14px;
+  color: #202020;
+
+  max-width: 180px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+   ========================================================= */
+
+.preview-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  z-index: 9999;
+}
+
+.preview-box {
+  position: relative;
+
+  width: 360px;
+  max-width: 90vw;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  text-align: center;
+}
+
+.preview-box img {
+  display: block;
+
+  width: auto;
+  height: auto;
+
+  max-width: 280px;
+  max-height: 380px;
+
+  object-fit: contain;
+
+  margin: 15px auto 0;
+
+  border-radius: 8px;
+}
+
+
+/* =========================================================
+   IMAGE ROW
+   ========================================================= */
+
+.form-row.three-columns {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 35px;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .form-row.three-columns {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+}
+
+.image-action-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.image-action-buttons button {
+  width: 80px;
+  height: 32px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.preview-btn,
+.delete-btn {
+  width: 75px;
+  height: 28px;
+  padding: 3px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+}
+
+/* =========================================================
+   CAREER VISUALIZATION - PRICING
+   ========================================================= */
+
+.pricing-section {
+  position: relative;
+  padding: 65px 5% 90px;
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(163, 56, 207, 0.10),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 75%,
+      rgba(194, 61, 184, 0.10),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #faf7ff 100%
+    );
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   PRICING HEADER
+   ========================================================= */
+
+.pricing-header {
+  text-align: center;
+  max-width: 850px;
+  margin: 0 auto 42px;
+}
+
+.pricing-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 18px;
+
+  border-radius: 30px;
+
+  background: linear-gradient(
+    135deg,
+    #f1e3ff,
+    #ead7ff
+  );
+
+  color: #7025d4;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+
+  box-shadow:
+    0 5px 18px rgba(116, 35, 214, 0.12);
+
+  animation: pricingFadeDown 0.7s ease both;
+}
+
+
+.pricing-header h2 {
+  margin: 15px 0 9px;
+
+  color: #6922cc;
+
+  /* SMALLER FONT */
+  font-size: clamp(27px, 3vw, 38px);
+
+  line-height: 1.15;
+
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+
+  animation: pricingFadeUp 0.8s ease both;
+}
+
+
+.pricing-header p {
+  margin: 0;
+
+  color: #7280a5;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  animation: pricingFadeUp 1s ease both;
+}
+
+
+/* =========================================================
+   PRICING CARDS
+   ========================================================= */
+
+.pricing-cards {
+  max-width: 1180px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 24px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.pricing-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 560px;
+
+  padding: 38px 25px 25px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.98),
+      rgba(251,248,255,0.98)
+    );
+
+  border: 1.5px solid #e6d2ff;
+
+  border-radius: 25px;
+
+  box-shadow:
+    0 10px 30px rgba(102, 32, 190, 0.07);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.35s cubic-bezier(.2,.8,.2,1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+
+  animation: pricingCardAppear 0.7s ease both;
+}
+
+
+/* Card entrance */
+
+.pricing-card:nth-child(1) {
+  animation-delay: 0.10s;
+}
+
+.pricing-card:nth-child(2) {
+  animation-delay: 0.20s;
+}
+
+.pricing-card:nth-child(3) {
+  animation-delay: 0.30s;
+}
+
+
+/* Card hover */
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+
+  border-color: #a24af0;
+
+  box-shadow:
+    0 20px 42px rgba(105, 32, 202, 0.15);
+}
+
+
+/* =========================================================
+   TOP PURPLE CAREER GLOW
+   ========================================================= */
+
+.card-top-shape {
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  width: 125px;
+  height: 18px;
+
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      #a334ec,
+      #d936c1,
+      #7020c7
+    );
+
+  border-radius: 0 0 16px 16px;
+
+  box-shadow:
+    0 4px 15px rgba(146, 45, 220, 0.20);
+}
+
+
+/* =========================================================
+   POPULAR CARD
+   ========================================================= */
+
+.popular-card {
+  border: 2px solid #8732e4;
+
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 16px 40px rgba(108, 31, 204, 0.13);
+
+  padding-top: 55px;
+}
+
+
+.popular-card:hover {
+  transform: translateY(-13px);
+
+  box-shadow:
+    0 25px 50px rgba(108, 31, 204, 0.20);
+}
+
+
+/* =========================================================
+   MOST POPULAR BADGE
+   ========================================================= */
+
+.popular-badge {
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 145px;
+
+  padding: 7px 10px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #9638ed,
+      #6920c3
+    );
+
+  color: #ffffff;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  line-height: 1.25;
+
+  letter-spacing: 0.3px;
+
+  border-radius: 0 0 15px 15px;
+
+  box-shadow:
+    0 7px 18px rgba(106, 30, 193, 0.20);
+
+  z-index: 10;
+
+  animation: popularPulse 2.5s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   PLAN HEADING
+   ========================================================= */
+
+.plan-heading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-bottom: 20px;
+}
+
+
+.plan-icon {
+  flex-shrink: 0;
+
+  width: 56px;
+  height: 56px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f1e4ff,
+      #e5d1ff
+    );
+
+  color: #7729d5;
+
+  font-size: 27px;
+
+  box-shadow:
+    inset 0 0 15px rgba(128, 43, 211, 0.05);
+
+  transition:
+    transform 0.3s ease;
+}
+
+
+.pricing-card:hover .plan-icon {
+  transform:
+    rotate(8deg)
+    scale(1.08);
+}
+
+
+.plan-heading h3 {
+  margin: 0 0 6px;
+
+  color: #6d24cf;
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.1px;
+}
+
+
+.plan-badge {
+  display: inline-block;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  background: #f0e2ff;
+
+  color: #7227cf;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   PRICE
+   ========================================================= */
+
+.price-box {
+  padding: 20px 16px;
+
+  margin-bottom: 22px;
+
+  text-align: center;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f7f0ff,
+      #eee0ff
+    );
+
+  border: 1px solid #ead8ff;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.pricing-card:hover .price-box {
+  transform: scale(1.02);
+
+  box-shadow:
+    0 8px 20px rgba(122, 42, 205, 0.08);
+}
+
+
+.price {
+  color: #7024d3;
+
+  font-size: clamp(34px, 3.5vw, 46px);
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: -1px;
+}
+
+
+.price-sub {
+  margin-top: 8px;
+
+  color: #68799e;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   FEATURES
+   ========================================================= */
+
+.features-box {
+  flex: 1;
+
+  padding: 17px 17px 15px;
+
+  border-radius: 17px;
+
+  border: 1px solid #e7d7fb;
+
+  background: #ffffff;
+}
+
+
+.features-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 10px 12px;
+
+  margin-bottom: 15px;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f5eaff,
+      #eee0ff
+    );
+
+  color: #7024d0;
+
+  font-size: 15px;
+
+  font-weight: 800;
+}
+
+
+.gift-icon {
+  font-size: 17px;
+}
+
+
+.feature {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-bottom: 12px;
+
+  color: #344875;
+
+  font-size: 14px;
+
+  line-height: 1.4;
+}
+
+
+.feature:last-child {
+  margin-bottom: 0;
+}
+
+
+.check {
+  flex-shrink: 0;
+
+  width: 21px;
+  height: 21px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #9137e8,
+      #6e20c5
+    );
+
+  color: white;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  transition:
+    transform 0.25s ease;
+}
+
+
+.feature:hover .check {
+  transform: scale(1.15);
+}
+
+
+/* =========================================================
+   BUY NOW BUTTON
+   ========================================================= */
+
+.buy-now-btn {
+  position: relative;
+
+  overflow: hidden;
+
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 13px 18px;
+
+  border: none;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      100deg,
+      #9b35ed,
+      #6920c2
+    );
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.4px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(111, 30, 198, 0.20);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* Shine animation */
+
+.buy-now-btn::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.40),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition:
+    left 0.6s ease;
+}
+
+
+.buy-now-btn:hover::before {
+  left: 140%;
+}
+
+
+.buy-now-btn:hover {
+  transform:
+    translateY(-4px)
+    scale(1.015);
+
+  box-shadow:
+    0 14px 28px rgba(105, 29, 194, 0.30);
+}
+
+
+.buy-now-btn:active {
+  transform: scale(0.97);
+}
+
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes pricingCardAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes pricingFadeUp {
+
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes pricingFadeDown {
+
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes popularPulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 7px 18px rgba(106, 30, 193, 0.20);
+  }
+
+  50% {
+    box-shadow:
+      0 9px 24px rgba(163, 55, 230, 0.38);
+  }
+}
+
+
+/* =========================================================
+   FORM SCROLL TARGET
+   ========================================================= */
+
+#career-pricing {
+  scroll-margin-top: 20px;
+}
+
+#career-registration {
+  scroll-margin-top: 25px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .pricing-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .popular-card {
+    transform: none;
+  }
+
+  .popular-card:hover {
+    transform: translateY(-8px);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .pricing-section {
+    padding: 50px 18px 65px;
+  }
+
+  .pricing-header {
+    margin-bottom: 32px;
+  }
+
+  .pricing-header h2 {
+    font-size: 28px;
+  }
+
+  .pricing-header p {
+    font-size: 14px;
+  }
+
+  .pricing-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pricing-card {
+    min-height: 0;
+
+    padding:
+      36px 20px 22px;
+  }
+
+  .popular-card {
+    padding-top: 52px;
+  }
+
+  .plan-heading h3 {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 40px;
+  }
+}
+
+/* =========================================
+   PERSONALIZED CAREER VISUALIZATION BUTTON
+========================================= */
+
+.personalized-btn {
+  display: block;
+  margin: 22px auto 0;
+  padding: 14px 30px;
+
+  border: 2px solid #8b2be2;
+  border-radius: 30px;
+
+  background: linear-gradient(
+    90deg,
+    #7425d8,
+    #d42ba9
+  );
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 20px rgba(139, 43, 226, 0.20);
+
+  transition: all 0.25s ease;
+}
+
+.personalized-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(139, 43, 226, 0.30);
+}
+
+
+/* =========================================
+   POPUP OVERLAY
+========================================= */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(20, 10, 35, 0.60);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+
+  padding: 20px;
+}
+
+
+/* =========================================
+   POPUP
+========================================= */
+
+.personalized-popup {
+  position: relative;
+
+  width: 100%;
+  max-width: 500px;
+
+  padding: 35px 30px;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  text-align: center;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.25);
+
+  border: 2px solid transparent;
+
+  background-image:
+    linear-gradient(#fff, #fff),
+    linear-gradient(
+      90deg,
+      #8b2be2,
+      #e52da9
+    );
+
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
+  animation: popupOpen 0.25s ease;
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.popup-close {
+  position: absolute;
+
+  top: 12px;
+  right: 15px;
+
+  width: 35px;
+  height: 35px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f3f0f8;
+
+  color: #555;
+
+  font-size: 25px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.popup-close:hover {
+  background: #e8def2;
+  color: #7425d8;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.popup-icon {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.personalized-popup h2 {
+  margin: 5px 0 12px;
+
+  font-size: 27px;
+  font-weight: 800;
+
+  background: linear-gradient(
+    90deg,
+    #7425d8,
+    #d42ba9
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.personalized-popup > p {
+  margin: 0 auto 25px;
+
+  max-width: 400px;
+
+  color: #666;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   CONTACT INFO
+========================================= */
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-top: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 15px 18px;
+
+  border-radius: 14px;
+
+  background: #faf7ff;
+
+  text-align: left;
+
+  border: 1px solid #eadcf8;
+}
+
+.contact-item > span {
+  font-size: 25px;
+}
+
+.contact-item strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #555;
+
+  font-size: 13px;
+}
+
+.contact-item a {
+  color: #7425d8;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.contact-item a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   POPUP FOOTER
+========================================= */
+
+.personalized-popup .popup-footer {
+  margin-top: 22px;
+  margin-bottom: 0;
+
+  color: #7425d8;
+
+  font-weight: 700;
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes popupOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .personalized-btn {
+    width: 90%;
+    padding: 13px 20px;
+    font-size: 15px;
+  }
+
+  .personalized-popup {
+    padding: 30px 20px;
+  }
+
+  .personalized-popup h2 {
+    font-size: 23px;
+  }
+
+}
+
+/* =========================================
+   IMAGE UPLOAD ACTIONS
+   ========================================= */
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.uploaded-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* File name */
+.uploaded-file-actions .file-name {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Preview button */
+.uploaded-file-actions .preview-btn {
+  position: static;
+  margin: 0;
+  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Delete button */
+.uploaded-file-actions .delete-btn {
+  position: static;
+  margin: 0;
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
