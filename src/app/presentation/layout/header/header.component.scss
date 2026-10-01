@@ -1938,3 +1938,16 @@ font-weight:600;
   background: #f1f5f9;
   margin: 6px 0;
 }
+
+
+@media (max-width: 480px) {
+  .nav-right {
+    display: flex;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+  .shop-trigger,
+  .search-trigger,
+  .auth-pill { display: none; } // move these into the mobile aside instead
+  .hamburger-menu { margin-left: auto; flex-shrink: 0; }
+}

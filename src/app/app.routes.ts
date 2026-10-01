@@ -18,13 +18,15 @@ import { PlanCardPageComponent } from './presentation/pages/plan-card-page/plan-
 import { PlanDetailPageComponent } from './presentation/pages/plan-detail-page/plan-detail-page';
 import { ShopComponent  } from './presentation/pages/shop/shop.component';
 import {CareerVisualization} from './presentation/pages/career-visualization/career-visualization';
-
+import { NotFound  } from './presentation/pages/not-found/not-found.component';
+import { homeQueryGuard } from './guards/home-query.guard';
 
 
 export const routes: Routes = [
   {
     path: '',
     component: HomePageComponent,
+    canActivate: [homeQueryGuard],
     title: 'Teachly | Interactive STEM Simulations & Learning Platform'
   },
 
@@ -130,7 +132,11 @@ export const routes: Routes = [
     component: PdfViewerComponent
   },
   {
-    path: '**',
-    redirectTo: '',
+    path: '404',
+    component: NotFound
   },
+  {
+    path: '**',
+    component: NotFound 
+  }
 ];

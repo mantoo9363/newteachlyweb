@@ -1,0 +1,47 @@
+<div class="not-found-page">
+
+  <div class="not-found-card">
+
+    <div class="error-animation">
+      <div class="number">4</div>
+
+      <div class="planet">
+        <div class="planet-ring"></div>
+        <div class="planet-dot dot-one"></div>
+        <div class="planet-dot dot-two"></div>
+        <div class="planet-dot dot-three"></div>
+      </div>
+
+      <div class="number">4</div>
+    </div>
+
+    <div class="content">
+
+      <span class="badge">PAGE NOT FOUND</span>
+
+      <h1>Oops! You seem to be lost.</h1>
+
+      <p>
+        The page you're looking for doesn't exist or may have been moved.
+      </p>
+
+      <div class="actions">
+
+        <!-- Only clicking this goes to Home -->
+        <button class="home-btn" (click)="goHome()">
+          <span>⌂</span>
+          Go to Home
+        </button>
+
+        <!-- Goes back only when clicked -->
+        <button class="back-btn" (click)="goBack()">
+          ← Go Back
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

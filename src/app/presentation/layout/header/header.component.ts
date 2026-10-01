@@ -1317,7 +1317,7 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-  console.log('🔥 HEADER INITIALIZED');
+  // console.log('🔥 HEADER INITIALIZED');
     this.popupService.popupData$.subscribe((plan) => {
 
       if (plan) {
@@ -1996,6 +1996,7 @@ export class HeaderComponent implements OnInit {
 
       email: form.Email,
       password: form.password,
+      confirm_password: form.confirmpassword,
 
       user_type: this.isSchoolSignup ? 'SCH' : 'STUDENT',
     };
