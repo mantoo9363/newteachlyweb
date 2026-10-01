@@ -1931,7 +1931,7 @@ export class HeaderComponent implements OnInit {
   this.closeSignupModal();
 
   // Dashboard
-  this.router.navigate(['/dashboard']);
+  this.router.navigate(['/']);
 
 },
 
